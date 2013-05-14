@@ -1,5 +1,52 @@
+/* ===========================================================================
+ * GLOBAL STYLES
+ * ======================================================================== */
+@font-face {
+    font-family: 'Mono Social Icons Font';
+    src: url('/theme/fonts/MonoSocialIconsFont-1.00.eot');
+    src: url('/theme/fonts/MonoSocialIconsFont-1.00.eot?#iefix') format('embedded-opentype'),
+         url('/theme/fonts/MonoSocialIconsFont-1.00.woff') format('woff'),
+         url('/theme/fonts/MonoSocialIconsFont-1.00.ttf') format('truetype'),
+         url('/theme/fonts/MonoSocialIconsFont-1.00.svg#MonoSocialIconsFont') format('svg');
+    src: url('/theme/fonts/MonoSocialIconsFont-1.00.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.symbol, a.symbol:before {
+    font-family: 'Mono Social Icons Font';
+    font-size: 24px;
+    -webkit-text-rendering: optimizeLegibility;
+    -moz-text-rendering: optimizeLegibility;
+    -ms-text-rendering: optimizeLegibility;
+    -o-text-rendering: optimizeLegibility;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    -o-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+
+a.symbol:before {
+    content: attr(title);
+    margin-right: 0.3em;
+    font-size: 130%;
+}
+
+a {
+    color: #ce7e00;
+}
+
+a:hover {
+    text-decoration: none;
+    background-color: #f2ab3c;
+    color: #2d2d2d;
+    padding: 5px 0px;
+}
+
 body {
-    background-color: #fefefe;
+    background-color: #fafafa;
     color: #2d2d2d;
     font-family: 'Bitter', serif;
     font-size: 14px;
@@ -19,8 +66,14 @@ h2 {
     filter:alpha(opacity=60);
 }
 
+/* ===========================================================================
+ * HEADER STYLES
+ * ======================================================================== */
+
 .miniBio {
-    background-color: #efefef;
+    background-color: #2d2d2d;
+    color: #ababab;
+    font-family: 'Helvetica', sans-serif;
     margin: 30px 0px;
     padding: 30px 0px;
 }
@@ -35,12 +88,9 @@ h2 {
     margin-right: 20px;
 }
 
-.navbar-inner {
-    background: none;
-    border: none;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-}
+/* ===========================================================================
+ * ARTICLE LIST STYLES
+ * ======================================================================== */
 
 .articleListItem {
     border-top: 1px solid #d2d2d2;
@@ -78,10 +128,14 @@ h2 {
     color: #232323;
 }
 
-.articleListItem h1 a:hover {
-    text-decoration: none;
-    background-color: yellow;
+.pagination {
+    margin-top: 60px;
 }
+
+
+/* ===========================================================================
+ * DETAIL ARTICLE STYLES
+ * ======================================================================== */
 
 .articleDetailHeadline h1 {
     font-size: 72px;
@@ -103,10 +157,28 @@ h2 {
     text-align: justify;
 }
 
-.pagination {
-    margin-top: 60px;
+/* ===========================================================================
+ * FOOTER STYLES
+ * ======================================================================== */
+
+.footer {
+    background-color: #cfcfcf;
+    padding: 60px 0px;
+    margin-top: 30px;
 }
 
+.footer ul {
+    list-style-type: none;
+    margin: 0px;
+}
+
+.footer ul a {
+    color: #2d2d2d;
+}
+
+/* ===========================================================================
+ * RESPONSIVE STYLES
+ * ======================================================================== */
 
 @media (max-width: 767px) {
     body {
@@ -154,4 +226,4 @@ h2 {
         margin-top: 10px;
         margin-bottom: 10px;
     }
-} 
+}
