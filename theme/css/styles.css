@@ -78,6 +78,10 @@ h2 {
     padding: 30px 0px;
 }
 
+.brand:hover {
+    background-color: inherit;
+}
+
 .brand img {
     width: 80px;
     height: 80px;
@@ -145,7 +149,7 @@ h2 {
 .articleDetailHeadline h2 {
     font-size: 30px;
     line-height: 30px;
-    margin-top: 10px;
+    margin-top: 30px;
     margin-bottom: 60px;
 }
 
