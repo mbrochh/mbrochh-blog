@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -45,17 +47,19 @@ and pieces of wisdom that amazed me. You can find the last post here:
 <h1>git aliases</h1>
 <h1>git defaults</h1>
 <p>http://jk.gs/git-config.html</p>
-<div class="highlight"><pre><span class="k">[push]</span>
-<span class="na">default</span> <span class="o">=</span> <span class="s">upstream</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">[</span>push<span class="o">]</span>
+<span class="nv">default</span> <span class="o">=</span> upstream
 </pre></div>
-
+</td></tr></table>
 
 <h1>factory_boy</h1>
 <h1>access django from parallels</h1>
-<div class="highlight"><pre>ifconfig -a
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>ifconfig -a
 ./manage.py runserver 192.168.0.10:8000
 </pre></div>
-
+</td></tr></table>
 
 <p>In Parallels, start IE and browse to http://192.168.0.10:8000</p>
 <h1>Chinese translations in Django</h1>
@@ -63,7 +67,18 @@ and pieces of wisdom that amazed me. You can find the last post here:
 <p>Put <code>zh-cn</code> in your settings.py but run <code>makemessages -l zh_CN</code></p>
 <h1>Replacing a field on a form</h1>
 <p>Let's assume:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">FooBar</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FooBar</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">foo</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
     <span class="n">bar</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
 
@@ -76,7 +91,7 @@ and pieces of wisdom that amazed me. You can find the last post here:
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">FooBar</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Usually we would instantiate the form <code>FormFooBar</code> which gets all it's fields
 created by the model. However, in the superclass, <code>FormBar</code> we would like
@@ -85,18 +100,53 @@ of the IntegerField which would display a different value than the one that
 is actually saved on the instance.</p>
 <p>The code above would still show the value from the instance. It took me quite
 some time to find out that we also need to add this line after:</p>
-<div class="highlight"><pre><span class="o">...</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FooBar</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+    <span class="n">bar</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">FormBar</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FormBar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&#39;bar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MyCustomIntegerField</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">FormFooBar</span><span class="p">(</span><span class="n">FormBar</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">FooBar</span>
+</pre></div>
+</td></tr></table>
+
+<p>Usually we would instantiate the form <code>FormFooBar</code> which gets all it's fields
+created by the model. However, in the superclass, <code>FormBar</code> we would like
+to replace the automatically created field <code>bar</code> by a custom implementation
+of the IntegerField which would display a different value than the one that
+is actually saved on the instance.</p>
+<p>The code above would still show the value from the instance. It took me quite
+some time to find out that we also need to add this line after:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">...</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s">&#39;bar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MyCustomIntegerField</span><span class="p">()</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">initial</span><span class="p">[</span><span class="s">&#39;bar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_custom_calue</span>
 </pre></div>
-
+</td></tr></table>
 
 <h1>Django and Sphinx autodoc</h1>
 <ul>
 <li>
 <p>add the following to conf.py</p>
-<p>::py
-sys.path.insert(0, os.path.abspath('../website/webapps/django/'))</p>
+<h1>!python</h1>
+<p>sys.path.insert(0, os.path.abspath('../website/webapps/django/'))</p>
 <h1>setup django</h1>
 <p>import settings
 from django.core.management import setup_environ
@@ -104,8 +154,8 @@ setup_environ(settings)</p>
 </li>
 <li>
 <p>change this in Makefile</p>
-<p>::sh
-SPHINXBUILD   = python $(shell which sphinx-build)</p>
+<h1>!python</h1>
+<p>SPHINXBUILD   = python $(shell which sphinx-build)</p>
 </li>
 <li>
 <p>run sphinx-apidoc -f -o api ../website/webapps/django/project</p>

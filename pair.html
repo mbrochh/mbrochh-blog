@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -88,37 +90,56 @@ hacker. At least I could come up with a dozen evil pranks immediately...</p>
 <p>So let's create a new user called <code>pairprogger</code>. For OSX I have created a
 file <code>create_user.sh</code>. Replace the three variables at the top and execute it.</p>
 <p><strong>OSX</strong></p>
-<div class="highlight"><pre><span class="c"># find out your staff group id (for me it is 20)</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># find out your staff group id (for me it is 20)</span>
 <span class="c"># dscacheutil -q group</span>
-<span class="n">STAFF_GROUP_ID</span><span class="p">=</span><span class="n">XX</span>
-<span class="n">USERNAME</span><span class="p">=</span><span class="s">&quot;pairprogger&quot;</span>
-<span class="n">PASSWORD</span><span class="p">=</span><span class="s">&quot;yourpassword&quot;</span>
+<span class="nv">STAFF_GROUP_ID</span><span class="o">=</span>XX
+<span class="nv">USERNAME</span><span class="o">=</span><span class="s2">&quot;pairprogger&quot;</span>
+<span class="nv">PASSWORD</span><span class="o">=</span><span class="s2">&quot;yourpassword&quot;</span>
 
-<span class="n">MAXID</span><span class="p">=</span>$<span class="p">(</span><span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">list</span> <span class="o">/</span><span class="n">Users</span> <span class="n">UniqueID</span> <span class="o">|</span> <span class="n">awk</span> <span class="s">&#39;{print $2}&#39;</span> <span class="o">|</span> <span class="nb">sort</span> <span class="o">-</span><span class="n">ug</span> <span class="o">|</span> <span class="n">tail</span> <span class="o">-</span>1<span class="p">)</span>
-<span class="n">NEWID</span><span class="p">=</span>$<span class="p">((</span><span class="n">MAXID</span><span class="o">+</span>1<span class="p">))</span>
+<span class="nv">MAXID</span><span class="o">=</span><span class="k">$(</span>dscl . -list /Users UniqueID | awk <span class="s1">&#39;{print $2}&#39;</span> | sort -ug | tail -1<span class="k">)</span>
+<span class="nv">NEWID</span><span class="o">=</span><span class="k">$((</span>MAXID+1<span class="k">))</span>
 
-<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span>
-<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">UserShell</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span>
-<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">UniqueID</span> <span class="s">&quot;$NEWID&quot;</span>
-<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">PrimaryGroupID</span> $<span class="n">STAFF_GROUP_ID</span>
-<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">RealName</span> <span class="s">&quot;Pair Programmer&quot;</span>
-<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">NFSHomeDirectory</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span>
-<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">passwd</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> $<span class="n">PASSWORD</span>
-<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">append</span> <span class="o">/</span><span class="n">Groups</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">apple</span><span class="p">.</span><span class="n">access_ssh</span> <span class="n">GroupMembership</span> $<span class="n">USERNAME</span>
-<span class="n">sudo</span> <span class="n">createhomedir</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">u</span> $<span class="n">USERNAME</span>
+sudo dscl . -create /Users/<span class="nv">$USERNAME</span>
+sudo dscl . -create /Users/<span class="nv">$USERNAME</span> UserShell /bin/bash
+sudo dscl . -create /Users/<span class="nv">$USERNAME</span> UniqueID <span class="s2">&quot;$NEWID&quot;</span>
+sudo dscl . -create /Users/<span class="nv">$USERNAME</span> PrimaryGroupID <span class="nv">$STAFF_GROUP_ID</span>
+sudo dscl . -create /Users/<span class="nv">$USERNAME</span> RealName <span class="s2">&quot;Pair Programmer&quot;</span>
+sudo dscl . -create /Users/<span class="nv">$USERNAME</span> NFSHomeDirectory /Users/<span class="nv">$USERNAME</span>
+sudo dscl . -passwd /Users/<span class="nv">$USERNAME</span> <span class="nv">$PASSWORD</span>
+sudo dscl . -append /Groups/com.apple.access_ssh GroupMembership <span class="nv">$USERNAME</span>
+sudo createhomedir -c -u <span class="nv">$USERNAME</span>
 <span class="c"># make sure that there is /Users/pairprogger/ on your disk now</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>I wont take credit for this insane user creation script for OSX.
 This thread on serverfault about
 <a href="http://serverfault.com/questions/20702/how-do-i-create-user-accounts-from-the-terminal-in-mac-os-x-10-5">how to create a user account on OSX</a>
 certainly saved my ass.</p>
 <p><strong>Ubuntu</strong></p>
-<div class="highlight"><pre><span class="n">sudo</span> <span class="n">useradd</span> <span class="o">-</span><span class="n">m</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span> <span class="n">pairprogger</span>
-<span class="n">sudo</span> <span class="n">passwd</span> <span class="n">pairprogger</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>sudo useradd -m -s /bin/bash pairprogger
+sudo passwd pairprogger
 </pre></div>
-
+</td></tr></table>
 
 <p>You should be able to test this by logging out. The new user should appear
 on your login screen.</p>
@@ -130,10 +151,10 @@ and paste your colleagues public RSA keys into the <code>authorized_keys</code> 
 <p><strong>OSX / Ubuntu</strong></p>
 <div class="highlight"><pre><span class="n">su</span> <span class="o">-</span> <span class="n">pairprogger</span>
 <span class="n">mkdir</span> <span class="p">.</span><span class="n">ssh</span>
-<span class="n">chmod</span> 700 <span class="p">.</span><span class="n">ssh</span>
+<span class="n">chmod</span> <span class="mi">700</span> <span class="p">.</span><span class="n">ssh</span>
 <span class="n">cd</span> <span class="p">.</span><span class="n">ssh</span>
 <span class="n">touch</span> <span class="n">authorized_keys</span>
-<span class="n">chmod</span> 600 <span class="n">authorized_keys</span>
+<span class="n">chmod</span> <span class="mi">600</span> <span class="n">authorized_keys</span>
 </pre></div>
 
 
@@ -149,14 +170,14 @@ steps.</p>
 <p>Note down your <a href="https://duckduckgo.com/?q=ip">public IP</a></p>
 <p>Note down your local IP:</p>
 <p><strong>OSX</strong></p>
-<div class="highlight"><pre><span class="n">ipconfig</span> <span class="n">getifaddr</span> <span class="n">en1</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>ipconfig getifaddr en1
 </pre></div>
-
+</td></tr></table>
 
 <p><strong>Ubuntu</strong></p>
-<div class="highlight"><pre><span class="n">ifconfig</span> <span class="n">wlan0</span> <span class="o">|</span> <span class="n">grep</span> <span class="s">&#39;inet addr&#39;</span> <span class="o">|</span> <span class="n">sed</span> <span class="s">&#39;s/.*inet addr:\([0-9.]*\).*/\1/&#39;</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>ifconfig wlan0 | grep <span class="s1">&#39;inet addr&#39;</span> | sed <span class="s1">&#39;s/.*inet addr:\([0-9.]*\).*/\1/&#39;</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>To setup port forwarding go to <code>192.168.0.1</code>. This IP might differ on your
 router. Usually you should find a section for advanced settings which should
@@ -177,21 +198,28 @@ via bruteforce.</p>
 <p><strong>OSX</strong></p>
 <p>Go to <code>System Preferences</code> --&gt; <code>Sharing</code> --&gt; <code>Remote login</code>. Add
 <code>Pair Programmer</code> to the list <code>Allow access for</code>.</p>
-<div class="highlight"><pre><span class="n">sudo</span> <span class="n">vim</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sshd_config</span>
-# <span class="n">Set</span> <span class="n">PasswordAuthentication</span> <span class="n">to</span> <span class="n">no</span>
-# <span class="n">Set</span> <span class="n">ChallengeResponseAuthentication</span> <span class="n">to</span> <span class="n">no</span>
-# <span class="n">Set</span> <span class="n">UsePAM</span> <span class="n">to</span> <span class="n">no</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre>sudo vim /etc/sshd_config
+<span class="c"># Set PasswordAuthentication to no</span>
+<span class="c"># Set ChallengeResponseAuthentication to no</span>
+<span class="c"># Set UsePAM to no</span>
 </pre></div>
-
+</td></tr></table>
 
 <p><strong>Ubuntu</strong></p>
-<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openssh</span><span class="o">-</span><span class="n">server</span>
-<span class="n">sudo</span> <span class="n">vim</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">sshd_config</span>
-# <span class="n">Set</span> <span class="n">PasswordAuthentication</span> <span class="n">to</span> <span class="n">no</span>
-# <span class="n">Add</span> <span class="n">the</span> <span class="n">following</span> <span class="n">to</span> <span class="n">the</span> <span class="n">bottom</span> <span class="n">of</span> <span class="n">the</span> <span class="n">file</span><span class="p">:</span>
-# <span class="n">AllowUsers</span> <span class="n">pairprogger</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre>sudo apt-get install openssh-server
+sudo vim /etc/ssh/sshd_config
+<span class="c"># Set PasswordAuthentication to no</span>
+<span class="c"># Add the following to the bottom of the file:</span>
+<span class="c"># AllowUsers pairprogger</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Please note that I am not a security expert. I have added these ssh
 restrictions while writing this post and have not tested them thoroughly. It
@@ -204,30 +232,32 @@ further restrict this account, please leave them in the comments.</p>
 <p>Since wemux seems to be based on tmux, you need to install both, but that
 should be a no-brainer:</p>
 <p><strong>OSX</strong></p>
-<div class="highlight"><pre><span class="n">brew</span> <span class="n">install</span> <span class="n">wemux</span>
-<span class="n">brew</span> <span class="n">install</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">downloads</span><span class="o">/</span><span class="n">zolrath</span><span class="o">/</span><span class="n">wemux</span><span class="o">/</span><span class="n">wemux</span><span class="p">.</span><span class="n">rb</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>brew install wemux
+brew install https://github.com/downloads/zolrath/wemux/wemux.rb
 </pre></div>
-
+</td></tr></table>
 
 <p><strong>Ubuntu</strong></p>
-<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">tmux</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>sudo apt-get install tmux
 </pre></div>
-
+</td></tr></table>
 
 <p>On Ubuntu follow the instructions at https://github.com/zolrath/wemux for
 manual installation.</p>
 <h2>Step 6: Start the wemux server</h2>
 <p>You are ready to go. Type the following command:</p>
-<div class="highlight"><pre><span class="n">wemux</span> <span class="n">start</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>wemux start
 </pre></div>
-
+</td></tr></table>
 
 <h2>Step 7: Join the wemux server</h2>
 <p>Now tell your friend to join you:</p>
-<div class="highlight"><pre><span class="n">ssh</span> <span class="n">pairprogger</span><span class="p">@</span><span class="n">your</span><span class="o">-</span><span class="n">public</span><span class="o">-</span><span class="n">ip</span>
-<span class="n">wemux</span> <span class="n">attach</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>ssh pairprogger@your-public-ip
+wemux attach
 </pre></div>
-
+</td></tr></table>
 
 <h2>Bonus: Your first tmux config</h2>
 <p>If you used GNU screen and if you are a Vim user, you will most likely find the 

@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -80,17 +82,19 @@ website and retrieve a download link for the latest version <a href="http://www.
 <h2>Update zsh</h2>
 <p>Something in my zsh seemed to be broken because whenever I tried to use TAB
 for folder completion I got this error:</p>
-<div class="highlight"><pre><span class="p">(</span><span class="n">eval</span><span class="p">):</span><span class="n">setopt</span><span class="p">:</span>3<span class="p">:</span> <span class="n">no</span> <span class="n">such</span> <span class="n">option</span><span class="p">:</span> <span class="n">NO_ignoreclosebraces</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">(</span><span class="nb">eval</span><span class="o">)</span>:setopt:3: no such option: NO_ignoreclosebraces
 </pre></div>
-
+</td></tr></table>
 
 <p>Updating zsh can only be done if you went through the various what-the-fucks of
 updating your Command Line Tools first, after that it simply is:</p>
-<div class="highlight"><pre><span class="n">brew</span> <span class="n">update</span>
-<span class="n">brew</span> <span class="n">uninstall</span> <span class="n">zsh</span>
-<span class="n">brew</span> <span class="n">install</span> <span class="n">zsh</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre>brew update
+brew uninstall zsh
+brew install zsh
 </pre></div>
-
+</td></tr></table>
 
 <p>And fixed my problem right away.</p>
 <h2>Re-Install Python</h2>
@@ -101,31 +105,40 @@ anything into my virtualenvs because pip always tried to install it into
 denied</code> errors. <code>brew list</code> showed that I actually installed Python via
 homebrew for some reason (I assume because of pygame), so I thought it might
 be a good idea to re-install Python:</p>
-<div class="highlight"><pre><span class="n">brew</span> <span class="n">uninstall</span> <span class="n">python</span>
-<span class="n">brew</span> <span class="n">install</span> <span class="n">python</span> <span class="o">--</span><span class="n">framework</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>brew uninstall python
+brew install python --framework
 </pre></div>
-
+</td></tr></table>
 
 <p>After this I ran into several other problems. I'm not sure if this is really
 necessary but setting up my <code>PATH</code> like this seemed to help:</p>
-<div class="highlight"><pre><span class="n">export</span> <span class="n">PATH</span><span class="p">=</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">sbin</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">python</span><span class="p">:</span>$<span class="n">PATH</span>
-# <span class="n">Include</span> <span class="n">user</span><span class="o">&#39;</span><span class="n">s</span> <span class="n">bin</span> <span class="n">folder</span><span class="p">.</span>
-<span class="k">if</span> <span class="p">[</span> <span class="o">-</span><span class="n">d</span> &quot;$<span class="n">HOME</span><span class="o">/</span><span class="n">bin</span>&quot; <span class="p">]</span> <span class="p">;</span> <span class="n">then</span>
-    <span class="n">export</span> <span class="n">PATH</span><span class="p">=</span>&quot;$<span class="n">HOME</span><span class="o">/</span><span class="n">bin</span><span class="p">:</span>$<span class="n">PATH</span>&quot;
-<span class="n">fi</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/bin:/usr/local/sbin:/usr/local/share/python:<span class="nv">$PATH</span>
+<span class="c"># Include user&#39;s bin folder.</span>
+<span class="k">if</span> <span class="o">[</span> -d <span class="s2">&quot;$HOME/bin&quot;</span> <span class="o">]</span> ; <span class="k">then</span>
+<span class="k">    </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;$HOME/bin:$PATH&quot;</span>
+<span class="k">fi</span>
 </pre></div>
-
+</td></tr></table>
 
 <h2>Re-Install Python stuff</h2>
 <p>It turned out that I could no longer activate my virtualenvs. Here is what I
 had to do:</p>
-<div class="highlight"><pre><span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">pip</span>
-<span class="n">sudo</span> <span class="n">easy_install</span> <span class="n">mercurial</span>
-<span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">virtualenv</span>
-<span class="n">sduo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">virtualenvwrapper</span>
-<span class="n">sudo</span> <span class="n">touch</span> <span class="o">/</span><span class="n">System</span><span class="o">/</span><span class="n">Library</span><span class="o">/</span><span class="n">Frameworks</span><span class="o">/</span><span class="n">Python</span><span class="p">.</span><span class="n">framework</span><span class="o">/</span><span class="n">Versions</span><span class="o">/</span>2<span class="p">.</span>7<span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python2</span><span class="p">.</span>7<span class="o">/</span><span class="n">distutils</span><span class="o">/</span><span class="n">__init__</span><span class="p">.</span><span class="n">py</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre>sudo easy_install pip
+sudo easy_install mercurial
+sudo pip install virtualenv
+sduo pip install virtualenvwrapper
+sudo touch /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/__init__.py
 </pre></div>
-
+</td></tr></table>
 
 <p>The last one is wonderful. Somehow Apple ships the Python stuff as compiled
 <code>.pyc</code> files without the <code>.py</code> files. I can't remember if it was when I
@@ -134,11 +147,13 @@ that <code>/distutils/__init__.py</code> cannot be found. Google told me that I 
 just create that missing <code>.py</code> file. <strong>What the fuck?</strong></p>
 <p>I also re-installed some packages that I like to install globally instead of
 installing them into each and every virtualenv:</p>
-<div class="highlight"><pre><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">psycopg2</span>
-<span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">mysql</span><span class="o">-</span><span class="n">python</span>
-<span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">PIL</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre>sudo pip install psycopg2
+sudo pip install mysql-python
+sudo pip install PIL
 </pre></div>
-
+</td></tr></table>
 
 <h2>Re-Install Java</h2>
 <p>When I tried to start solr a pop-up offered to download the latest Java version.</p>

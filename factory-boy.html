@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -47,7 +49,15 @@ a generic foreign key. An example could be a messaging app where messages can
 attached to any other object (when you think about Facebook, a message can
 be sent to another User, or to his profile timeline, or to a status update
 and so on):</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Message</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Message</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;auth.User&#39;</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">4000</span><span class="p">)</span>
     <span class="n">creation_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -57,12 +67,19 @@ and so on):</p>
     <span class="n">object_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PositiveIntegerField</span><span class="p">()</span>
     <span class="n">content_object</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">GenericForeignKey</span><span class="p">(</span><span class="s">&#39;content_type&#39;</span><span class="p">,</span> <span class="s">&#39;object_id&#39;</span><span class="p">)</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>I like to maintain 100% code coverage in all my projects, so I will even test
 seemingly mundane things like instantiation and saving of all my models. A test
 for this <code>Message</code> model could look like this:</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
 <span class="kn">from</span> <span class="nn">messages.tests.factories</span> <span class="kn">import</span> <span class="n">MessageFactory</span>
 
 <span class="k">class</span> <span class="nc">MessageTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
@@ -71,7 +88,7 @@ for this <code>Message</code> model could look like this:</p>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">MessageFactory</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Granted, this is a very simple test but as the model grows this test case would
 obviously grow as well. The interesting question is: How can we write the
@@ -87,18 +104,22 @@ table when you run <code>syncdb</code> or <code>migrate</code>. So the better so
 a <code>test_app</code> inside of your reusable app and only add that app to
 <code>INSTALLED_APPS</code> in your <code>test_settings.py</code>.</p>
 <p>So let's create a few new files:</p>
-<div class="highlight"><pre>yourapp/tests/factories.py
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre>yourapp/tests/factories.py
 yourapp/tests/models_tests.py
 yourapp/tests/test_app/__init__.py
 yourapp/tests/test_app/models.py
 </pre></div>
-
+</td></tr></table>
 
 <p>Your test app's <code>models.py</code> should look like this:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">DummyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">DummyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Now we can create our reusable app's factory. There are three things to notice
 here:</p>
@@ -116,7 +137,21 @@ here:</p>
    of the generic foreign key.</li>
 </ol>
 <p>Here is how your <code>factories.py</code> should look like:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">factory</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">factory</span>
 <span class="kn">from</span> <span class="nn">django_libs.tests.factories</span> <span class="kn">import</span> <span class="n">UserFactory</span>
 <span class="kn">from</span> <span class="nn">yourapp.tests.test_app.models</span> <span class="kn">import</span> <span class="n">DummyModel</span>
 <span class="kn">from</span> <span class="nn">yourapp.models</span> <span class="kn">import</span> <span class="n">Message</span>
@@ -132,7 +167,7 @@ here:</p>
     <span class="n">creation_date</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">LazyAttribute</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">now</span><span class="p">())</span>
     <span class="n">content_object</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">SubFactory</span><span class="p">(</span><span class="n">DummyModelFactory</span><span class="p">)</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Now, whenever you want to create a <code>Message</code> in your tests, just call
 <code>MessageFactory()</code> and there you are. Your message will be tied to an
@@ -141,10 +176,11 @@ instance of a <code>DummyModel</code> which will be created automagically as wel
 message saying that there is no table for the <code>DummyModel</code> in your test
 database. In order to solve this you should create a <code>test_settings.py</code> which
 adds the <code>test_app</code> to your <code>INSTALLED_APPS</code>:</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">myproject.settings</span> <span class="kn">import</span> <span class="o">*</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">myproject.settings</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">INSTALLED_APPS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;yourapp.tests.test_app&#39;</span><span class="p">)</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Of course your <code>test_settings.py</code> needs a lot of other stuff. To speed up the
 tests you could to change the db backend to an in-memory sqlite database and

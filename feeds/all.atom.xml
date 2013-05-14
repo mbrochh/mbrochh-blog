@@ -4,7 +4,15 @@ a generic foreign key. An example could be a messaging app where messages can
 attached to any other object (when you think about Facebook, a message can
 be sent to another User, or to his profile timeline, or to a status update
 and so on):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;auth.User&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;creation_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateTimeField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto_now_add&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -14,12 +22,19 @@ and so on):&lt;/p&gt;
     &lt;span class="n"&gt;object_id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;PositiveIntegerField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
     &lt;span class="n"&gt;content_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;generic&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GenericForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;content_type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;object_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;I like to maintain 100% code coverage in all my projects, so I will even test
 seemingly mundane things like instantiation and saving of all my models. A test
 for this &lt;code&gt;Message&lt;/code&gt; model could look like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;TestCase&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;TestCase&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;messages.tests.factories&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MessageFactory&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MessageTestCase&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;TestCase&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -28,7 +43,7 @@ for this &lt;code&gt;Message&lt;/code&gt; model could look like this:&lt;/p&gt;
         &lt;span class="n"&gt;obj&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MessageFactory&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertTrue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Granted, this is a very simple test but as the model grows this test case would
 obviously grow as well. The interesting question is: How can we write the
@@ -44,18 +59,22 @@ table when you run &lt;code&gt;syncdb&lt;/code&gt; or &lt;code&gt;migrate&lt;/co
 a &lt;code&gt;test_app&lt;/code&gt; inside of your reusable app and only add that app to
 &lt;code&gt;INSTALLED_APPS&lt;/code&gt; in your &lt;code&gt;test_settings.py&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;So let's create a few new files:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;yourapp/tests/factories.py
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;yourapp/tests/factories.py
 yourapp/tests/models_tests.py
 yourapp/tests/test_app/__init__.py
 yourapp/tests/test_app/models.py
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Your test app's &lt;code&gt;models.py&lt;/code&gt; should look like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DummyModel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DummyModel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;blank&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Now we can create our reusable app's factory. There are three things to notice
 here:&lt;/p&gt;
@@ -73,7 +92,21 @@ here:&lt;/p&gt;
    of the generic foreign key.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Here is how your &lt;code&gt;factories.py&lt;/code&gt; should look like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;factory&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;factory&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django_libs.tests.factories&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;UserFactory&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp.tests.test_app.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DummyModel&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Message&lt;/span&gt;
@@ -89,7 +122,7 @@ here:&lt;/p&gt;
     &lt;span class="n"&gt;creation_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;factory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;LazyAttribute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
     &lt;span class="n"&gt;content_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;factory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SubFactory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DummyModelFactory&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Now, whenever you want to create a &lt;code&gt;Message&lt;/code&gt; in your tests, just call
 &lt;code&gt;MessageFactory()&lt;/code&gt; and there you are. Your message will be tied to an
@@ -98,10 +131,11 @@ instance of a &lt;code&gt;DummyModel&lt;/code&gt; which will be created automagi
 message saying that there is no table for the &lt;code&gt;DummyModel&lt;/code&gt; in your test
 database. In order to solve this you should create a &lt;code&gt;test_settings.py&lt;/code&gt; which
 adds the &lt;code&gt;test_app&lt;/code&gt; to your &lt;code&gt;INSTALLED_APPS&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;myproject.settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;myproject.settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
 &lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;yourapp.tests.test_app&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Of course your &lt;code&gt;test_settings.py&lt;/code&gt; needs a lot of other stuff. To speed up the
 tests you could to change the db backend to an in-memory sqlite database and
@@ -130,33 +164,34 @@ page and download new versions of bootstrap over and over again.&lt;/p&gt;
 done:&lt;/p&gt;
 &lt;h2&gt;Add Bootstrap as a submodule&lt;/h2&gt;
 &lt;p&gt;First I add bootstrap as a git submodule to my Django projects:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;submodule&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;twitter&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;submodules&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;git submodule add git://github.com/twitter/bootstrap.git myproject/submodules/bootstrap
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;It is important to add the submodule to a path inside your project root. This
 way you can place symlinks easily with all relative paths.&lt;/p&gt;
 &lt;h2&gt;Setup your css folder&lt;/h2&gt;
 &lt;p&gt;Surely you will have a folder that holds your project's CSS files somewhere in
 your project. For my Django projects that is usually:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;myproject/myproject/static/css/
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Inside of this folder I like to create a &lt;code&gt;libs&lt;/code&gt; folder which holds CSS files
 of third party plugins or frameworks that I use. In our case this would be
 bootstrap, so let's create a bootstrap folder:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;mkdir myproject/myproject/static/css/libs/bootstrap/
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Symlink the bootstrap files&lt;/h2&gt;
 &lt;p&gt;So here is the first part of the trick. Inside of the &lt;code&gt;bootstrap&lt;/code&gt; which we have
 just created, we symlink all the &lt;code&gt;.less&lt;/code&gt; files of the Bootstrap framework:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
-&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;submodules&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;&lt;span class="o"&gt;/*&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;myproject/myproject/static/css/libs/bootstrap/
+ln -s ../../../../../submodules/bootstrap/less/* .
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;It would be better to just symlink the whole &lt;code&gt;less&lt;/code&gt; folder instead of all files
 but unfortunately &lt;code&gt;lessc&lt;/code&gt; is not able to follow such symlinks and would fail
@@ -164,54 +199,78 @@ to compile the &lt;code&gt;bootstrap.less&lt;/code&gt; file.&lt;/p&gt;
 &lt;h2&gt;Prepare the working files&lt;/h2&gt;
 &lt;p&gt;Here comes the second part of the trick. We will create copies of the files
 &lt;code&gt;bootstrap.less&lt;/code&gt; and &lt;code&gt;responsive.less&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
-&lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="n"&gt;libs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
-&lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="n"&gt;libs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;responsive&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
-&lt;span class="n"&gt;touch&lt;/span&gt; &lt;span class="n"&gt;my&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;variables&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;
-&lt;span class="n"&gt;touch&lt;/span&gt; &lt;span class="n"&gt;styles&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;myproject/myproject/static/css/
+cp libs/bootstrap/bootstrap.less .
+cp libs/bootstrap/responsive.less .
+touch my-variables.less
+touch styles.less
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;I know, I know, we have just symlinked them, why create another copy now? The
 reason is that we won't use the symlinks (you could delete them). Instead
 we will make a three simple changes to those two files. First we need to change
 the paths to all the imported &lt;code&gt;.less&lt;/code&gt; files:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sed&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;s/import &amp;quot;/import &amp;quot;libs\/bootstrap\//g&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;
-&lt;span class="n"&gt;sed&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;s/import &amp;quot;/import &amp;quot;libs\/bootstrap\//g&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;responsive&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sed -i -e &lt;span class="s1"&gt;&amp;#39;s/import &amp;quot;/import &amp;quot;libs\/bootstrap\//g&amp;#39;&lt;/span&gt; bootstrap.less
+sed -i -e &lt;span class="s1"&gt;&amp;#39;s/import &amp;quot;/import &amp;quot;libs\/bootstrap\//g&amp;#39;&lt;/span&gt; responsive.less
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Next we will add an import of our own variables file to both files. The import
 should come right after the import of the original &lt;code&gt;variables.less&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;# Excerpt from your bootstrap.less copy:&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;# Excerpt from your bootstrap.less copy:&lt;/span&gt;
 
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="c1"&gt;// CSS Reset&lt;/span&gt;
-&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;libs/bootstrap/reset.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="cp"&gt;@import&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;libs/bootstrap/reset.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="c1"&gt;// Core variables and mixins&lt;/span&gt;
-&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;libs/bootstrap/variables.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="cp"&gt;@import&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;libs/bootstrap/variables.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;my-variables.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Our own variables overrides&lt;/span&gt;
+&lt;span class="cp"&gt;@import&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;my-variables.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Our own variables overrides&lt;/span&gt;
 
-&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;libs/bootstrap/mixins.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="cp"&gt;@import&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;libs/bootstrap/mixins.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Finally we will include our very own &lt;code&gt;styles.less&lt;/code&gt; at the bottom of
 &lt;code&gt;bootstrap.less&lt;/code&gt;. Styles in this file would override everything else from
 bootstrap:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;# Excerpt from your bootstrap.less copy:&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;# Excerpt from your bootstrap.less copy:&lt;/span&gt;
 
 &lt;span class="p"&gt;...&lt;/span&gt;
 &lt;span class="c1"&gt;// Utility classes&lt;/span&gt;
-&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;libs/bootstrap/utilities.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Has to be last to override when necessary&lt;/span&gt;
+&lt;span class="cp"&gt;@import&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;libs/bootstrap/utilities.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Has to be last to override when necessary&lt;/span&gt;
 
 &lt;span class="c1"&gt;// Our own stuff&lt;/span&gt;
-&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;styles.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="cp"&gt;@import&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;styles.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Repeat the last two steps for &lt;code&gt;responsive.less&lt;/code&gt; as well, of course here you
 would add an import to &lt;code&gt;styles-responsive.less&lt;/code&gt; instead of &lt;code&gt;styles.less&lt;/code&gt; at the 
@@ -275,7 +334,13 @@ Here is what I learned:&lt;/p&gt;
 for describing the process nice enough for a dummy like me.&lt;/p&gt;
 &lt;p&gt;Following his instructions I made sure that I have not activated any
 virtualenv, then I ran&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;pip install supervisor
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;pip install supervisor
 
 &lt;span class="c"&gt;# Let&amp;#39;s create some folders we will need later on&lt;/span&gt;
 mkdir ~/tmp
@@ -283,31 +348,49 @@ mkdir -p ~/mylogs/cron
 mkdir ~/etc &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; ~/etc
 vim supervisor.conf
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Here is what my &lt;code&gt;supervisor.conf&lt;/code&gt; looks like. Of course you would need to
 insert your webfaction username and adjust the path to your solr installation:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[unix_http_server]&lt;/span&gt;
-&lt;span class="na"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/username/tmp/supervisor.sock&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;[&lt;/span&gt;unix_http_server&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/home/username/tmp/supervisor.sock
 
-&lt;span class="k"&gt;[supervisord]&lt;/span&gt;
-&lt;span class="na"&gt;logfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/username/mylogs/supervisord.log&lt;/span&gt;
-&lt;span class="na"&gt;logfile_maxbytes&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;50MB&lt;/span&gt;
-&lt;span class="na"&gt;logfile_backups&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;10&lt;/span&gt;
-&lt;span class="na"&gt;loglevel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;info&lt;/span&gt;
-&lt;span class="na"&gt;pidfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/username/tmp/supervisord.pid&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;supervisord&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;logfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/home/username/mylogs/supervisord.log
+&lt;span class="nv"&gt;logfile_maxbytes&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;50MB
+&lt;span class="nv"&gt;logfile_backups&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;10
+&lt;span class="nv"&gt;loglevel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;info
+&lt;span class="nv"&gt;pidfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/home/username/tmp/supervisord.pid
 
-&lt;span class="k"&gt;[rpcinterface:supervisor]&lt;/span&gt;
-&lt;span class="na"&gt;supervisor.rpcinterface_factory&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;supervisor.rpcinterface:make_main_rpcinterface&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;rpcinterface:supervisor&lt;span class="o"&gt;]&lt;/span&gt;
+supervisor.rpcinterface_factory &lt;span class="o"&gt;=&lt;/span&gt; supervisor.rpcinterface:make_main_rpcinterface
 
-&lt;span class="k"&gt;[supervisorctl]&lt;/span&gt;
-&lt;span class="na"&gt;serverurl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;unix:///home/username/tmp/supervisor.sock&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;supervisorctl&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;serverurl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;unix:///home/username/tmp/supervisor.sock
 
-&lt;span class="k"&gt;[program:solr]&lt;/span&gt;
-&lt;span class="na"&gt;directory&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/username/opt/apache-solr-3.5.0/example&lt;/span&gt;
-&lt;span class="na"&gt;command&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;java -Djava.util.logging.config.file=logging.properties -jar start.jar&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;program:solr&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;directory&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/home/username/opt/apache-solr-3.5.0/example
+&lt;span class="nb"&gt;command&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;java -Djava.util.logging.config.file&lt;span class="o"&gt;=&lt;/span&gt;logging.properties -jar start.jar
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;The meaning of all these config sections should be obvious and is very well
 documented in the &lt;a href="http://supervisord.org/configuration.html"&gt;supervisor configuration documentation&lt;/a&gt;.&lt;/p&gt;
@@ -319,20 +402,31 @@ made things very easy.&lt;/p&gt;
 &lt;p&gt;Just create the file &lt;code&gt;logging.properties&lt;/code&gt; in the same folder where solr's
 &lt;code&gt;start.jar&lt;/code&gt; resides. Mine looks like this (again, replace username with your
 webfaction account name):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Default global logging level:&lt;/span&gt;
-&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;INFO&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Default global logging level:&lt;/span&gt;
+.level &lt;span class="o"&gt;=&lt;/span&gt; INFO
 
 &lt;span class="c"&gt;# Write to a file:&lt;/span&gt;
-&lt;span class="n"&gt;handlers&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileHandler&lt;/span&gt;
+&lt;span class="nv"&gt;handlers&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; java.util.logging.FileHandler
 
 &lt;span class="c"&gt;# Write log messages in XML format:&lt;/span&gt;
 &lt;span class="c"&gt;# Use java.util.logging.SimpleFormatter to log like Solr logs to the screen by default&lt;/span&gt;
-&lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileHandler&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;formatter&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;XMLFormatter&lt;/span&gt;
+java.util.logging.FileHandler.formatter &lt;span class="o"&gt;=&lt;/span&gt; java.util.logging.XMLFormatter
 
 &lt;span class="c"&gt;# Log to the current working directory, with log files named solrxxx.log&lt;/span&gt;
-&lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileHandler&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nb"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mylogs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt;&lt;span class="c"&gt;%u.log&lt;/span&gt;
+java.util.logging.FileHandler.pattern &lt;span class="o"&gt;=&lt;/span&gt; /home/username/mylogs/solr%u.log
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;If you are wondering what different options for logging levels there are, have
 a look at this page about &lt;a href="http://lucidworks.lucidimagination.com/display/solr/Configuring+Logging"&gt;solr logging&lt;/a&gt;.
@@ -343,9 +437,9 @@ users send hundreds of search queries per day - each query would be logged.&lt;/
 cannot run the &lt;code&gt;supervisord&lt;/code&gt; command twice - it would warn you that another
 instance is already running. Therefore we can safely schedule a cronjob to run
 &lt;code&gt;supervisord&lt;/code&gt; every five minutes:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;*/&lt;/span&gt;5 &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;supervisord&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mylogs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;cron&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;supervisord&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nb"&gt;log&lt;/span&gt; 2&lt;span class="o"&gt;&amp;gt;&amp;amp;&lt;/span&gt;1
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;*/5 * * * * ~/bin/supervisord &amp;gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/mylogs/cron/supervisord.log 2&amp;gt;&amp;amp;1
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Manage solr&lt;/h2&gt;
 &lt;p&gt;If you ever need to start, stop or restart solr, you can do so via
@@ -359,7 +453,14 @@ being.&lt;/p&gt;
 &lt;p&gt;Every now and then you will introduce changes to your models and your search
 index that will require a rebuild of the index. I like to automate that with
 a Fabric task. Here it is:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;run_rebuild_index&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;run_rebuild_index&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Rebuilds the Solr index on the server.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;supervisorctl stop solr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -367,7 +468,8 @@ a Fabric task. Here it is:&lt;/p&gt;
     &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;supervisorctl start solr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;workon envname &amp;amp;&amp;amp; $HOME/webapps/django/myproject/manage.py rebuild_index --noinput&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="solr"></category><category term="webfaction"></category></entry><entry><title>RE: Developer Time</title><link href="http://martinbrochhaus.com/re-developer-time.html" rel="alternate"></link><updated>2012-12-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-12-06:re-developer-time.html</id><summary type="html">&lt;p&gt;I just came across &lt;a href="http://pydanny.com/developer-time.html"&gt;Daniel Greenfeld's post about Developer time&lt;/a&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</summary><category term="solr"></category><category term="webfaction"></category></entry><entry><title>RE: Developer Time</title><link href="http://martinbrochhaus.com/re-developer-time.html" rel="alternate"></link><updated>2012-12-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-12-06:re-developer-time.html</id><summary type="html">&lt;p&gt;I just came across &lt;a href="http://pydanny.com/developer-time.html"&gt;Daniel Greenfeld's post about Developer time&lt;/a&gt;
 and when I was halfway entering my reply into the comment field I realised
 that this might be worth a blog post on it's own. So here is my two cents:&lt;/p&gt;
 &lt;p&gt;I believe that there are good ways to maximise developer time, they might just
@@ -521,17 +623,19 @@ website and retrieve a download link for the latest version &lt;a href="http://w
 &lt;h2&gt;Update zsh&lt;/h2&gt;
 &lt;p&gt;Something in my zsh seemed to be broken because whenever I tried to use TAB
 for folder completion I got this error:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eval&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;&lt;span class="n"&gt;setopt&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;3&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt; &lt;span class="n"&gt;such&lt;/span&gt; &lt;span class="n"&gt;option&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;NO_ignoreclosebraces&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;eval&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;:setopt:3: no such option: NO_ignoreclosebraces
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Updating zsh can only be done if you went through the various what-the-fucks of
 updating your Command Line Tools first, after that it simply is:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
-&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;uninstall&lt;/span&gt; &lt;span class="n"&gt;zsh&lt;/span&gt;
-&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;zsh&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;brew update
+brew uninstall zsh
+brew install zsh
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;And fixed my problem right away.&lt;/p&gt;
 &lt;h2&gt;Re-Install Python&lt;/h2&gt;
@@ -542,31 +646,40 @@ anything into my virtualenvs because pip always tried to install it into
 denied&lt;/code&gt; errors. &lt;code&gt;brew list&lt;/code&gt; showed that I actually installed Python via
 homebrew for some reason (I assume because of pygame), so I thought it might
 be a good idea to re-install Python:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;uninstall&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt;
-&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;framework&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;brew uninstall python
+brew install python --framework
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;After this I ran into several other problems. I'm not sure if this is really
 necessary but setting up my &lt;code&gt;PATH&lt;/code&gt; like this seemed to help:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;export&lt;/span&gt; &lt;span class="n"&gt;PATH&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sbin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;$&lt;span class="n"&gt;PATH&lt;/span&gt;
-# &lt;span class="n"&gt;Include&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;bin&lt;/span&gt; &lt;span class="n"&gt;folder&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &amp;quot;$&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&amp;quot; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt;
-    &lt;span class="n"&gt;export&lt;/span&gt; &lt;span class="n"&gt;PATH&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&amp;quot;$&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;$&lt;span class="n"&gt;PATH&lt;/span&gt;&amp;quot;
-&lt;span class="n"&gt;fi&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/local/bin:/usr/local/sbin:/usr/local/share/python:&lt;span class="nv"&gt;$PATH&lt;/span&gt;
+&lt;span class="c"&gt;# Include user&amp;#39;s bin folder.&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -d &lt;span class="s2"&gt;&amp;quot;$HOME/bin&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; ; &lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="k"&gt;    &lt;/span&gt;&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;$HOME/bin:$PATH&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;fi&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Re-Install Python stuff&lt;/h2&gt;
 &lt;p&gt;It turned out that I could no longer activate my virtualenvs. Here is what I
 had to do:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;easy_install&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;easy_install&lt;/span&gt; &lt;span class="n"&gt;mercurial&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;virtualenv&lt;/span&gt;
-&lt;span class="n"&gt;sduo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;virtualenvwrapper&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;touch&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Library&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Frameworks&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Python&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;framework&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Versions&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;7&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;python2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;7&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;distutils&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sudo easy_install pip
+sudo easy_install mercurial
+sudo pip install virtualenv
+sduo pip install virtualenvwrapper
+sudo touch /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/__init__.py
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;The last one is wonderful. Somehow Apple ships the Python stuff as compiled
 &lt;code&gt;.pyc&lt;/code&gt; files without the &lt;code&gt;.py&lt;/code&gt; files. I can't remember if it was when I
@@ -575,11 +688,13 @@ that &lt;code&gt;/distutils/__init__.py&lt;/code&gt; cannot be found. Google tol
 just create that missing &lt;code&gt;.py&lt;/code&gt; file. &lt;strong&gt;What the fuck?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;I also re-installed some packages that I like to install globally instead of
 installing them into each and every virtualenv:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;psycopg2&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;mysql&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;PIL&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sudo pip install psycopg2
+sudo pip install mysql-python
+sudo pip install PIL
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Re-Install Java&lt;/h2&gt;
 &lt;p&gt;When I tried to start solr a pop-up offered to download the latest Java version.&lt;/p&gt;
@@ -602,84 +717,113 @@ and got curious.&lt;/p&gt;
 &lt;h2&gt;Install zeromq&lt;/h2&gt;
 &lt;p&gt;Since we cannot install anything as root, I chose to install zeromq into
 the folder &lt;code&gt;/opt/zeromq-2.2.0&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;
-&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;
-&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;
-&lt;span class="n"&gt;cd&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;
-&lt;span class="n"&gt;wget&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;download&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tar&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt;
-&lt;span class="n"&gt;tar&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;xvf&lt;/span&gt; &lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tar&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt;
-&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0
-&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;$&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0
-&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;mkdir -p &lt;span class="nv"&gt;$HOME&lt;/span&gt;/src
+mkdir -p &lt;span class="nv"&gt;$HOME&lt;/span&gt;/opt
+mkdir -p &lt;span class="nv"&gt;$HOME&lt;/span&gt;/etc
+&lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/src
+wget http://download.zeromq.org/zeromq-2.2.0.tar.gz
+tar -xvf zeromq-2.2.0.tar.gz
+&lt;span class="nb"&gt;cd &lt;/span&gt;zeromq-2.2.0
+./configure --prefix&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/opt/zeromq-2.2.0
+make &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Install Circus&lt;/h2&gt;
 &lt;p&gt;Now we can install Circus. I assume that you are using virtualenv and
 virtualenvwrapper:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;workon&lt;/span&gt; &lt;span class="n"&gt;yourvenv&lt;/span&gt;
-&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;circus&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;workon yourvenv
+pip install circus
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;This will fail because of the custom installation folder of zeromq. Thankfully
 the failed zeromq build will remain in your virtualenv's build folder so that
 you can install it again manually, this time giving it the path to your
 zeromq installation:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;your&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Venv&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
-&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;
-&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;pyzmq&lt;/span&gt;
-&lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;zmq&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0
-&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;circus&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /your/Venv/
+&lt;span class="nb"&gt;cd &lt;/span&gt;build
+&lt;span class="nb"&gt;cd &lt;/span&gt;pyzmq
+python setup.py install --zmq&lt;span class="o"&gt;=&lt;/span&gt;/home/username/opt/zeromq-2.2.0
+pip install circus
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Install Solr&lt;/h2&gt;
 &lt;p&gt;Now let's install Solr, following &lt;a href="http://django-haystack.readthedocs.org/en/latest/installing_search_engines.html#solr"&gt;this post&lt;/a&gt;.
 All you really need to do is download and unpack it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;
-&lt;span class="n"&gt;curl&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;O&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;apache&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mirrors&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tds&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lucene&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;3&lt;span class="p"&gt;.&lt;/span&gt;5&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;apache&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;3&lt;span class="p"&gt;.&lt;/span&gt;5&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tgz&lt;/span&gt;
-&lt;span class="n"&gt;tar&lt;/span&gt; &lt;span class="n"&gt;xvzf&lt;/span&gt; &lt;span class="n"&gt;apache&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;3&lt;span class="p"&gt;.&lt;/span&gt;5&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tgz&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/opt
+curl -O http://apache.mirrors.tds.net/lucene/solr/3.5.0/apache-solr-3.5.0.tgz
+tar xvzf apache-solr-3.5.0.tgz
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Configure Circus&lt;/h2&gt;
 &lt;p&gt;Create a &lt;code&gt;circus.ini&lt;/code&gt; file somewhere on your file system. The following file
 works great for me, just replace the path to your Solr installation
 (usually just change your username):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[circus]&lt;/span&gt;
-&lt;span class="na"&gt;check_delay&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;5&lt;/span&gt;
-&lt;span class="na"&gt;endpoint&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;tcp://127.0.0.1:5555&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;[&lt;/span&gt;circus&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;check_delay&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 5
+&lt;span class="nv"&gt;endpoint&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; tcp://127.0.0.1:5555
 
-&lt;span class="k"&gt;[watcher:solr]&lt;/span&gt;
-&lt;span class="na"&gt;cmd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;java&lt;/span&gt;
-&lt;span class="na"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;-Djava.util.logging.config.file=logging.properties -jar start.jar&lt;/span&gt;
-&lt;span class="na"&gt;working_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/&amp;lt;USERNAME&amp;gt;/opt/apache-solr-3.5.0/example&lt;/span&gt;
-&lt;span class="na"&gt;warmup_delay&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;0&lt;/span&gt;
-&lt;span class="na"&gt;numprocesses&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;span class="na"&gt;singleton&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;True&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;watcher:solr&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;cmd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; java
+&lt;span class="nv"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; -Djava.util.logging.config.file&lt;span class="o"&gt;=&lt;/span&gt;logging.properties -jar start.jar
+&lt;span class="nv"&gt;working_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; /home/&amp;lt;USERNAME&amp;gt;/opt/apache-solr-3.5.0/example
+&lt;span class="nv"&gt;warmup_delay&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 0
+&lt;span class="nv"&gt;numprocesses&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; 1
+&lt;span class="nv"&gt;singleton&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; True
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Start circus:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;circusd&lt;/span&gt; &lt;span class="n"&gt;circus&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ini&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;circusd circus.ini &amp;amp;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;That's it. On my Webfaction server circus eats 15MB RAM. You can now start and
 stop Solr using &lt;code&gt;circusctl&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;circusctl&lt;/span&gt; &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="n"&gt;solr&lt;/span&gt;
-&lt;span class="n"&gt;circusctl&lt;/span&gt; &lt;span class="n"&gt;stop&lt;/span&gt; &lt;span class="n"&gt;solr&lt;/span&gt;
-&lt;span class="n"&gt;circusctl&lt;/span&gt; &lt;span class="n"&gt;start&lt;/span&gt; &lt;span class="n"&gt;solr&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;circusctl status solr
+circusctl stop solr
+circusctl start solr
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Or try to kill Solr. Circus will immediately restart it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ps&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;grep&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;
-&lt;span class="n"&gt;kill&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt; &lt;span class="n"&gt;PID&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="n"&gt;ps&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;grep&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;ps aux | grep java
+&lt;span class="nb"&gt;kill&lt;/span&gt; &amp;lt;solr PID&amp;gt;
+ps aux | grep java
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;You need to be careful when starting and stopping Solr. Even though Circus will
 return &lt;code&gt;[OK]&lt;/code&gt; the process will remain visible for a few seconds after you
@@ -1065,7 +1209,18 @@ and starting &lt;code&gt;mongod&lt;/code&gt; giving it that path to the desired 
 &lt;p&gt;Every object has an &lt;code&gt;_id&lt;/code&gt; attribute. The id's are of type &lt;code&gt;ObjectId&lt;/code&gt; which
 are similar to UIDs.&lt;/p&gt;
 &lt;p&gt;Creating objects is very simple:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pymongo&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pymongo&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bson&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ObjectId&lt;/span&gt;
 
 &lt;span class="c"&gt;# TODO create connection&lt;/span&gt;
@@ -1078,15 +1233,18 @@ are similar to UIDs.&lt;/p&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;posts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Finding is similar:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pprint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;posts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find_one&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;id&amp;quot;: post[&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;_id&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;]}))&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pprint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;posts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find_one&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;id&amp;quot;: post[&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;_id&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;]}))&lt;/span&gt;
 &lt;span class="c"&gt;# or&lt;/span&gt;
 &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;post&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;posts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="n"&gt;pprint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Note that there is no schema at all. We can start doing this right away, no
 need to define any tables or something. We also don't need to alter tables
@@ -1117,11 +1275,13 @@ into public domain, so we can tinker with it and build upon it.&lt;/p&gt;
 &lt;li&gt;Not going to cover OpenGL today, unfortunately.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;A first pygame program is really simple:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pygame&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pygame&lt;/span&gt;
 &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="n"&gt;screen&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;display&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_mode&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;640&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;480&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Better put some structure to your code. Create a Game() class with a main()
 method. Don't use global variables.&lt;/p&gt;
@@ -1131,12 +1291,15 @@ like OpenGL separate the drawing part from the display part so that we can use
 a more sane coordinate system with &lt;code&gt;0,0&lt;/code&gt; at bottom left. Pygame is not that
 modern unfortunately.&lt;/p&gt;
 &lt;p&gt;Let's draw something:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;image&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;player.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;image&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;player.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;screen&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c"&gt;# Fill the screen with a background color&lt;/span&gt;
 &lt;span class="n"&gt;screen&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;blit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;320&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;240&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c"&gt;# Copies the image to that position on screen&lt;/span&gt;
 &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;display&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Pygame uses RGB colors.&lt;/p&gt;
 &lt;p&gt;We learn about "tearing". If we draw to the screen directly, the screen might
@@ -1153,27 +1316,39 @@ game.&lt;/p&gt;
 &lt;h1&gt;User input&lt;/h1&gt;
 &lt;p&gt;While Pygame can tell us, if a key down event has recently happened, it can
 also tell us which keys are currently being pressed:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_pressed&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_pressed&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;K_LEFT&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
     &lt;span class="n"&gt;image_x&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Both can be useful. Since the main loop runs with a clock and goes to sleep
 every 30 seconds, it can very well happen that the user pressed the escape key
 to quit the game while we have been sleeping. In this case we would check like
 this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;event&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;event&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;KEYDOWN&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;K_ESCAPE&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h1&gt;Sprites&lt;/h1&gt;
 &lt;p&gt;To put things together, we can define sprites, which are images, that know how
 they look like and where they are on screen. We can give them an &lt;code&gt;update&lt;/code&gt;
 method and handle their user input, which pulls out a lot of clutter from our
 main loop:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Player&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sprite&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sprite&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Player&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sprite&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sprite&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Player&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;player.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1184,7 +1359,7 @@ main loop:&lt;/p&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;K_LEFT&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;You would want to pass the amount of time that has passed since the last loop
 call and pass it into the update method. Then don't just jump 10 pixels but
@@ -1217,10 +1392,11 @@ game development is structuring your code as efficient as possible because it
 can quickly grow into a huge amount of spaghetti code.&lt;/p&gt;
 &lt;h1&gt;Sound&lt;/h1&gt;
 &lt;p&gt;As expected, adding sound is extremely easy as well:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jump&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mixer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sound&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;jump.wav&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jump&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mixer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sound&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;jump.wav&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jump&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;play&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;&lt;a href="https://code.google.com/p/sfxr/"&gt;SFXR&lt;/a&gt; is a great little tool that emulates
 the sound chip of the C64 and allows you to model cute 8bit sounds for your
@@ -1299,37 +1475,56 @@ hacker. At least I could come up with a dozen evil pranks immediately...&lt;/p&g
 &lt;p&gt;So let's create a new user called &lt;code&gt;pairprogger&lt;/code&gt;. For OSX I have created a
 file &lt;code&gt;create_user.sh&lt;/code&gt;. Replace the three variables at the top and execute it.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OSX&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# find out your staff group id (for me it is 20)&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# find out your staff group id (for me it is 20)&lt;/span&gt;
 &lt;span class="c"&gt;# dscacheutil -q group&lt;/span&gt;
-&lt;span class="n"&gt;STAFF_GROUP_ID&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="n"&gt;XX&lt;/span&gt;
-&lt;span class="n"&gt;USERNAME&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;pairprogger&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;PASSWORD&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;yourpassword&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;STAFF_GROUP_ID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;XX
+&lt;span class="nv"&gt;USERNAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;pairprogger&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;PASSWORD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;yourpassword&amp;quot;&lt;/span&gt;
 
-&lt;span class="n"&gt;MAXID&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;$&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt; &lt;span class="n"&gt;UniqueID&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;awk&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="nb"&gt;sort&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ug&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;tail&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;1&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;NEWID&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;$&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;MAXID&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;1&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="nv"&gt;MAXID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;dscl . -list /Users UniqueID | awk &lt;span class="s1"&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt; | sort -ug | tail -1&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;NEWID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$((&lt;/span&gt;MAXID+1&lt;span class="k"&gt;))&lt;/span&gt;
 
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;UserShell&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bash&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;UniqueID&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$NEWID&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;PrimaryGroupID&lt;/span&gt; $&lt;span class="n"&gt;STAFF_GROUP_ID&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;RealName&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Pair Programmer&amp;quot;&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;NFSHomeDirectory&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;passwd&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; $&lt;span class="n"&gt;PASSWORD&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Groups&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apple&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;access_ssh&lt;/span&gt; &lt;span class="n"&gt;GroupMembership&lt;/span&gt; $&lt;span class="n"&gt;USERNAME&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;createhomedir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;u&lt;/span&gt; $&lt;span class="n"&gt;USERNAME&lt;/span&gt;
+sudo dscl . -create /Users/&lt;span class="nv"&gt;$USERNAME&lt;/span&gt;
+sudo dscl . -create /Users/&lt;span class="nv"&gt;$USERNAME&lt;/span&gt; UserShell /bin/bash
+sudo dscl . -create /Users/&lt;span class="nv"&gt;$USERNAME&lt;/span&gt; UniqueID &lt;span class="s2"&gt;&amp;quot;$NEWID&amp;quot;&lt;/span&gt;
+sudo dscl . -create /Users/&lt;span class="nv"&gt;$USERNAME&lt;/span&gt; PrimaryGroupID &lt;span class="nv"&gt;$STAFF_GROUP_ID&lt;/span&gt;
+sudo dscl . -create /Users/&lt;span class="nv"&gt;$USERNAME&lt;/span&gt; RealName &lt;span class="s2"&gt;&amp;quot;Pair Programmer&amp;quot;&lt;/span&gt;
+sudo dscl . -create /Users/&lt;span class="nv"&gt;$USERNAME&lt;/span&gt; NFSHomeDirectory /Users/&lt;span class="nv"&gt;$USERNAME&lt;/span&gt;
+sudo dscl . -passwd /Users/&lt;span class="nv"&gt;$USERNAME&lt;/span&gt; &lt;span class="nv"&gt;$PASSWORD&lt;/span&gt;
+sudo dscl . -append /Groups/com.apple.access_ssh GroupMembership &lt;span class="nv"&gt;$USERNAME&lt;/span&gt;
+sudo createhomedir -c -u &lt;span class="nv"&gt;$USERNAME&lt;/span&gt;
 &lt;span class="c"&gt;# make sure that there is /Users/pairprogger/ on your disk now&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;I wont take credit for this insane user creation script for OSX.
 This thread on serverfault about
 &lt;a href="http://serverfault.com/questions/20702/how-do-i-create-user-accounts-from-the-terminal-in-mac-os-x-10-5"&gt;how to create a user account on OSX&lt;/a&gt;
 certainly saved my ass.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;useradd&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bash&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;passwd&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sudo useradd -m -s /bin/bash pairprogger
+sudo passwd pairprogger
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;You should be able to test this by logging out. The new user should appear
 on your login screen.&lt;/p&gt;
@@ -1341,10 +1536,10 @@ and paste your colleagues public RSA keys into the &lt;code&gt;authorized_keys&l
 &lt;p&gt;&lt;strong&gt;OSX / Ubuntu&lt;/strong&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;su&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;
 &lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;
-&lt;span class="n"&gt;chmod&lt;/span&gt; 700 &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;
+&lt;span class="n"&gt;chmod&lt;/span&gt; &lt;span class="mi"&gt;700&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;
 &lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;
 &lt;span class="n"&gt;touch&lt;/span&gt; &lt;span class="n"&gt;authorized_keys&lt;/span&gt;
-&lt;span class="n"&gt;chmod&lt;/span&gt; 600 &lt;span class="n"&gt;authorized_keys&lt;/span&gt;
+&lt;span class="n"&gt;chmod&lt;/span&gt; &lt;span class="mi"&gt;600&lt;/span&gt; &lt;span class="n"&gt;authorized_keys&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1360,14 +1555,14 @@ steps.&lt;/p&gt;
 &lt;p&gt;Note down your &lt;a href="https://duckduckgo.com/?q=ip"&gt;public IP&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Note down your local IP:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OSX&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ipconfig&lt;/span&gt; &lt;span class="n"&gt;getifaddr&lt;/span&gt; &lt;span class="n"&gt;en1&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;ipconfig getifaddr en1
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ifconfig&lt;/span&gt; &lt;span class="n"&gt;wlan0&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;grep&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;inet addr&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;sed&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;s/.*inet addr:\([0-9.]*\).*/\1/&amp;#39;&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;ifconfig wlan0 | grep &lt;span class="s1"&gt;&amp;#39;inet addr&amp;#39;&lt;/span&gt; | sed &lt;span class="s1"&gt;&amp;#39;s/.*inet addr:\([0-9.]*\).*/\1/&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;To setup port forwarding go to &lt;code&gt;192.168.0.1&lt;/code&gt;. This IP might differ on your
 router. Usually you should find a section for advanced settings which should
@@ -1388,21 +1583,28 @@ via bruteforce.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OSX&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Go to &lt;code&gt;System Preferences&lt;/code&gt; --&amp;gt; &lt;code&gt;Sharing&lt;/code&gt; --&amp;gt; &lt;code&gt;Remote login&lt;/code&gt;. Add
 &lt;code&gt;Pair Programmer&lt;/code&gt; to the list &lt;code&gt;Allow access for&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sshd_config&lt;/span&gt;
-# &lt;span class="n"&gt;Set&lt;/span&gt; &lt;span class="n"&gt;PasswordAuthentication&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt;
-# &lt;span class="n"&gt;Set&lt;/span&gt; &lt;span class="n"&gt;ChallengeResponseAuthentication&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt;
-# &lt;span class="n"&gt;Set&lt;/span&gt; &lt;span class="n"&gt;UsePAM&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sudo vim /etc/sshd_config
+&lt;span class="c"&gt;# Set PasswordAuthentication to no&lt;/span&gt;
+&lt;span class="c"&gt;# Set ChallengeResponseAuthentication to no&lt;/span&gt;
+&lt;span class="c"&gt;# Set UsePAM to no&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;openssh&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;server&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sshd_config&lt;/span&gt;
-# &lt;span class="n"&gt;Set&lt;/span&gt; &lt;span class="n"&gt;PasswordAuthentication&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt;
-# &lt;span class="n"&gt;Add&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;following&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;bottom&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-# &lt;span class="n"&gt;AllowUsers&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get install openssh-server
+sudo vim /etc/ssh/sshd_config
+&lt;span class="c"&gt;# Set PasswordAuthentication to no&lt;/span&gt;
+&lt;span class="c"&gt;# Add the following to the bottom of the file:&lt;/span&gt;
+&lt;span class="c"&gt;# AllowUsers pairprogger&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Please note that I am not a security expert. I have added these ssh
 restrictions while writing this post and have not tested them thoroughly. It
@@ -1415,30 +1617,32 @@ further restrict this account, please leave them in the comments.&lt;/p&gt;
 &lt;p&gt;Since wemux seems to be based on tmux, you need to install both, but that
 should be a no-brainer:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OSX&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;wemux&lt;/span&gt;
-&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;downloads&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;zolrath&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wemux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wemux&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rb&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;brew install wemux
+brew install https://github.com/downloads/zolrath/wemux/wemux.rb
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;tmux&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get install tmux
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;On Ubuntu follow the instructions at https://github.com/zolrath/wemux for
 manual installation.&lt;/p&gt;
 &lt;h2&gt;Step 6: Start the wemux server&lt;/h2&gt;
 &lt;p&gt;You are ready to go. Type the following command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;wemux&lt;/span&gt; &lt;span class="n"&gt;start&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;wemux start
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Step 7: Join the wemux server&lt;/h2&gt;
 &lt;p&gt;Now tell your friend to join you:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ssh&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;your&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;public&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ip&lt;/span&gt;
-&lt;span class="n"&gt;wemux&lt;/span&gt; &lt;span class="n"&gt;attach&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;ssh pairprogger@your-public-ip
+wemux attach
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h2&gt;Bonus: Your first tmux config&lt;/h2&gt;
 &lt;p&gt;If you used GNU screen and if you are a Vim user, you will most likely find the 
@@ -1477,13 +1681,17 @@ the time. Somehow most people don't suffer from this so this seems to be a
 problem with my Ubuntu installation, but recently I found a solution that works
 for me:&lt;/p&gt;
 &lt;p&gt;On my servers, I now set this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;# in ~/.ssh/config:
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# in ~/.ssh/config:&lt;/span&gt;
 ServerAliveInterval 60
 
-# in ~/.screenrc
-caption always &amp;#39;%c:%s&amp;#39;
+&lt;span class="c"&gt;# in ~/.screenrc&lt;/span&gt;
+caption always &lt;span class="s1"&gt;&amp;#39;%c:%s&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Now I just need to remember to start a screen session right after I login. The
 screen setting will render a clock at the bottom of the screen which is enough
@@ -1548,7 +1756,7 @@ Here are some posts that, to me, should be spread as far as possible.&lt;/p&gt;
   It sad but true: This whole Scrumm and Agile movement is a big scam. This
   rant explains why. Thought provoking read.&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</summary><category term="snippets"></category><category term="ubuntu"></category><category term="screen"></category><category term="ssh"></category><category term="mercurial"></category><category term="self growth"></category></entry><entry><title>InnoDB vs. MyISAM</title><link href="http://martinbrochhaus.com/myisam-vs-innodb.md.html" rel="alternate"></link><updated>2012-03-18T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-03-18:myisam-vs-innodb.md.html</id><summary type="html">&lt;p&gt;During the last few months I constantly ran into problems with MySQL which
+&lt;/ul&gt;</summary><category term="snippets"></category><category term="ubuntu"></category><category term="screen"></category><category term="ssh"></category><category term="mercurial"></category><category term="self growth"></category></entry><entry><title>InnoDB vs. MyISAM</title><link href="http://martinbrochhaus.com/myisam-vs-innodb.html" rel="alternate"></link><updated>2012-03-18T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-03-18:myisam-vs-innodb.html</id><summary type="html">&lt;p&gt;During the last few months I constantly ran into problems with MySQL which
 drove me crazy and I finally decided to use PostgreSQL for all new projects.
 Today I figured out what was going on:&lt;/p&gt;
 &lt;p&gt;On my development machine I have MySQL version 5.1.61 installed. Recent
@@ -1581,9 +1789,9 @@ error or death.&lt;/p&gt;
 &lt;p&gt;So I imported the server's datbase locally and asked some stupid questions in
 the #mysql channel. A friendly user named &lt;code&gt;salle&lt;/code&gt; answered within a second
 and I learned about a cool SQL command which I never needed before:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;SHOW&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;STATUS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;SHOW&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;STATUS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;This shows, among many other informatoin, which engine each of your tables has
 and at the first glance I could see that the newly created tables that came
@@ -1591,9 +1799,9 @@ with the South migration on the server had a different engine than all the
 rest.&lt;/p&gt;
 &lt;p&gt;Another stupid question later I learned that I can convert the tables to the
 other engine by simply executing:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;ALTER&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;tablename&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ENGINE&lt;/span&gt;&lt;span class="o"&gt;=&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;engine&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;ALTER&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;tablename&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ENGINE&lt;/span&gt;&lt;span class="o"&gt;=&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;engine&lt;/span&gt; &lt;span class="k"&gt;name&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;So I converted all MyISAM tables into InnoDB tables and all was good. I should
 definitely update my local MySQL installation...&lt;/p&gt;</summary><category term="databases"></category><category term="mysql"></category><category term="django"></category></entry><entry><title>Snippets of February 2012</title><link href="http://martinbrochhaus.com/snippets-201202.html" rel="alternate"></link><updated>2012-02-29T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-02-29:snippets-201202.html</id><summary type="html">&lt;p&gt;Naturally, as a developer I learn new awesome things almost every day.
@@ -1607,10 +1815,11 @@ the codereview that I should not pollute other project's &lt;code&gt;.gitignore&
 with unrelated stuff but rather use a global &lt;code&gt;.gitignore&lt;/code&gt; file instead. How
 could I not know about this until now?!?&lt;/p&gt;
 &lt;p&gt;Just add the following code to your .gitconfig:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;[core]
-excludesfile = $HOME/.gitignore_global
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;[&lt;/span&gt;core&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;excludesfile&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/.gitignore_global
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Then create the &lt;code&gt;.gitignore_global&lt;/code&gt; file and put stuff inside that your
 editors of choice might produce.&lt;/p&gt;
@@ -1618,23 +1827,37 @@ editors of choice might produce.&lt;/p&gt;
 &lt;p&gt;So I finally got the &lt;code&gt;hjkl&lt;/code&gt; keys for movement into my muscle memory. Now it
 annoys me that I have to use the arrow keys when I want to browse through the
 various options that the code completion suggests. There is a vimbit for that:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;set completeopt=longest,menuone
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;set &lt;/span&gt;&lt;span class="nv"&gt;completeopt&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;longest,menuone
 
-&amp;quot; found here: http://stackoverflow.com/a/2170800/70778
-function! OmniPopup(action)
-    if pumvisible()
-        if a:action == &amp;#39;j&amp;#39;
-            return &amp;quot;\&amp;lt;C-N&amp;gt;&amp;quot;
-        elseif a:action == &amp;#39;k&amp;#39;
-            return &amp;quot;\&amp;lt;C-P&amp;gt;&amp;quot;
+&lt;span class="s2"&gt;&amp;quot; found here: http://stackoverflow.com/a/2170800/70778&lt;/span&gt;
+&lt;span class="s2"&gt;function! OmniPopup(action)&lt;/span&gt;
+&lt;span class="s2"&gt;    if pumvisible()&lt;/span&gt;
+&lt;span class="s2"&gt;        if a:action == &amp;#39;j&amp;#39;&lt;/span&gt;
+&lt;span class="s2"&gt;            return &amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\&amp;lt;&lt;/span&gt;C-N&amp;gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="s2"&gt;        elseif a:action == &amp;#39;k&amp;#39;&lt;/span&gt;
+&lt;span class="s2"&gt;            return &amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\&amp;lt;&lt;/span&gt;C-P&amp;gt;&lt;span class="err"&gt;&amp;quot;&lt;/span&gt;
         endif
     endif
-    return a:action
+    &lt;span class="k"&gt;return &lt;/span&gt;a:action
 endfunction
-inoremap &amp;lt;silent&amp;gt;&amp;lt;C-j&amp;gt; &amp;lt;C-R&amp;gt;=OmniPopup(&amp;#39;j&amp;#39;)&amp;lt;CR&amp;gt;
-inoremap &amp;lt;silent&amp;gt;&amp;lt;C-k&amp;gt; &amp;lt;C-R&amp;gt;=OmniPopup(&amp;#39;k&amp;#39;)&amp;lt;CR&amp;gt;
+inoremap &amp;lt;silent&amp;gt;&amp;lt;C-j&amp;gt; &amp;lt;C-R&amp;gt;&lt;span class="o"&gt;=&lt;/span&gt;OmniPopup&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;j&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&amp;lt;CR&amp;gt;
+inoremap &amp;lt;silent&amp;gt;&amp;lt;C-k&amp;gt; &amp;lt;C-R&amp;gt;&lt;span class="o"&gt;=&lt;/span&gt;OmniPopup&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;k&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&amp;lt;CR&amp;gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h1&gt;Vimbits&lt;/h1&gt;
 &lt;p&gt;Speaking of vimbits: &lt;a href="http://vimbits.com/"&gt;vimbits.com&lt;/a&gt; recently flew through
@@ -1643,9 +1866,9 @@ exploded with all kinds of awesomeness.&lt;/p&gt;
 &lt;h1&gt;Showing git branch in prompt&lt;/h1&gt;
 &lt;p&gt;I thought that I was typing &lt;code&gt;git branch&lt;/code&gt; way too often (actually I type
 &lt;code&gt;git br&lt;/code&gt;, of course).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;export PS1=&amp;#39;\w\[\033[31m\]$(__git_ps1 &amp;quot;(%s)&amp;quot;) \[\033[01;34m\]$\[\033[00m\] &amp;#39;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;PS1&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;\w\[\033[31m\]$(__git_ps1 &amp;quot;(%s)&amp;quot;) \[\033[01;34m\]$\[\033[00m\] &amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Hint: In order for this to work, you need to install git via Homebrew on OSX.&lt;/p&gt;</summary><category term="git"></category><category term="python"></category><category term="vim"></category><category term="snippets"></category></entry><entry><title>Blogging with Pelican and GitHub</title><link href="http://martinbrochhaus.com/pelican.html" rel="alternate"></link><updated>2012-02-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-02-20:pelican.html</id><summary type="html">&lt;p&gt;While it took me indeed just four lines of code and thirty minutes to setup the
 first version of this blog, I couldn't resist to geek over it for a few more
@@ -1676,14 +1899,21 @@ in here will be served at &lt;code&gt;http://username.github.com&lt;/code&gt;. F
 please see the &lt;a href="http://pages.github.com/"&gt;GitHub Pages Documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;h1&gt;Setup your repository&lt;/h1&gt;
 &lt;p&gt;First create a folder on your disk for the new project:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;mkdir &lt;span class="nv"&gt;$HOME&lt;/span&gt;/Projects/myblog
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;mkdir &lt;span class="nv"&gt;$HOME&lt;/span&gt;/Projects/myblog
 &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/Projects/myblog
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Next setup your &lt;code&gt;source&lt;/code&gt; folder. This is the folder where you will write your
 articles and call pelican to generate your static html output:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;mkdir &lt;span class="nb"&gt;source&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;mkdir &lt;span class="nb"&gt;source&lt;/span&gt;
 &lt;span class="nb"&gt;cd source&lt;/span&gt;
 
 &lt;span class="c"&gt;# We will steal some files from my own repo here:&lt;/span&gt;
@@ -1691,88 +1921,112 @@ wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/requirement
 wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/fabfile.py
 wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/settings.py.sample settings.py
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;The sample &lt;code&gt;settings.py&lt;/code&gt; you just got from my own repo will need some changes
 now. Have a look at it and edit it so that it fits your needs.&lt;/p&gt;
 &lt;h1&gt;Setup your virtualenv&lt;/h1&gt;
 &lt;p&gt;If you have never used virtualenv and virtualenvwrapper before, now is the
 time to learn about it. Usually this is what you need to do to install it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;sudo easy_install pip
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sudo easy_install pip
 sudo pip install virtualenv
 sudo pip install virtualenvwrapper
 &lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;WORKON_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;~/Envs
 &lt;span class="nb"&gt;source&lt;/span&gt; /usr/local/bin/virtualenvwrapper.sh
 &lt;span class="c"&gt;# also add export WORKON_HOME=~/Envs to your .bashrc file&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;We will use virtualenv to install fabric and pelican:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;mkvirtualenv -p python2.7 blog
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;mkvirtualenv -p python2.7 blog
 workon blog
 pip install -r requirements.txt
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h1&gt;Create your first post&lt;/h1&gt;
 &lt;p&gt;Now is the time to create your first post:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the source/ folder&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the source/ folder&lt;/span&gt;
 mkdir -p posts/2012/02/  &lt;span class="c"&gt;# insert appropriate year and month here&lt;/span&gt;
 &lt;span class="nb"&gt;cd &lt;/span&gt;posts/2012/02/
 touch hello-world.md
 nano hello-world.md
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;To learn more about how to write your articles with Markdown or
 reStructuredText for Pelican, have a look at
 &lt;a href="http://pelican.notmyidea.org/en/latest/getting_started.html#writing-articles-using-pelican"&gt;writing articles using pelican&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Your article should look similar to this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;Date: 2012-02-20
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;Date: 2012-02-20
 Title: Hello world
 Category: Blog
-Tags: blogging, test
+Tags: blogging, &lt;span class="nb"&gt;test&lt;/span&gt;
 
 Lorem ipsum
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;I like to create meaningful commit messages for the edits of my &lt;code&gt;.md&lt;/code&gt; files and
 separate them from the changes that the Pelican output generates, therefore now
 it is a good time to create a commit:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;git add .
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;git add .
 git commit -am &lt;span class="s2"&gt;&amp;quot;Created my first post.&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h1&gt;Publish your first post&lt;/h1&gt;
 &lt;p&gt;This is the interesting part! You will use Pelican now to generate the output
 for your blog:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the source/ folder&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the source/ folder&lt;/span&gt;
 pelican . -o ../ -s settings.py
 git status
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;When you run &lt;code&gt;git status&lt;/code&gt; you will see that Pelican generated a whole bunch
 of files in your root directory. Open your &lt;code&gt;index.html&lt;/code&gt; and have a look at
 your new blog.&lt;/p&gt;
 &lt;p&gt;If you see that something went wrong, you might want to destroy the generated
 output:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the root folder and be sure that your .md file changes&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the root folder and be sure that your .md file changes&lt;/span&gt;
 &lt;span class="c"&gt;# have been committed&lt;/span&gt;
 git clean -df
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Now you can edit your &lt;code&gt;.md&lt;/code&gt; files again and generate the output again. If you
 are happy with your output, it is time to publish it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the root folder&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the root folder&lt;/span&gt;
 git add .
 git commit -am &lt;span class="s2"&gt;&amp;quot;Pelican output&amp;quot;&lt;/span&gt;
 git push origin master
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h1&gt;Publishing with fabric&lt;/h1&gt;
 &lt;p&gt;As you have seen, the workflow of editing your posts is always the same. First
@@ -1782,17 +2036,17 @@ standard commit message. Finally you push to Github which will make your
 changes visible.&lt;/p&gt;
 &lt;p&gt;To make this workflow easier, I have created a little Fabric script. Now you
 can just edit your &lt;code&gt;.md&lt;/code&gt; files and once you are done, call Fabric:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;fab publish:&lt;span class="s1"&gt;&amp;#39;My commit message&amp;#39;&lt;/span&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;fab publish:&lt;span class="s1"&gt;&amp;#39;My commit message&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;h1&gt;Setting up a custom domain&lt;/h1&gt;
 &lt;p&gt;As if all this isn't awesome enough, GitHub makes it really easy to create
 custom domains for your GitHub page. All you need is to place a file called
 &lt;code&gt;CNAME&lt;/code&gt; in the root of your project and add the following content:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;yourdomain.com
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;yourdomain.com
 &lt;/pre&gt;&lt;/div&gt;
-
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;Then point the A record of your domain to the IP address of GitHub. For more
 information have a look at the instructions about

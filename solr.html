@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -51,7 +53,13 @@ Here is what I learned:</p>
 for describing the process nice enough for a dummy like me.</p>
 <p>Following his instructions I made sure that I have not activated any
 virtualenv, then I ran</p>
-<div class="highlight"><pre>pip install supervisor
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre>pip install supervisor
 
 <span class="c"># Let&#39;s create some folders we will need later on</span>
 mkdir ~/tmp
@@ -59,31 +67,49 @@ mkdir -p ~/mylogs/cron
 mkdir ~/etc <span class="o">&amp;&amp;</span> <span class="nb">cd</span> ~/etc
 vim supervisor.conf
 </pre></div>
-
+</td></tr></table>
 
 <p>Here is what my <code>supervisor.conf</code> looks like. Of course you would need to
 insert your webfaction username and adjust the path to your solr installation:</p>
-<div class="highlight"><pre><span class="k">[unix_http_server]</span>
-<span class="na">file</span><span class="o">=</span><span class="s">/home/username/tmp/supervisor.sock</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">[</span>unix_http_server<span class="o">]</span>
+<span class="nv">file</span><span class="o">=</span>/home/username/tmp/supervisor.sock
 
-<span class="k">[supervisord]</span>
-<span class="na">logfile</span><span class="o">=</span><span class="s">/home/username/mylogs/supervisord.log</span>
-<span class="na">logfile_maxbytes</span><span class="o">=</span><span class="s">50MB</span>
-<span class="na">logfile_backups</span><span class="o">=</span><span class="s">10</span>
-<span class="na">loglevel</span><span class="o">=</span><span class="s">info</span>
-<span class="na">pidfile</span><span class="o">=</span><span class="s">/home/username/tmp/supervisord.pid</span>
+<span class="o">[</span>supervisord<span class="o">]</span>
+<span class="nv">logfile</span><span class="o">=</span>/home/username/mylogs/supervisord.log
+<span class="nv">logfile_maxbytes</span><span class="o">=</span>50MB
+<span class="nv">logfile_backups</span><span class="o">=</span>10
+<span class="nv">loglevel</span><span class="o">=</span>info
+<span class="nv">pidfile</span><span class="o">=</span>/home/username/tmp/supervisord.pid
 
-<span class="k">[rpcinterface:supervisor]</span>
-<span class="na">supervisor.rpcinterface_factory</span> <span class="o">=</span> <span class="s">supervisor.rpcinterface:make_main_rpcinterface</span>
+<span class="o">[</span>rpcinterface:supervisor<span class="o">]</span>
+supervisor.rpcinterface_factory <span class="o">=</span> supervisor.rpcinterface:make_main_rpcinterface
 
-<span class="k">[supervisorctl]</span>
-<span class="na">serverurl</span><span class="o">=</span><span class="s">unix:///home/username/tmp/supervisor.sock</span>
+<span class="o">[</span>supervisorctl<span class="o">]</span>
+<span class="nv">serverurl</span><span class="o">=</span>unix:///home/username/tmp/supervisor.sock
 
-<span class="k">[program:solr]</span>
-<span class="na">directory</span><span class="o">=</span><span class="s">/home/username/opt/apache-solr-3.5.0/example</span>
-<span class="na">command</span><span class="o">=</span><span class="s">java -Djava.util.logging.config.file=logging.properties -jar start.jar</span>
+<span class="o">[</span>program:solr<span class="o">]</span>
+<span class="nv">directory</span><span class="o">=</span>/home/username/opt/apache-solr-3.5.0/example
+<span class="nb">command</span><span class="o">=</span>java -Djava.util.logging.config.file<span class="o">=</span>logging.properties -jar start.jar
 </pre></div>
-
+</td></tr></table>
 
 <p>The meaning of all these config sections should be obvious and is very well
 documented in the <a href="http://supervisord.org/configuration.html">supervisor configuration documentation</a>.</p>
@@ -95,20 +121,31 @@ made things very easy.</p>
 <p>Just create the file <code>logging.properties</code> in the same folder where solr's
 <code>start.jar</code> resides. Mine looks like this (again, replace username with your
 webfaction account name):</p>
-<div class="highlight"><pre><span class="c"># Default global logging level:</span>
-<span class="p">.</span><span class="n">level</span> <span class="p">=</span> <span class="n">INFO</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># Default global logging level:</span>
+.level <span class="o">=</span> INFO
 
 <span class="c"># Write to a file:</span>
-<span class="n">handlers</span> <span class="p">=</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">logging</span><span class="p">.</span><span class="n">FileHandler</span>
+<span class="nv">handlers</span> <span class="o">=</span> java.util.logging.FileHandler
 
 <span class="c"># Write log messages in XML format:</span>
 <span class="c"># Use java.util.logging.SimpleFormatter to log like Solr logs to the screen by default</span>
-<span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">logging</span><span class="p">.</span><span class="n">FileHandler</span><span class="p">.</span><span class="n">formatter</span> <span class="p">=</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">logging</span><span class="p">.</span><span class="n">XMLFormatter</span>
+java.util.logging.FileHandler.formatter <span class="o">=</span> java.util.logging.XMLFormatter
 
 <span class="c"># Log to the current working directory, with log files named solrxxx.log</span>
-<span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">logging</span><span class="p">.</span><span class="n">FileHandler</span><span class="p">.</span><span class="n">pattern</span> <span class="p">=</span> <span class="o">/</span><span class="nb">home</span><span class="o">/</span><span class="n">username</span><span class="o">/</span><span class="n">mylogs</span><span class="o">/</span><span class="n">solr</span><span class="c">%u.log</span>
+java.util.logging.FileHandler.pattern <span class="o">=</span> /home/username/mylogs/solr%u.log
 </pre></div>
-
+</td></tr></table>
 
 <p>If you are wondering what different options for logging levels there are, have
 a look at this page about <a href="http://lucidworks.lucidimagination.com/display/solr/Configuring+Logging">solr logging</a>.
@@ -119,9 +156,9 @@ users send hundreds of search queries per day - each query would be logged.</p>
 cannot run the <code>supervisord</code> command twice - it would warn you that another
 instance is already running. Therefore we can safely schedule a cronjob to run
 <code>supervisord</code> every five minutes:</p>
-<div class="highlight"><pre><span class="o">*/</span>5 <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">~/</span><span class="n">bin</span><span class="o">/</span><span class="n">supervisord</span> <span class="o">&gt;</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">mylogs</span><span class="o">/</span><span class="n">cron</span><span class="o">/</span><span class="n">supervisord</span><span class="p">.</span><span class="nb">log</span> 2<span class="o">&gt;&amp;</span>1
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>*/5 * * * * ~/bin/supervisord &gt; <span class="nv">$HOME</span>/mylogs/cron/supervisord.log 2&gt;&amp;1
 </pre></div>
-
+</td></tr></table>
 
 <h2>Manage solr</h2>
 <p>If you ever need to start, stop or restart solr, you can do so via
@@ -135,7 +172,14 @@ being.</p>
 <p>Every now and then you will introduce changes to your models and your search
 index that will require a rebuild of the index. I like to automate that with
 a Fabric task. Here it is:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">run_rebuild_index</span><span class="p">():</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">run_rebuild_index</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Rebuilds the Solr index on the server.&quot;&quot;&quot;</span>
     <span class="n">run</span><span class="p">(</span><span class="s">&#39;supervisorctl stop solr&#39;</span><span class="p">)</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -144,6 +188,7 @@ a Fabric task. Here it is:</p>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="n">run</span><span class="p">(</span><span class="s">&#39;workon envname &amp;&amp; $HOME/webapps/django/myproject/manage.py rebuild_index --noinput&#39;</span><span class="p">)</span>
 </pre></div>
+</td></tr></table>
         </div>
     </div>
 </div>

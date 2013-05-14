@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -72,13 +74,17 @@ the time. Somehow most people don't suffer from this so this seems to be a
 problem with my Ubuntu installation, but recently I found a solution that works
 for me:</p>
 <p>On my servers, I now set this:</p>
-<div class="highlight"><pre># in ~/.ssh/config:
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># in ~/.ssh/config:</span>
 ServerAliveInterval 60
 
-# in ~/.screenrc
-caption always &#39;%c:%s&#39;
+<span class="c"># in ~/.screenrc</span>
+caption always <span class="s1">&#39;%c:%s&#39;</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Now I just need to remember to start a screen session right after I login. The
 screen setting will render a clock at the bottom of the screen which is enough

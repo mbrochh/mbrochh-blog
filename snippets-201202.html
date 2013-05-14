@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -53,10 +55,11 @@ the codereview that I should not pollute other project's <code>.gitignore</code>
 with unrelated stuff but rather use a global <code>.gitignore</code> file instead. How
 could I not know about this until now?!?</p>
 <p>Just add the following code to your .gitconfig:</p>
-<div class="highlight"><pre>[core]
-excludesfile = $HOME/.gitignore_global
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">[</span>core<span class="o">]</span>
+<span class="nv">excludesfile</span> <span class="o">=</span> <span class="nv">$HOME</span>/.gitignore_global
 </pre></div>
-
+</td></tr></table>
 
 <p>Then create the <code>.gitignore_global</code> file and put stuff inside that your
 editors of choice might produce.</p>
@@ -64,23 +67,37 @@ editors of choice might produce.</p>
 <p>So I finally got the <code>hjkl</code> keys for movement into my muscle memory. Now it
 annoys me that I have to use the arrow keys when I want to browse through the
 various options that the code completion suggests. There is a vimbit for that:</p>
-<div class="highlight"><pre>set completeopt=longest,menuone
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">set </span><span class="nv">completeopt</span><span class="o">=</span>longest,menuone
 
-&quot; found here: http://stackoverflow.com/a/2170800/70778
-function! OmniPopup(action)
-    if pumvisible()
-        if a:action == &#39;j&#39;
-            return &quot;\&lt;C-N&gt;&quot;
-        elseif a:action == &#39;k&#39;
-            return &quot;\&lt;C-P&gt;&quot;
+<span class="s2">&quot; found here: http://stackoverflow.com/a/2170800/70778</span>
+<span class="s2">function! OmniPopup(action)</span>
+<span class="s2">    if pumvisible()</span>
+<span class="s2">        if a:action == &#39;j&#39;</span>
+<span class="s2">            return &quot;</span><span class="se">\&lt;</span>C-N&gt;<span class="s2">&quot;</span>
+<span class="s2">        elseif a:action == &#39;k&#39;</span>
+<span class="s2">            return &quot;</span><span class="se">\&lt;</span>C-P&gt;<span class="err">&quot;</span>
         endif
     endif
-    return a:action
+    <span class="k">return </span>a:action
 endfunction
-inoremap &lt;silent&gt;&lt;C-j&gt; &lt;C-R&gt;=OmniPopup(&#39;j&#39;)&lt;CR&gt;
-inoremap &lt;silent&gt;&lt;C-k&gt; &lt;C-R&gt;=OmniPopup(&#39;k&#39;)&lt;CR&gt;
+inoremap &lt;silent&gt;&lt;C-j&gt; &lt;C-R&gt;<span class="o">=</span>OmniPopup<span class="o">(</span><span class="s1">&#39;j&#39;</span><span class="o">)</span>&lt;CR&gt;
+inoremap &lt;silent&gt;&lt;C-k&gt; &lt;C-R&gt;<span class="o">=</span>OmniPopup<span class="o">(</span><span class="s1">&#39;k&#39;</span><span class="o">)</span>&lt;CR&gt;
 </pre></div>
-
+</td></tr></table>
 
 <h1>Vimbits</h1>
 <p>Speaking of vimbits: <a href="http://vimbits.com/">vimbits.com</a> recently flew through
@@ -89,9 +106,9 @@ exploded with all kinds of awesomeness.</p>
 <h1>Showing git branch in prompt</h1>
 <p>I thought that I was typing <code>git branch</code> way too often (actually I type
 <code>git br</code>, of course).</p>
-<div class="highlight"><pre>export PS1=&#39;\w\[\033[31m\]$(__git_ps1 &quot;(%s)&quot;) \[\033[01;34m\]$\[\033[00m\] &#39;
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s1">&#39;\w\[\033[31m\]$(__git_ps1 &quot;(%s)&quot;) \[\033[01;34m\]$\[\033[00m\] &#39;</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Hint: In order for this to work, you need to install git via Homebrew on OSX.</p>
         </div>

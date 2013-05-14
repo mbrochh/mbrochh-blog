@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -64,33 +66,34 @@ page and download new versions of bootstrap over and over again.</p>
 done:</p>
 <h2>Add Bootstrap as a submodule</h2>
 <p>First I add bootstrap as a git submodule to my Django projects:</p>
-<div class="highlight"><pre><span class="n">git</span> <span class="n">submodule</span> <span class="n">add</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">twitter</span><span class="o">/</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">git</span> <span class="n">myproject</span><span class="o">/</span><span class="n">submodules</span><span class="o">/</span><span class="n">bootstrap</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>git submodule add git://github.com/twitter/bootstrap.git myproject/submodules/bootstrap
 </pre></div>
-
+</td></tr></table>
 
 <p>It is important to add the submodule to a path inside your project root. This
 way you can place symlinks easily with all relative paths.</p>
 <h2>Setup your css folder</h2>
 <p>Surely you will have a folder that holds your project's CSS files somewhere in
 your project. For my Django projects that is usually:</p>
-<div class="highlight"><pre><span class="n">myproject</span><span class="o">/</span><span class="n">myproject</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">css</span><span class="o">/</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>myproject/myproject/static/css/
 </pre></div>
-
+</td></tr></table>
 
 <p>Inside of this folder I like to create a <code>libs</code> folder which holds CSS files
 of third party plugins or frameworks that I use. In our case this would be
 bootstrap, so let's create a bootstrap folder:</p>
-<div class="highlight"><pre><span class="n">mkdir</span> <span class="n">myproject</span><span class="o">/</span><span class="n">myproject</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">css</span><span class="o">/</span><span class="n">libs</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>mkdir myproject/myproject/static/css/libs/bootstrap/
 </pre></div>
-
+</td></tr></table>
 
 <h2>Symlink the bootstrap files</h2>
 <p>So here is the first part of the trick. Inside of the <code>bootstrap</code> which we have
 just created, we symlink all the <code>.less</code> files of the Bootstrap framework:</p>
-<div class="highlight"><pre><span class="n">cd</span> <span class="n">myproject</span><span class="o">/</span><span class="n">myproject</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">css</span><span class="o">/</span><span class="n">libs</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span>
-<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="n">submodules</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span><span class="n">less</span><span class="o">/*</span> <span class="p">.</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">cd </span>myproject/myproject/static/css/libs/bootstrap/
+ln -s ../../../../../submodules/bootstrap/less/* .
 </pre></div>
-
+</td></tr></table>
 
 <p>It would be better to just symlink the whole <code>less</code> folder instead of all files
 but unfortunately <code>lessc</code> is not able to follow such symlinks and would fail
@@ -98,54 +101,78 @@ to compile the <code>bootstrap.less</code> file.</p>
 <h2>Prepare the working files</h2>
 <p>Here comes the second part of the trick. We will create copies of the files
 <code>bootstrap.less</code> and <code>responsive.less</code>:</p>
-<div class="highlight"><pre><span class="n">cd</span> <span class="n">myproject</span><span class="o">/</span><span class="n">myproject</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">css</span><span class="o">/</span>
-<span class="n">cp</span> <span class="n">libs</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">less</span> <span class="p">.</span>
-<span class="n">cp</span> <span class="n">libs</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span><span class="n">responsive</span><span class="p">.</span><span class="n">less</span> <span class="p">.</span>
-<span class="n">touch</span> <span class="n">my</span><span class="o">-</span><span class="n">variables</span><span class="p">.</span><span class="n">less</span>
-<span class="n">touch</span> <span class="n">styles</span><span class="p">.</span><span class="n">less</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">cd </span>myproject/myproject/static/css/
+cp libs/bootstrap/bootstrap.less .
+cp libs/bootstrap/responsive.less .
+touch my-variables.less
+touch styles.less
 </pre></div>
-
+</td></tr></table>
 
 <p>I know, I know, we have just symlinked them, why create another copy now? The
 reason is that we won't use the symlinks (you could delete them). Instead
 we will make a three simple changes to those two files. First we need to change
 the paths to all the imported <code>.less</code> files:</p>
-<div class="highlight"><pre><span class="n">sed</span> <span class="o">-</span><span class="nb">i</span> <span class="o">-</span><span class="n">e</span> <span class="s">&#39;s/import &quot;/import &quot;libs\/bootstrap\//g&#39;</span> <span class="n">bootstrap</span><span class="p">.</span><span class="n">less</span>
-<span class="n">sed</span> <span class="o">-</span><span class="nb">i</span> <span class="o">-</span><span class="n">e</span> <span class="s">&#39;s/import &quot;/import &quot;libs\/bootstrap\//g&#39;</span> <span class="n">responsive</span><span class="p">.</span><span class="n">less</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>sed -i -e <span class="s1">&#39;s/import &quot;/import &quot;libs\/bootstrap\//g&#39;</span> bootstrap.less
+sed -i -e <span class="s1">&#39;s/import &quot;/import &quot;libs\/bootstrap\//g&#39;</span> responsive.less
 </pre></div>
-
+</td></tr></table>
 
 <p>Next we will add an import of our own variables file to both files. The import
 should come right after the import of the original <code>variables.less</code>:</p>
-<div class="highlight"><pre><span class="cp"># Excerpt from your bootstrap.less copy:</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp"># Excerpt from your bootstrap.less copy:</span>
 
 <span class="p">...</span>
 <span class="c1">// CSS Reset</span>
-<span class="err">@</span><span class="n">import</span> <span class="s">&quot;libs/bootstrap/reset.less&quot;</span><span class="p">;</span>
+<span class="cp">@import</span> <span class="s2">&quot;libs/bootstrap/reset.less&quot;</span><span class="p">;</span>
 
 <span class="c1">// Core variables and mixins</span>
-<span class="err">@</span><span class="n">import</span> <span class="s">&quot;libs/bootstrap/variables.less&quot;</span><span class="p">;</span>
+<span class="cp">@import</span> <span class="s2">&quot;libs/bootstrap/variables.less&quot;</span><span class="p">;</span>
 
-<span class="err">@</span><span class="n">import</span> <span class="s">&quot;my-variables.less&quot;</span><span class="p">;</span> <span class="c1">// Our own variables overrides</span>
+<span class="cp">@import</span> <span class="s2">&quot;my-variables.less&quot;</span><span class="p">;</span> <span class="c1">// Our own variables overrides</span>
 
-<span class="err">@</span><span class="n">import</span> <span class="s">&quot;libs/bootstrap/mixins.less&quot;</span><span class="p">;</span>
+<span class="cp">@import</span> <span class="s2">&quot;libs/bootstrap/mixins.less&quot;</span><span class="p">;</span>
 <span class="p">...</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Finally we will include our very own <code>styles.less</code> at the bottom of
 <code>bootstrap.less</code>. Styles in this file would override everything else from
 bootstrap:</p>
-<div class="highlight"><pre><span class="cp"># Excerpt from your bootstrap.less copy:</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp"># Excerpt from your bootstrap.less copy:</span>
 
 <span class="p">...</span>
 <span class="c1">// Utility classes</span>
-<span class="err">@</span><span class="n">import</span> <span class="s">&quot;libs/bootstrap/utilities.less&quot;</span><span class="p">;</span> <span class="c1">// Has to be last to override when necessary</span>
+<span class="cp">@import</span> <span class="s2">&quot;libs/bootstrap/utilities.less&quot;</span><span class="p">;</span> <span class="c1">// Has to be last to override when necessary</span>
 
 <span class="c1">// Our own stuff</span>
-<span class="err">@</span><span class="n">import</span> <span class="s">&quot;styles.less&quot;</span><span class="p">;</span>
+<span class="cp">@import</span> <span class="s2">&quot;styles.less&quot;</span><span class="p">;</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Repeat the last two steps for <code>responsive.less</code> as well, of course here you
 would add an import to <code>styles-responsive.less</code> instead of <code>styles.less</code> at the 

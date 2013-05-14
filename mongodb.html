@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -51,7 +53,18 @@ and starting <code>mongod</code> giving it that path to the desired db folder.</
 <p>Every object has an <code>_id</code> attribute. The id's are of type <code>ObjectId</code> which
 are similar to UIDs.</p>
 <p>Creating objects is very simple:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">pymongo</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pymongo</span>
 <span class="kn">from</span> <span class="nn">bson</span> <span class="kn">import</span> <span class="n">ObjectId</span>
 
 <span class="c"># TODO create connection</span>
@@ -64,15 +77,18 @@ are similar to UIDs.</p>
 <span class="p">}</span>
 <span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Finding is similar:</p>
-<div class="highlight"><pre><span class="n">pprint</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">&#39;id&quot;: post[&#39;</span><span class="n">_id</span><span class="s">&#39;]}))</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">pprint</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">&#39;id&quot;: post[&#39;</span><span class="n">_id</span><span class="s">&#39;]}))</span>
 <span class="c"># or</span>
 <span class="k">for</span> <span class="n">post</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">posts</span><span class="o">.</span><span class="n">find</span><span class="p">():</span>
     <span class="n">pprint</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Note that there is no schema at all. We can start doing this right away, no
 need to define any tables or something. We also don't need to alter tables

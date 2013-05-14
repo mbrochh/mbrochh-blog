@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -56,11 +58,13 @@ into public domain, so we can tinker with it and build upon it.</p>
 <li>Not going to cover OpenGL today, unfortunately.</li>
 </ul>
 <p>A first pygame program is really simple:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygame</span>
 <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">))</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Better put some structure to your code. Create a Game() class with a main()
 method. Don't use global variables.</p>
@@ -70,12 +74,15 @@ like OpenGL separate the drawing part from the display part so that we can use
 a more sane coordinate system with <code>0,0</code> at bottom left. Pygame is not that
 modern unfortunately.</p>
 <p>Let's draw something:</p>
-<div class="highlight"><pre><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">&#39;player.png&#39;</span><span class="p">)</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">&#39;player.png&#39;</span><span class="p">)</span>
 <span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>  <span class="c"># Fill the screen with a background color</span>
 <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">))</span>  <span class="c"># Copies the image to that position on screen</span>
 <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Pygame uses RGB colors.</p>
 <p>We learn about "tearing". If we draw to the screen directly, the screen might
@@ -92,27 +99,39 @@ game.</p>
 <h1>User input</h1>
 <p>While Pygame can tell us, if a key down event has recently happened, it can
 also tell us which keys are currently being pressed:</p>
-<div class="highlight"><pre><span class="n">key</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">key</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()</span>
 <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_LEFT</span><span class="p">]:</span>
     <span class="n">image_x</span> <span class="o">-=</span> <span class="mi">10</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>Both can be useful. Since the main loop runs with a clock and goes to sleep
 every 30 seconds, it can very well happen that the user pressed the escape key
 to quit the game while we have been sleeping. In this case we would check like
 this:</p>
-<div class="highlight"><pre><span class="n">event</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">event</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
 </pre></div>
-
+</td></tr></table>
 
 <h1>Sprites</h1>
 <p>To put things together, we can define sprites, which are images, that know how
 they look like and where they are on screen. We can give them an <code>update</code>
 method and handle their user input, which pulls out a lot of clutter from our
 main loop:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Player</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Player</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
 <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">groups</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">(</span><span class="n">Player</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">groups</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">&#39;player.png&#39;</span><span class="p">)</span>
@@ -123,7 +142,7 @@ main loop:</p>
     <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_LEFT</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">x</span> <span class="o">-=</span> <span class="mi">10</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>You would want to pass the amount of time that has passed since the last loop
 call and pass it into the update method. Then don't just jump 10 pixels but
@@ -156,10 +175,11 @@ game development is structuring your code as efficient as possible because it
 can quickly grow into a huge amount of spaghetti code.</p>
 <h1>Sound</h1>
 <p>As expected, adding sound is extremely easy as well:</p>
-<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">jump</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="s">&#39;jump.wav&#39;</span><span class="p">)</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">jump</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="s">&#39;jump.wav&#39;</span><span class="p">)</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">jump</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 </pre></div>
-
+</td></tr></table>
 
 <p><a href="https://code.google.com/p/sfxr/">SFXR</a> is a great little tool that emulates
 the sound chip of the C64 and allows you to model cute 8bit sounds for your

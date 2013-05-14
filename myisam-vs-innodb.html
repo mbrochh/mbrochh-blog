@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -74,9 +76,9 @@ error or death.</p>
 <p>So I imported the server's datbase locally and asked some stupid questions in
 the #mysql channel. A friendly user named <code>salle</code> answered within a second
 and I learned about a cool SQL command which I never needed before:</p>
-<div class="highlight"><pre><span class="k">SHOW</span> <span class="k">TABLE</span> <span class="n">STATUS</span><span class="p">;</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">SHOW</span> <span class="k">TABLE</span> <span class="n">STATUS</span><span class="p">;</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>This shows, among many other informatoin, which engine each of your tables has
 and at the first glance I could see that the newly created tables that came
@@ -84,9 +86,9 @@ with the South migration on the server had a different engine than all the
 rest.</p>
 <p>Another stupid question later I learned that I can convert the tables to the
 other engine by simply executing:</p>
-<div class="highlight"><pre><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="o">&lt;</span><span class="n">tablename</span><span class="o">&gt;</span> <span class="n">ENGINE</span><span class="o">=&lt;</span><span class="n">engine</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="o">&lt;</span><span class="n">tablename</span><span class="o">&gt;</span> <span class="n">ENGINE</span><span class="o">=&lt;</span><span class="n">engine</span> <span class="k">name</span><span class="o">&gt;</span><span class="p">;</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>So I converted all MyISAM tables into InnoDB tables and all was good. I should
 definitely update my local MySQL installation...</p>

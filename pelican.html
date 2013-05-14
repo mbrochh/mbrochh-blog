@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -69,14 +71,21 @@ in here will be served at <code>http://username.github.com</code>. For more info
 please see the <a href="http://pages.github.com/">GitHub Pages Documentation</a>.</p>
 <h1>Setup your repository</h1>
 <p>First create a folder on your disk for the new project:</p>
-<div class="highlight"><pre>mkdir <span class="nv">$HOME</span>/Projects/myblog
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>mkdir <span class="nv">$HOME</span>/Projects/myblog
 <span class="nb">cd</span> <span class="nv">$HOME</span>/Projects/myblog
 </pre></div>
-
+</td></tr></table>
 
 <p>Next setup your <code>source</code> folder. This is the folder where you will write your
 articles and call pelican to generate your static html output:</p>
-<div class="highlight"><pre>mkdir <span class="nb">source</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre>mkdir <span class="nb">source</span>
 <span class="nb">cd source</span>
 
 <span class="c"># We will steal some files from my own repo here:</span>
@@ -84,88 +93,112 @@ wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/requirement
 wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/fabfile.py
 wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/settings.py.sample settings.py
 </pre></div>
-
+</td></tr></table>
 
 <p>The sample <code>settings.py</code> you just got from my own repo will need some changes
 now. Have a look at it and edit it so that it fits your needs.</p>
 <h1>Setup your virtualenv</h1>
 <p>If you have never used virtualenv and virtualenvwrapper before, now is the
 time to learn about it. Usually this is what you need to do to install it:</p>
-<div class="highlight"><pre>sudo easy_install pip
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre>sudo easy_install pip
 sudo pip install virtualenv
 sudo pip install virtualenvwrapper
 <span class="nb">export </span><span class="nv">WORKON_HOME</span><span class="o">=</span>~/Envs
 <span class="nb">source</span> /usr/local/bin/virtualenvwrapper.sh
 <span class="c"># also add export WORKON_HOME=~/Envs to your .bashrc file</span>
 </pre></div>
-
+</td></tr></table>
 
 <p>We will use virtualenv to install fabric and pelican:</p>
-<div class="highlight"><pre>mkvirtualenv -p python2.7 blog
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre>mkvirtualenv -p python2.7 blog
 workon blog
 pip install -r requirements.txt
 </pre></div>
-
+</td></tr></table>
 
 <h1>Create your first post</h1>
 <p>Now is the time to create your first post:</p>
-<div class="highlight"><pre><span class="c"># make sure to be in the source/ folder</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># make sure to be in the source/ folder</span>
 mkdir -p posts/2012/02/  <span class="c"># insert appropriate year and month here</span>
 <span class="nb">cd </span>posts/2012/02/
 touch hello-world.md
 nano hello-world.md
 </pre></div>
-
+</td></tr></table>
 
 <p>To learn more about how to write your articles with Markdown or
 reStructuredText for Pelican, have a look at
 <a href="http://pelican.notmyidea.org/en/latest/getting_started.html#writing-articles-using-pelican">writing articles using pelican</a>.</p>
 <p>Your article should look similar to this:</p>
-<div class="highlight"><pre>Date: 2012-02-20
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre>Date: 2012-02-20
 Title: Hello world
 Category: Blog
-Tags: blogging, test
+Tags: blogging, <span class="nb">test</span>
 
 Lorem ipsum
 </pre></div>
-
+</td></tr></table>
 
 <p>I like to create meaningful commit messages for the edits of my <code>.md</code> files and
 separate them from the changes that the Pelican output generates, therefore now
 it is a good time to create a commit:</p>
-<div class="highlight"><pre>git add .
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>git add .
 git commit -am <span class="s2">&quot;Created my first post.&quot;</span>
 </pre></div>
-
+</td></tr></table>
 
 <h1>Publish your first post</h1>
 <p>This is the interesting part! You will use Pelican now to generate the output
 for your blog:</p>
-<div class="highlight"><pre><span class="c"># make sure to be in the source/ folder</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># make sure to be in the source/ folder</span>
 pelican . -o ../ -s settings.py
 git status
 </pre></div>
-
+</td></tr></table>
 
 <p>When you run <code>git status</code> you will see that Pelican generated a whole bunch
 of files in your root directory. Open your <code>index.html</code> and have a look at
 your new blog.</p>
 <p>If you see that something went wrong, you might want to destroy the generated
 output:</p>
-<div class="highlight"><pre><span class="c"># make sure to be in the root folder and be sure that your .md file changes</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># make sure to be in the root folder and be sure that your .md file changes</span>
 <span class="c"># have been committed</span>
 git clean -df
 </pre></div>
-
+</td></tr></table>
 
 <p>Now you can edit your <code>.md</code> files again and generate the output again. If you
 are happy with your output, it is time to publish it:</p>
-<div class="highlight"><pre><span class="c"># make sure to be in the root folder</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># make sure to be in the root folder</span>
 git add .
 git commit -am <span class="s2">&quot;Pelican output&quot;</span>
 git push origin master
 </pre></div>
-
+</td></tr></table>
 
 <h1>Publishing with fabric</h1>
 <p>As you have seen, the workflow of editing your posts is always the same. First
@@ -175,17 +208,17 @@ standard commit message. Finally you push to Github which will make your
 changes visible.</p>
 <p>To make this workflow easier, I have created a little Fabric script. Now you
 can just edit your <code>.md</code> files and once you are done, call Fabric:</p>
-<div class="highlight"><pre>fab publish:<span class="s1">&#39;My commit message&#39;</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>fab publish:<span class="s1">&#39;My commit message&#39;</span>
 </pre></div>
-
+</td></tr></table>
 
 <h1>Setting up a custom domain</h1>
 <p>As if all this isn't awesome enough, GitHub makes it really easy to create
 custom domains for your GitHub page. All you need is to place a file called
 <code>CNAME</code> in the root of your project and add the following content:</p>
-<div class="highlight"><pre>yourdomain.com
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>yourdomain.com
 </pre></div>
-
+</td></tr></table>
 
 <p>Then point the A record of your domain to the IP address of GitHub. For more
 information have a look at the instructions about

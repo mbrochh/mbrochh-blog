@@ -6,6 +6,8 @@
     <!-- Bootstrap -->
     <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
     <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
 
     <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
@@ -51,84 +53,113 @@ and got curious.</p>
 <h2>Install zeromq</h2>
 <p>Since we cannot install anything as root, I chose to install zeromq into
 the folder <code>/opt/zeromq-2.2.0</code>:</p>
-<div class="highlight"><pre><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">src</span>
-<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">opt</span>
-<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">etc</span>
-<span class="n">cd</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">src</span>
-<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="p">.</span><span class="n">zeromq</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0<span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
-<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0<span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
-<span class="n">cd</span> <span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0
-<span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="p">=</span>$<span class="n">HOME</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0
-<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre>mkdir -p <span class="nv">$HOME</span>/src
+mkdir -p <span class="nv">$HOME</span>/opt
+mkdir -p <span class="nv">$HOME</span>/etc
+<span class="nb">cd</span> <span class="nv">$HOME</span>/src
+wget http://download.zeromq.org/zeromq-2.2.0.tar.gz
+tar -xvf zeromq-2.2.0.tar.gz
+<span class="nb">cd </span>zeromq-2.2.0
+./configure --prefix<span class="o">=</span><span class="nv">$HOME</span>/opt/zeromq-2.2.0
+make <span class="o">&amp;&amp;</span> make install
 </pre></div>
-
+</td></tr></table>
 
 <h2>Install Circus</h2>
 <p>Now we can install Circus. I assume that you are using virtualenv and
 virtualenvwrapper:</p>
-<div class="highlight"><pre><span class="n">workon</span> <span class="n">yourvenv</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">circus</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre>workon yourvenv
+pip install circus
 </pre></div>
-
+</td></tr></table>
 
 <p>This will fail because of the custom installation folder of zeromq. Thankfully
 the failed zeromq build will remain in your virtualenv's build folder so that
 you can install it again manually, this time giving it the path to your
 zeromq installation:</p>
-<div class="highlight"><pre><span class="n">cd</span> <span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">Venv</span><span class="o">/</span>
-<span class="n">cd</span> <span class="n">build</span>
-<span class="n">cd</span> <span class="n">pyzmq</span>
-<span class="n">python</span> <span class="n">setup</span><span class="p">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">zmq</span><span class="p">=</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">username</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0
-<span class="n">pip</span> <span class="n">install</span> <span class="n">circus</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">cd</span> /your/Venv/
+<span class="nb">cd </span>build
+<span class="nb">cd </span>pyzmq
+python setup.py install --zmq<span class="o">=</span>/home/username/opt/zeromq-2.2.0
+pip install circus
 </pre></div>
-
+</td></tr></table>
 
 <h2>Install Solr</h2>
 <p>Now let's install Solr, following <a href="http://django-haystack.readthedocs.org/en/latest/installing_search_engines.html#solr">this post</a>.
 All you really need to do is download and unpack it:</p>
-<div class="highlight"><pre><span class="n">cd</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">opt</span>
-<span class="n">curl</span> <span class="o">-</span><span class="n">O</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="p">.</span><span class="n">mirrors</span><span class="p">.</span><span class="n">tds</span><span class="p">.</span><span class="n">net</span><span class="o">/</span><span class="n">lucene</span><span class="o">/</span><span class="n">solr</span><span class="o">/</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">solr</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span>
-<span class="n">tar</span> <span class="n">xvzf</span> <span class="n">apache</span><span class="o">-</span><span class="n">solr</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">cd</span> <span class="nv">$HOME</span>/opt
+curl -O http://apache.mirrors.tds.net/lucene/solr/3.5.0/apache-solr-3.5.0.tgz
+tar xvzf apache-solr-3.5.0.tgz
 </pre></div>
-
+</td></tr></table>
 
 <h2>Configure Circus</h2>
 <p>Create a <code>circus.ini</code> file somewhere on your file system. The following file
 works great for me, just replace the path to your Solr installation
 (usually just change your username):</p>
-<div class="highlight"><pre><span class="k">[circus]</span>
-<span class="na">check_delay</span> <span class="o">=</span> <span class="s">5</span>
-<span class="na">endpoint</span> <span class="o">=</span> <span class="s">tcp://127.0.0.1:5555</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">[</span>circus<span class="o">]</span>
+<span class="nv">check_delay</span> <span class="o">=</span> 5
+<span class="nv">endpoint</span> <span class="o">=</span> tcp://127.0.0.1:5555
 
-<span class="k">[watcher:solr]</span>
-<span class="na">cmd</span> <span class="o">=</span> <span class="s">java</span>
-<span class="na">args</span> <span class="o">=</span> <span class="s">-Djava.util.logging.config.file=logging.properties -jar start.jar</span>
-<span class="na">working_dir</span> <span class="o">=</span> <span class="s">/home/&lt;USERNAME&gt;/opt/apache-solr-3.5.0/example</span>
-<span class="na">warmup_delay</span> <span class="o">=</span> <span class="s">0</span>
-<span class="na">numprocesses</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">singleton</span> <span class="o">=</span> <span class="s">True</span>
+<span class="o">[</span>watcher:solr<span class="o">]</span>
+<span class="nv">cmd</span> <span class="o">=</span> java
+<span class="nv">args</span> <span class="o">=</span> -Djava.util.logging.config.file<span class="o">=</span>logging.properties -jar start.jar
+<span class="nv">working_dir</span> <span class="o">=</span> /home/&lt;USERNAME&gt;/opt/apache-solr-3.5.0/example
+<span class="nv">warmup_delay</span> <span class="o">=</span> 0
+<span class="nv">numprocesses</span> <span class="o">=</span> 1
+<span class="nv">singleton</span> <span class="o">=</span> True
 </pre></div>
-
+</td></tr></table>
 
 <p>Start circus:</p>
-<div class="highlight"><pre><span class="n">circusd</span> <span class="n">circus</span><span class="p">.</span><span class="n">ini</span> <span class="o">&amp;</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>circusd circus.ini &amp;
 </pre></div>
-
+</td></tr></table>
 
 <p>That's it. On my Webfaction server circus eats 15MB RAM. You can now start and
 stop Solr using <code>circusctl</code>:</p>
-<div class="highlight"><pre><span class="n">circusctl</span> <span class="n">status</span> <span class="n">solr</span>
-<span class="n">circusctl</span> <span class="n">stop</span> <span class="n">solr</span>
-<span class="n">circusctl</span> <span class="n">start</span> <span class="n">solr</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre>circusctl status solr
+circusctl stop solr
+circusctl start solr
 </pre></div>
-
+</td></tr></table>
 
 <p>Or try to kill Solr. Circus will immediately restart it:</p>
-<div class="highlight"><pre><span class="n">ps</span> <span class="n">aux</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">java</span>
-<span class="n">kill</span> <span class="o">&lt;</span><span class="n">solr</span> <span class="n">PID</span><span class="o">&gt;</span>
-<span class="n">ps</span> <span class="n">aux</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">java</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre>ps aux | grep java
+<span class="nb">kill</span> &lt;solr PID&gt;
+ps aux | grep java
 </pre></div>
-
+</td></tr></table>
 
 <p>You need to be careful when starting and stopping Solr. Even though Circus will
 return <code>[OK]</code> the process will remain visible for a few seconds after you
