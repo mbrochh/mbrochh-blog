@@ -45,7 +45,7 @@ for me:
 
 On my servers, I now set this:
 
-    ::text
+    #!sh
     # in ~/.ssh/config:
     ServerAliveInterval 60
 

@@ -35,6 +35,7 @@ Add Bootstrap as a submodule
 
 First I add bootstrap as a git submodule to my Django projects:
 
+    #!sh
     git submodule add git://github.com/twitter/bootstrap.git myproject/submodules/bootstrap
 
 It is important to add the submodule to a path inside your project root. This
@@ -47,12 +48,14 @@ Setup your css folder
 Surely you will have a folder that holds your project's CSS files somewhere in
 your project. For my Django projects that is usually:
 
+    #!sh
     myproject/myproject/static/css/
 
 Inside of this folder I like to create a `libs` folder which holds CSS files
 of third party plugins or frameworks that I use. In our case this would be
 bootstrap, so let's create a bootstrap folder:
 
+    #!sh
     mkdir myproject/myproject/static/css/libs/bootstrap/
 
 
@@ -62,6 +65,7 @@ Symlink the bootstrap files
 So here is the first part of the trick. Inside of the `bootstrap` which we have
 just created, we symlink all the `.less` files of the Bootstrap framework:
 
+    #!sh
     cd myproject/myproject/static/css/libs/bootstrap/
     ln -s ../../../../../submodules/bootstrap/less/* .
 
@@ -76,6 +80,7 @@ Prepare the working files
 Here comes the second part of the trick. We will create copies of the files
 `bootstrap.less` and `responsive.less`:
 
+    #!sh
     cd myproject/myproject/static/css/
     cp libs/bootstrap/bootstrap.less .
     cp libs/bootstrap/responsive.less .
@@ -87,12 +92,14 @@ reason is that we won't use the symlinks (you could delete them). Instead
 we will make a three simple changes to those two files. First we need to change
 the paths to all the imported `.less` files:
 
+    #!sh
     sed -i -e 's/import "/import "libs\/bootstrap\//g' bootstrap.less
     sed -i -e 's/import "/import "libs\/bootstrap\//g' responsive.less
 
 Next we will add an import of our own variables file to both files. The import
 should come right after the import of the original `variables.less`:
 
+    #!less
     # Excerpt from your bootstrap.less copy:
 
     ...
@@ -111,6 +118,7 @@ Finally we will include our very own `styles.less` at the bottom of
 `bootstrap.less`. Styles in this file would override everything else from
 bootstrap:
 
+    #!less
     # Excerpt from your bootstrap.less copy:
 
     ...

@@ -21,7 +21,7 @@ are similar to UIDs.
 
 Creating objects is very simple:
 
-    ::py
+    #!python
     import pymongo
     from bson import ObjectId
 
@@ -37,7 +37,7 @@ Creating objects is very simple:
 
 Finding is similar:
 
-    ::py
+    #!python
     pprint(db.posts.find_one({'id": post['_id']}))
     # or
     for post in db.posts.find():

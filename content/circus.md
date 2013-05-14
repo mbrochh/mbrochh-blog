@@ -20,6 +20,7 @@ Here is what I did to install zeromq, solr and circus on a Webfaction server:
 Since we cannot install anything as root, I chose to install zeromq into
 the folder ``/opt/zeromq-2.2.0``:
 
+    #!sh
     mkdir -p $HOME/src
     mkdir -p $HOME/opt
     mkdir -p $HOME/etc
@@ -35,6 +36,7 @@ the folder ``/opt/zeromq-2.2.0``:
 Now we can install Circus. I assume that you are using virtualenv and
 virtualenvwrapper:
 
+    #!sh
     workon yourvenv
     pip install circus
 
@@ -43,6 +45,7 @@ the failed zeromq build will remain in your virtualenv's build folder so that
 you can install it again manually, this time giving it the path to your
 zeromq installation:
 
+    #!sh
     cd /your/Venv/
     cd build
     cd pyzmq
@@ -54,6 +57,7 @@ zeromq installation:
 Now let's install Solr, following [this post](http://django-haystack.readthedocs.org/en/latest/installing_search_engines.html#solr).
 All you really need to do is download and unpack it:
 
+    #!sh
     cd $HOME/opt
     curl -O http://apache.mirrors.tds.net/lucene/solr/3.5.0/apache-solr-3.5.0.tgz
     tar xvzf apache-solr-3.5.0.tgz
@@ -64,6 +68,7 @@ Create a `circus.ini` file somewhere on your file system. The following file
 works great for me, just replace the path to your Solr installation
 (usually just change your username):
 
+    #!sh
     [circus]
     check_delay = 5
     endpoint = tcp://127.0.0.1:5555
@@ -78,17 +83,20 @@ works great for me, just replace the path to your Solr installation
 
 Start circus:
 
+    #!sh
     circusd circus.ini &
 
 That's it. On my Webfaction server circus eats 15MB RAM. You can now start and
 stop Solr using `circusctl`:
 
+    #!sh
     circusctl status solr
     circusctl stop solr
     circusctl start solr
 
 Or try to kill Solr. Circus will immediately restart it:
 
+    #!sh
     ps aux | grep java
     kill <solr PID>
     ps aux | grep java

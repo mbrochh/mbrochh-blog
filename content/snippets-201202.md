@@ -20,7 +20,7 @@ could I not know about this until now?!?
 
 Just add the following code to your .gitconfig:
 
-    ::text
+    #!sh
     [core]
     excludesfile = $HOME/.gitignore_global
 
@@ -33,7 +33,7 @@ So I finally got the ``hjkl`` keys for movement into my muscle memory. Now it
 annoys me that I have to use the arrow keys when I want to browse through the
 various options that the code completion suggests. There is a vimbit for that:
 
-    ::text
+    #!sh
     set completeopt=longest,menuone
 
     " found here: http://stackoverflow.com/a/2170800/70778
@@ -61,7 +61,7 @@ exploded with all kinds of awesomeness.
 I thought that I was typing ``git branch`` way too often (actually I type
 ``git br``, of course).
 
-    ::text
+    #!sh
     export PS1='\w\[\033[31m\]$(__git_ps1 "(%s)") \[\033[01;34m\]$\[\033[00m\] '
 
 Hint: In order for this to work, you need to install git via Homebrew on OSX.

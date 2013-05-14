@@ -11,7 +11,7 @@ attached to any other object (when you think about Facebook, a message can
 be sent to another User, or to his profile timeline, or to a status update
 and so on):
 
-    ::py
+    #!python
     class Message(models.Model):
         user = models.ForeignKey('auth.User')
         text = models.TextField(max_length=4000)
@@ -26,7 +26,7 @@ I like to maintain 100% code coverage in all my projects, so I will even test
 seemingly mundane things like instantiation and saving of all my models. A test
 for this `Message` model could look like this:
 
-    ::py
+    #!python
     from django.test import TestCase
     from messages.tests.factories import MessageFactory
 
@@ -54,7 +54,7 @@ a `test_app` inside of your reusable app and only add that app to
 
 So let's create a few new files:
 
-    ::sh
+    #!sh
     yourapp/tests/factories.py
     yourapp/tests/models_tests.py
     yourapp/tests/test_app/__init__.py
@@ -62,7 +62,7 @@ So let's create a few new files:
 
 Your test app's `models.py` should look like this:
 
-    ::py
+    #!python
     class DummyModel(models.Model):
         name = models.CharField(max_length=256, blank=True)
 
@@ -83,7 +83,7 @@ here:
 
 Here is how your `factories.py` should look like:
 
-    ::py
+    #!python
     import factory
     from django_libs.tests.factories import UserFactory
     from yourapp.tests.test_app.models import DummyModel
@@ -109,7 +109,7 @@ message saying that there is no table for the `DummyModel` in your test
 database. In order to solve this you should create a `test_settings.py` which
 adds the `test_app` to your `INSTALLED_APPS`:
 
-    ::py
+    #!python
     from myproject.settings import *
     INSTALLED_APPS.append('yourapp.tests.test_app')
 

@@ -59,6 +59,7 @@ file ``create_user.sh``. Replace the three variables at the top and execute it.
 
 **OSX**
 
+    #!sh
     # find out your staff group id (for me it is 20)
     # dscacheutil -q group
     STAFF_GROUP_ID=XX
@@ -86,6 +87,7 @@ certainly saved my ass.
 
 **Ubuntu**
 
+    #!sh
     sudo useradd -m -s /bin/bash pairprogger
     sudo passwd pairprogger
 
@@ -126,10 +128,12 @@ Note down your local IP:
 
 **OSX**
 
+    #!sh
     ipconfig getifaddr en1
 
 **Ubuntu**
 
+    #!sh
     ifconfig wlan0 | grep 'inet addr' | sed 's/.*inet addr:\([0-9.]*\).*/\1/'
 
 To setup port forwarding go to `192.168.0.1`. This IP might differ on your
@@ -156,6 +160,7 @@ via bruteforce.
 Go to `System Preferences` --> `Sharing` --> `Remote login`. Add
 `Pair Programmer` to the list `Allow access for`.
 
+    #!sh
     sudo vim /etc/sshd_config
     # Set PasswordAuthentication to no
     # Set ChallengeResponseAuthentication to no
@@ -163,6 +168,7 @@ Go to `System Preferences` --> `Sharing` --> `Remote login`. Add
 
 **Ubuntu**
 
+    #!sh
     sudo apt-get install openssh-server
     sudo vim /etc/ssh/sshd_config
     # Set PasswordAuthentication to no
@@ -185,11 +191,13 @@ should be a no-brainer:
 
 **OSX**
 
+    #!sh
     brew install wemux
     brew install https://github.com/downloads/zolrath/wemux/wemux.rb
 
 **Ubuntu**
 
+    #!sh
     sudo apt-get install tmux
 
 On Ubuntu follow the instructions at https://github.com/zolrath/wemux for
@@ -199,12 +207,14 @@ manual installation.
 
 You are ready to go. Type the following command:
 
+    #!sh
     wemux start
 
 ## Step 7: Join the wemux server
 
 Now tell your friend to join you:
 
+    #!sh
     ssh pairprogger@your-public-ip
     wemux attach
 

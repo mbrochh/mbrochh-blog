@@ -58,11 +58,13 @@ website and retrieve a download link for the latest version [here](http://www.pa
 Something in my zsh seemed to be broken because whenever I tried to use TAB
 for folder completion I got this error:
 
+    #!sh
     (eval):setopt:3: no such option: NO_ignoreclosebraces
 
 Updating zsh can only be done if you went through the various what-the-fucks of
 updating your Command Line Tools first, after that it simply is:
 
+    #!sh
     brew update
     brew uninstall zsh
     brew install zsh
@@ -79,12 +81,14 @@ denied`` errors. ``brew list`` showed that I actually installed Python via
 homebrew for some reason (I assume because of pygame), so I thought it might
 be a good idea to re-install Python:
 
+    #!sh
     brew uninstall python
     brew install python --framework
 
 After this I ran into several other problems. I'm not sure if this is really
 necessary but setting up my ``PATH`` like this seemed to help:
 
+    #!sh
     export PATH=/usr/local/bin:/usr/local/sbin:/usr/local/share/python:$PATH
     # Include user's bin folder.
     if [ -d "$HOME/bin" ] ; then
@@ -96,6 +100,7 @@ necessary but setting up my ``PATH`` like this seemed to help:
 It turned out that I could no longer activate my virtualenvs. Here is what I
 had to do:
 
+    #!sh
     sudo easy_install pip
     sudo easy_install mercurial
     sudo pip install virtualenv
@@ -111,6 +116,7 @@ just create that missing ``.py`` file. **What the fuck?**
 I also re-installed some packages that I like to install globally instead of
 installing them into each and every virtualenv:
 
+    #!sh
     sudo pip install psycopg2
     sudo pip install mysql-python
     sudo pip install PIL

@@ -1,7 +1,7 @@
 Date: 2012-03-18
 Title: InnoDB vs. MyISAM 
 Tagline: MySQL InnoDB vs. MyISAM and the foreign key constraint of death
-Slug: myisam-vs-innodb.md
+Slug: myisam-vs-innodb
 Category: Blog
 Tags: databases, mysql, django
 
@@ -43,7 +43,7 @@ So I imported the server's datbase locally and asked some stupid questions in
 the #mysql channel. A friendly user named ``salle`` answered within a second
 and I learned about a cool SQL command which I never needed before:
 
-    ::sql
+    #!psql
     SHOW TABLE STATUS;
 
 This shows, among many other informatoin, which engine each of your tables has
@@ -54,7 +54,7 @@ rest.
 Another stupid question later I learned that I can convert the tables to the
 other engine by simply executing:
 
-    ::sql
+    #!psql
     ALTER TABLE <tablename> ENGINE=<engine name>;
 
 So I converted all MyISAM tables into InnoDB tables and all was good. I should

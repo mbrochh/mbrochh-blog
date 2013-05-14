@@ -23,7 +23,7 @@ for describing the process nice enough for a dummy like me.
 Following his instructions I made sure that I have not activated any
 virtualenv, then I ran
 
-    ::sh
+    #!sh
     pip install supervisor
 
     # Let's create some folders we will need later on
@@ -35,7 +35,7 @@ virtualenv, then I ran
 Here is what my `supervisor.conf` looks like. Of course you would need to
 insert your webfaction username and adjust the path to your solr installation:
 
-    ::txt
+    #!sh
     [unix_http_server]
     file=/home/username/tmp/supervisor.sock
 
@@ -71,7 +71,7 @@ Just create the file `logging.properties` in the same folder where solr's
 `start.jar` resides. Mine looks like this (again, replace username with your
 webfaction account name):
 
-    ::txt
+    #!sh
     # Default global logging level:
     .level = INFO
 
@@ -98,7 +98,7 @@ cannot run the `supervisord` command twice - it would warn you that another
 instance is already running. Therefore we can safely schedule a cronjob to run
 `supervisord` every five minutes:
 
-    ::txt
+    #!sh
     */5 * * * * ~/bin/supervisord > $HOME/mylogs/cron/supervisord.log 2>&1
 
 
@@ -120,7 +120,7 @@ Every now and then you will introduce changes to your models and your search
 index that will require a rebuild of the index. I like to automate that with
 a Fabric task. Here it is:
 
-    ::py
+    #!python
     def run_rebuild_index():
         """Rebuilds the Solr index on the server."""
         run('supervisorctl stop solr')

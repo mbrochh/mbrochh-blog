@@ -24,7 +24,7 @@ into public domain, so we can tinker with it and build upon it.
 
 A first pygame program is really simple:
 
-    ::py
+    #!python
     import pygame
     pygame.init()
     screen = pygame.display.set_mode((640, 480))
@@ -41,7 +41,7 @@ modern unfortunately.
 
 Let's draw something:
 
-    ::py
+    #!python
     image = pygame.image.load('player.png')
     screen.fill((200, 200, 200))  # Fill the screen with a background color
     screen.blit(image, (320, 240))  # Copies the image to that position on screen
@@ -68,7 +68,7 @@ Our first animation is just adding 10 pixels to the image position.
 While Pygame can tell us, if a key down event has recently happened, it can
 also tell us which keys are currently being pressed:
 
-    ::py
+    #!python
     key = pygame.key.get_pressed()
     if key[pygame.K_LEFT]:
         image_x -= 10
@@ -78,7 +78,7 @@ every 30 seconds, it can very well happen that the user pressed the escape key
 to quit the game while we have been sleeping. In this case we would check like
 this:
 
-    ::py
+    #!python
     event = pygame.event.get()
     if event.type == pygame.KEYDOWN and event.key = pygame.K_ESCAPE:
 
@@ -89,7 +89,7 @@ they look like and where they are on screen. We can give them an ``update``
 method and handle their user input, which pulls out a lot of clutter from our
 main loop:
 
-    ::py
+    #!python
     class Player(pygame.sprite.Sprite):
     def __init__(self, *groups):
         super(Player, self).__init__(*groups)
@@ -144,7 +144,7 @@ can quickly grow into a huge amount of spaghetti code.
 
 As expected, adding sound is extremely easy as well:
 
-    ::py
+    #!python
     self.jump = pygame.mixer.Sound('jump.wav')
     self.jump.play()
 

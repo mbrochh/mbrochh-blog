@@ -43,14 +43,14 @@ please see the [GitHub Pages Documentation](http://pages.github.com/).
 
 First create a folder on your disk for the new project:
 
-    ::sh
+    #!sh
     mkdir $HOME/Projects/myblog
     cd $HOME/Projects/myblog
 
 Next setup your `source` folder. This is the folder where you will write your
 articles and call pelican to generate your static html output:
 
-    ::sh
+    #!sh
     mkdir source
     cd source
 
@@ -68,7 +68,7 @@ now. Have a look at it and edit it so that it fits your needs.
 If you have never used virtualenv and virtualenvwrapper before, now is the
 time to learn about it. Usually this is what you need to do to install it:
 
-    ::sh
+    #!sh
     sudo easy_install pip
     sudo pip install virtualenv
     sudo pip install virtualenvwrapper
@@ -78,7 +78,7 @@ time to learn about it. Usually this is what you need to do to install it:
 
 We will use virtualenv to install fabric and pelican:
 
-    ::sh
+    #!sh
     mkvirtualenv -p python2.7 blog
     workon blog
     pip install -r requirements.txt
@@ -88,7 +88,7 @@ We will use virtualenv to install fabric and pelican:
 
 Now is the time to create your first post:
 
-    ::sh
+    #!sh
     # make sure to be in the source/ folder
     mkdir -p posts/2012/02/  # insert appropriate year and month here
     cd posts/2012/02/
@@ -101,7 +101,7 @@ reStructuredText for Pelican, have a look at
 
 Your article should look similar to this:
 
-    ::text
+    #!sh
     Date: 2012-02-20
     Title: Hello world
     Category: Blog
@@ -113,7 +113,7 @@ I like to create meaningful commit messages for the edits of my `.md` files and
 separate them from the changes that the Pelican output generates, therefore now
 it is a good time to create a commit:
 
-    ::sh
+    #!sh
     git add .
     git commit -am "Created my first post."
 
@@ -123,7 +123,7 @@ it is a good time to create a commit:
 This is the interesting part! You will use Pelican now to generate the output
 for your blog:
 
-    ::sh
+    #!sh
     # make sure to be in the source/ folder
     pelican . -o ../ -s settings.py
     git status
@@ -135,7 +135,7 @@ your new blog.
 If you see that something went wrong, you might want to destroy the generated
 output:
 
-    ::sh
+    #!sh
     # make sure to be in the root folder and be sure that your .md file changes
     # have been committed
     git clean -df
@@ -143,7 +143,7 @@ output:
 Now you can edit your `.md` files again and generate the output again. If you
 are happy with your output, it is time to publish it:
 
-    ::sh
+    #!sh
     # make sure to be in the root folder
     git add .
     git commit -am "Pelican output"
@@ -161,7 +161,7 @@ changes visible.
 To make this workflow easier, I have created a little Fabric script. Now you
 can just edit your `.md` files and once you are done, call Fabric:
 
-    ::sh
+    #!sh
     fab publish:'My commit message'
 
 
@@ -171,7 +171,7 @@ As if all this isn't awesome enough, GitHub makes it really easy to create
 custom domains for your GitHub page. All you need is to place a file called
 `CNAME` in the root of your project and add the following content:
 
-    ::text
+    #!sh
     yourdomain.com
 
 Then point the A record of your domain to the IP address of GitHub. For more

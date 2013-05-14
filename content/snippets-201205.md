@@ -15,12 +15,13 @@ and pieces of wisdom that amazed me. You can find the last post here:
 # git defaults
 http://jk.gs/git-config.html
 
+    #!sh
     [push]
     default = upstream
 # factory_boy
 # access django from parallels
 
-    ::sh
+    #!sh
     ifconfig -a
     ./manage.py runserver 192.168.0.10:8000
 
@@ -37,7 +38,7 @@ Put ``zh-cn`` in your settings.py but run ``makemessages -l zh_CN``
 
 Let's assume:
 
-    ::py
+    #!python
     class FooBar(models.Model):
         foo = models.IntegerField()
         bar = models.IntegerField()
@@ -60,7 +61,30 @@ is actually saved on the instance.
 The code above would still show the value from the instance. It took me quite
 some time to find out that we also need to add this line after:
 
-    ::py
+    #!python
+    class FooBar(models.Model):
+        foo = models.IntegerField()
+        bar = models.IntegerField()
+
+    class FormBar(forms.ModelForm):
+        def __init__(self, *args, **kwargs):
+            super(FormBar, self).__init__(*args, **kwargs)
+            self.fields['bar'] = MyCustomIntegerField()
+
+    class FormFooBar(FormBar):
+        class Meta:
+            model = FooBar
+
+Usually we would instantiate the form ``FormFooBar`` which gets all it's fields
+created by the model. However, in the superclass, ``FormBar`` we would like
+to replace the automatically created field ``bar`` by a custom implementation
+of the IntegerField which would display a different value than the one that
+is actually saved on the instance.
+
+The code above would still show the value from the instance. It took me quite
+some time to find out that we also need to add this line after:
+
+    #!python
     ...
     self.fields['bar'] = MyCustomIntegerField()
     self.initial['bar'] = my_custom_calue
@@ -69,7 +93,7 @@ some time to find out that we also need to add this line after:
 # Django and Sphinx autodoc
 * add the following to conf.py
 
-    ::py
+    #!python
     sys.path.insert(0, os.path.abspath('../website/webapps/django/'))
     # setup django
     import settings
@@ -78,7 +102,7 @@ some time to find out that we also need to add this line after:
 
 * change this in Makefile
 
-    ::sh
+    #!python
     SPHINXBUILD   = python $(shell which sphinx-build)
 
 * run sphinx-apidoc -f -o api ../website/webapps/django/project
