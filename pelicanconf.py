@@ -8,6 +8,7 @@ AUTHOR = u'Martin Brochhaus'
 SITENAME = u'martinbrochhaus.com'
 SITEURL = 'http://martinbrochhaus.com'
 MINI_BIO = u"I build software with Python & Django. Every day. All day long."
+BIO = u'<strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.'
 
 TIMEZONE = 'Asia/Singapore'
 
@@ -23,10 +24,10 @@ LINKS = ()
 
 # Social widget
 SOCIAL = (
-    ('Github', 'https://github.com/mbrochh'),
-    ('Google Plus', 'https://plus.google.com/101162916953876296847/about'),
-    ('Twitter', 'https://twitter.com/mbrochh'),
-    ('Facebook', 'https://facebook.com/mbrochh'),
+    ('Github', 'https://github.com/mbrochh', '&#xe037;'),
+    ('Google Plus', 'https://plus.google.com/101162916953876296847/about', '&#xe039;'),
+    ('Twitter', 'https://twitter.com/mbrochh', '&#xe086;'),
+    ('Facebook', 'https://facebook.com/mbrochh', '&#xe027;'),
 )
 
 DEFAULT_PAGINATION = 10
@@ -42,3 +43,4 @@ FILES_TO_COPY = (
 )
 
 GOOGLE_ANALYTICS = 'UA-XXXXXXX-XX'
+DISQUS_SITENAME = 'martinbrochhauscom'

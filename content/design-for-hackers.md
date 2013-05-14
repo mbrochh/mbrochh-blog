@@ -1,4 +1,4 @@
-Date: 2012-06-??
+Date: 2012-06-01
 Title: Book Review: Design for Hackers
 Slug: design-for-hackers
 Category: Blog
