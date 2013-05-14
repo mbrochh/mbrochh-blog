@@ -217,7 +217,7 @@ very useful.
 I hope I didn't forget anything. If so, please let me know in the comments!
 
 Oh and: This is how it is going to look like:
-![wemux server](./images/wemux.png)
+![wemux server](/images/wemux.png)
 
 Note how wemux determines that my Ubuntu machine has lesser screen resolution
 and automatically scales down the working area on my MacBook. If this is not
