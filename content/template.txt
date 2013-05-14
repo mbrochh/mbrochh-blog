@@ -1,0 +1,7 @@
+Date: 2012-06-08
+Title: PyCon APAC 2012 - Title
+Slug: slug
+Category: Blog
+Tags: python, pycon, conferences
+
+

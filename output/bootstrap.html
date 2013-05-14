@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>How to manage Twitter Bootstrap</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="./" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="./index.html">martinbrochhaus.com </a></h1>
+                <nav><ul>
+                                                                                <li><a href="./">Archives</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+
+        <section id="content" class="body">
+<article>
+        <header> <h1 class="entry-title"><a href="bootstrap.html"
+        rel="bookmark" title="Permalink to How to manage Twitter Bootstrap">How to manage Twitter Bootstrap</a></h1>  </header>
+        <div class="entry-content">
+        <footer class="post-info">
+        <abbr class="published" title="2013-01-17T00:00:00">
+                Thu 17 January 2013
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="./author/martin-brochhaus.html">Martin Brochhaus</a>
+        </address>
+        <p>In <a href="./category/blog.html">Blog</a>. </p>
+<p>tags: <a href="./tag/css.html">css</a><a href="./tag/bootstrap.html">bootstrap</a><a href="./tag/howto.html">howto</a></p></p></footer><!-- /.post-info --><!-- /.post-info -->
+        <p>Without any doubt, <a href="http://twitter.github.com/bootstrap/">Twitter's Bootstrap</a>
+is awesome. So far I am using it in more than 10 projects and I don't regret
+anything.</p>
+<p>Unfortunately, Bootstrap has one major flaw: You can't really add it to your
+project and manipulate it, without editing the source files. Bootstrap offers
+a download page where you can chose the parts that you want and where you can
+enter values for all the variables - but I don't know who on earth works like
+this. I usually don't know about exact color values for my project until
+shortly before go-live and I certainly don't want to come back to the download
+page and download new versions of bootstrap over and over again.</p>
+<p>Here is what I want:</p>
+<ul>
+<li>I want to add Bootstrap to my project and work with the latest files from
+  the github repo</li>
+<li>Yet I don't want to manipulate them, because</li>
+<li>I want to be able to update my bootstrap sources at any time without merge
+  conflicts</li>
+<li>Updating should be a no-brainer</li>
+</ul>
+<p>My solution might not be the most elegant, but so far it seems to get the job
+done:</p>
+<h2>Add Bootstrap as a submodule</h2>
+<p>First I add bootstrap as a git submodule to my Django projects:</p>
+<div class="highlight"><pre><span class="n">git</span> <span class="n">submodule</span> <span class="n">add</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">twitter</span><span class="o">/</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">git</span> <span class="n">myproject</span><span class="o">/</span><span class="n">submodules</span><span class="o">/</span><span class="n">bootstrap</span>
+</pre></div>
+
+
+<p>It is important to add the submodule to a path inside your project root. This
+way you can place symlinks easily with all relative paths.</p>
+<h2>Setup your css folder</h2>
+<p>Surely you will have a folder that holds your project's CSS files somewhere in
+your project. For my Django projects that is usually:</p>
+<div class="highlight"><pre><span class="n">myproject</span><span class="o">/</span><span class="n">myproject</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">css</span><span class="o">/</span>
+</pre></div>
+
+
+<p>Inside of this folder I like to create a <code>libs</code> folder which holds CSS files
+of third party plugins or frameworks that I use. In our case this would be
+bootstrap, so let's create a bootstrap folder:</p>
+<div class="highlight"><pre><span class="n">mkdir</span> <span class="n">myproject</span><span class="o">/</span><span class="n">myproject</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">css</span><span class="o">/</span><span class="n">libs</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span>
+</pre></div>
+
+
+<h2>Symlink the bootstrap files</h2>
+<p>So here is the first part of the trick. Inside of the <code>bootstrap</code> which we have
+just created, we symlink all the <code>.less</code> files of the Bootstrap framework:</p>
+<div class="highlight"><pre><span class="n">cd</span> <span class="n">myproject</span><span class="o">/</span><span class="n">myproject</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">css</span><span class="o">/</span><span class="n">libs</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span>
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="n">submodules</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span><span class="n">less</span><span class="o">/*</span> <span class="p">.</span>
+</pre></div>
+
+
+<p>It would be better to just symlink the whole <code>less</code> folder instead of all files
+but unfortunately <code>lessc</code> is not able to follow such symlinks and would fail
+to compile the <code>bootstrap.less</code> file.</p>
+<h2>Prepare the working files</h2>
+<p>Here comes the second part of the trick. We will create copies of the files
+<code>bootstrap.less</code> and <code>responsive.less</code>:</p>
+<div class="highlight"><pre><span class="n">cd</span> <span class="n">myproject</span><span class="o">/</span><span class="n">myproject</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">css</span><span class="o">/</span>
+<span class="n">cp</span> <span class="n">libs</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">less</span> <span class="p">.</span>
+<span class="n">cp</span> <span class="n">libs</span><span class="o">/</span><span class="n">bootstrap</span><span class="o">/</span><span class="n">responsive</span><span class="p">.</span><span class="n">less</span> <span class="p">.</span>
+<span class="n">touch</span> <span class="n">my</span><span class="o">-</span><span class="n">variables</span><span class="p">.</span><span class="n">less</span>
+<span class="n">touch</span> <span class="n">styles</span><span class="p">.</span><span class="n">less</span>
+</pre></div>
+
+
+<p>I know, I know, we have just symlinked them, why create another copy now? The
+reason is that we won't use the symlinks (you could delete them). Instead
+we will make a three simple changes to those two files. First we need to change
+the paths to all the imported <code>.less</code> files:</p>
+<div class="highlight"><pre><span class="n">sed</span> <span class="o">-</span><span class="nb">i</span> <span class="o">-</span><span class="n">e</span> <span class="s">&#39;s/import &quot;/import &quot;libs\/bootstrap\//g&#39;</span> <span class="n">bootstrap</span><span class="p">.</span><span class="n">less</span>
+<span class="n">sed</span> <span class="o">-</span><span class="nb">i</span> <span class="o">-</span><span class="n">e</span> <span class="s">&#39;s/import &quot;/import &quot;libs\/bootstrap\//g&#39;</span> <span class="n">responsive</span><span class="p">.</span><span class="n">less</span>
+</pre></div>
+
+
+<p>Next we will add an import of our own variables file to both files. The import
+should come right after the import of the original <code>variables.less</code>:</p>
+<div class="highlight"><pre><span class="cp"># Excerpt from your bootstrap.less copy:</span>
+
+<span class="p">...</span>
+<span class="c1">// CSS Reset</span>
+<span class="err">@</span><span class="n">import</span> <span class="s">&quot;libs/bootstrap/reset.less&quot;</span><span class="p">;</span>
+
+<span class="c1">// Core variables and mixins</span>
+<span class="err">@</span><span class="n">import</span> <span class="s">&quot;libs/bootstrap/variables.less&quot;</span><span class="p">;</span>
+
+<span class="err">@</span><span class="n">import</span> <span class="s">&quot;my-variables.less&quot;</span><span class="p">;</span> <span class="c1">// Our own variables overrides</span>
+
+<span class="err">@</span><span class="n">import</span> <span class="s">&quot;libs/bootstrap/mixins.less&quot;</span><span class="p">;</span>
+<span class="p">...</span>
+</pre></div>
+
+
+<p>Finally we will include our very own <code>styles.less</code> at the bottom of
+<code>bootstrap.less</code>. Styles in this file would override everything else from
+bootstrap:</p>
+<div class="highlight"><pre><span class="cp"># Excerpt from your bootstrap.less copy:</span>
+
+<span class="p">...</span>
+<span class="c1">// Utility classes</span>
+<span class="err">@</span><span class="n">import</span> <span class="s">&quot;libs/bootstrap/utilities.less&quot;</span><span class="p">;</span> <span class="c1">// Has to be last to override when necessary</span>
+
+<span class="c1">// Our own stuff</span>
+<span class="err">@</span><span class="n">import</span> <span class="s">&quot;styles.less&quot;</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Repeat the last two steps for <code>responsive.less</code> as well, of course here you
+would add an import to <code>styles-responsive.less</code> instead of <code>styles.less</code> at the 
+bottom.</p>
+<h2>How to work with this setup?</h2>
+<p>That's a whole lot of files to deal with, but the rules are actually quite
+simple:</p>
+<ul>
+<li>Never touch anything in the <code>/libs/bootstrap/</code> folder</li>
+<li>If you would like to change the value of any of Bootstrap's
+  <a href="https://github.com/twitter/bootstrap/blob/master/less/variables.less">variables</a>,
+  override that same variable in our <code>my-varibales.less</code> file.</li>
+<li>You can even invent new variables here.</li>
+<li>Whenever you would like to add project specific styles for your site, add
+  them to <code>styles.less</code> and <code>responsive-styles.less</code>.</li>
+</ul>
+<p>When you are done, compile the files <code>bootstrap.less</code> and <code>responsive.less</code>. I
+like to save the output as <code>bootstrap.css</code> and <code>bootstrap-responsive.css</code> and
+those two files are the ones that I link in my templates.</p>
+<h2>Why is this awesome?</h2>
+<p>First of all, you will have your project specific overrides included in the
+rest of the Bootstrap framework and don't need to link it in your templates.
+This saves you one request.</p>
+<p>Secondly, we are symlinking to a git submodule, so if a new version or even
+just a minor bugfix is released, we can just <code>cd</code> into the
+<code>submodules/bootstrap</code> folder and run <code>git pull</code>. After that we need to
+re-compile our files and that's it - we just updated our Bootstrap files.</p>
+<h2>What can go wrong?</h2>
+<p>There is one thing that can and will still go wrong: The two file that we have
+modified and copied (<code>bootstrap.less</code> and <code>responsive.less</code>) might differ
+when you pull the latest Bootstrap version. Especially when a major new release
+happened, there will most definitely be new imports in those files. Luckily
+those files are really simple, so you can probably spot the new import at a
+glance. A new import would also mean that there is a new file that should be
+symlinked.</p>
+<p>So in this case, the best workflow would be this:</p>
+<ul>
+<li>Delete all symlinks and re-create them</li>
+<li>Copy <code>bootstrap.less</code> and <code>responsive.less</code> again</li>
+<li>Run the <code>sed</code> commands again</li>
+<li>Add the imports to <code>my-variables.less</code> and <code>styles.less</code> again.</li>
+</ul>
+<p>You could even create a shell script for this task, therefore I consider it
+a no-brainer :)</p>
+<h2>tl;dr</h2>
+<p>We want to use bootstrap as a git submodule because then we can update it
+simply via <code>git pull</code>.</p>
+<p>We can't really touch any of the sourcefiles because that would result in merge
+conflicts when we pull a new version, but the <code>variables.less</code> file is full of
+gold and really needs to be changed.</p>
+<p>As a solution, we just create our own <code>my-variables.less</code> file and import it
+in copies of <code>bootstrap.less</code> and <code>responsive.less</code> - those files are just as
+likely to change but if they do, we can re-create them in no time.</p>
+        </div><!-- /.entry-content -->
+        
+</article>
+</section>
+
+        <aside id="sidebar">
+                <div class="widget">
+                        <h2>Categories</h2>
+                        <ul>
+                                                   <li class="active"><a href="./category/blog.html">Blog</a></li>
+                                                </ul>
+                </div>
+                                <div class="widget social">
+                        <h2>Social</h2>
+                        <ul>
+                            <li><a href="./" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="https://github.com/mbrochh">Github</a></li>
+                                                    <li><a href="https://plus.google.com/101162916953876296847/about">Google Plus</a></li>
+                                                    <li><a href="https://twitter.com/mbrochh">Twitter</a></li>
+                                                    <li><a href="https://facebook.com/mbrochh">Facebook</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </aside><!-- /#sidebar -->
+
+        <footer id="footer" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is «notmyidea-cms», a modified version of «notmyidea», the default theme.</p>
+        </footer><!-- /#footer -->
+
+</body>
+</html>
