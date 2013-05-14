@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2013-01-22T00:00:00+08:00</updated><entry><title>Django GFKs &amp; Factory Boy</title><link href="/factory-boy.html" rel="alternate"></link><updated>2013-01-22T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2013-01-22:factory-boy.html</id><summary type="html">&lt;p&gt;Let's say you are writing a reusable Django app and your app has a model with
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-01-22T00:00:00+08:00</updated><entry><title>Django GFKs &amp; Factory Boy</title><link href="http://martinbrochhaus.com/factory-boy.html" rel="alternate"></link><updated>2013-01-22T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-01-22:factory-boy.html</id><summary type="html">&lt;p&gt;Let's say you are writing a reusable Django app and your app has a model with
 a generic foreign key. An example could be a messaging app where messages can
 attached to any other object (when you think about Facebook, a message can
 be sent to another User, or to his profile timeline, or to a status update
@@ -107,7 +107,7 @@ adds the &lt;code&gt;test_app&lt;/code&gt; to your &lt;code&gt;INSTALLED_APPS&lt
 tests you could to change the db backend to an in-memory sqlite database and
 for better test case recovery you could use a NoseTestRunner. Check out
 my &lt;a href="https://github.com/bitmazk/django-libs/blob/master/django_libs/settings/test_settings.py"&gt;test settings in django-libs&lt;/a&gt;
-for an example that I use in all my projects.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="testing"></category><category term="howto"></category></entry><entry><title>Manage Twitter Bootstrap</title><link href="/bootstrap.html" rel="alternate"></link><updated>2013-01-17T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2013-01-17:bootstrap.html</id><summary type="html">&lt;p&gt;Without any doubt, &lt;a href="http://twitter.github.com/bootstrap/"&gt;Twitter's Bootstrap&lt;/a&gt;
+for an example that I use in all my projects.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="testing"></category><category term="howto"></category></entry><entry><title>Manage Twitter Bootstrap</title><link href="http://martinbrochhaus.com/bootstrap.html" rel="alternate"></link><updated>2013-01-17T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-01-17:bootstrap.html</id><summary type="html">&lt;p&gt;Without any doubt, &lt;a href="http://twitter.github.com/bootstrap/"&gt;Twitter's Bootstrap&lt;/a&gt;
 is awesome. So far I am using it in more than 10 projects and I don't regret
 anything.&lt;/p&gt;
 &lt;p&gt;Unfortunately, Bootstrap has one major flaw: You can't really add it to your
@@ -264,7 +264,7 @@ conflicts when we pull a new version, but the &lt;code&gt;variables.less&lt;/cod
 gold and really needs to be changed.&lt;/p&gt;
 &lt;p&gt;As a solution, we just create our own &lt;code&gt;my-variables.less&lt;/code&gt; file and import it
 in copies of &lt;code&gt;bootstrap.less&lt;/code&gt; and &lt;code&gt;responsive.less&lt;/code&gt; - those files are just as
-likely to change but if they do, we can re-create them in no time.&lt;/p&gt;</summary><category term="css"></category><category term="bootstrap"></category><category term="howto"></category></entry><entry><title>Solr &amp; Supervisor</title><link href="/solr.html" rel="alternate"></link><updated>2013-01-10T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2013-01-10:solr.html</id><summary type="html">&lt;p&gt;A while ago I wrote how to &lt;a href="http://martinbrochhaus.com/2012/07/circus.html"&gt;daemonize Solr on Webfaction with Circus &lt;/a&gt;.&lt;/p&gt;
+likely to change but if they do, we can re-create them in no time.&lt;/p&gt;</summary><category term="css"></category><category term="bootstrap"></category><category term="howto"></category></entry><entry><title>Solr &amp; Supervisor</title><link href="http://martinbrochhaus.com/solr.html" rel="alternate"></link><updated>2013-01-10T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-01-10:solr.html</id><summary type="html">&lt;p&gt;A while ago I wrote how to &lt;a href="http://martinbrochhaus.com/2012/07/circus.html"&gt;daemonize Solr on Webfaction with Circus &lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Unfortunately this solution has not proven to be as stable as I wished, plus
 I think there is a security issue because in theory other Webfaction users on
 the same machine could communicate with my own Circus instance.&lt;/p&gt;
@@ -367,7 +367,7 @@ a Fabric task. Here it is:&lt;/p&gt;
     &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;supervisorctl start solr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;workon envname &amp;amp;&amp;amp; $HOME/webapps/django/myproject/manage.py rebuild_index --noinput&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="solr"></category><category term="webfaction"></category></entry><entry><title>RE: Developer Time</title><link href="/re-developer-time.html" rel="alternate"></link><updated>2012-12-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-12-06:re-developer-time.html</id><summary type="html">&lt;p&gt;I just came across &lt;a href="http://pydanny.com/developer-time.html"&gt;Daniel Greenfeld's post about Developer time&lt;/a&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="solr"></category><category term="webfaction"></category></entry><entry><title>RE: Developer Time</title><link href="http://martinbrochhaus.com/re-developer-time.html" rel="alternate"></link><updated>2012-12-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-12-06:re-developer-time.html</id><summary type="html">&lt;p&gt;I just came across &lt;a href="http://pydanny.com/developer-time.html"&gt;Daniel Greenfeld's post about Developer time&lt;/a&gt;
 and when I was halfway entering my reply into the comment field I realised
 that this might be worth a blog post on it's own. So here is my two cents:&lt;/p&gt;
 &lt;p&gt;I believe that there are good ways to maximise developer time, they might just
@@ -481,7 +481,7 @@ result is always the same: After 3 hours or so, my thinking slows down. After
 you wrote in the first hours to the code you wrote in the last hour of a six
 hour coding block.&lt;/p&gt;
 &lt;p&gt;Small interruptions aren't that bad. The problem are the interruptions that we
-can't schedule ourselves.&lt;/p&gt;</summary><category term="programming"></category><category term="management"></category></entry><entry><title>Fixing Mountain Lion</title><link href="/mountain-lion.html" rel="alternate"></link><updated>2012-07-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-07-26:mountain-lion.html</id><summary type="html">&lt;p&gt;Out of habit I opened the AppStore on my MacBook Pro yesterday and found a big
+can't schedule ourselves.&lt;/p&gt;</summary><category term="programming"></category><category term="management"></category></entry><entry><title>Fixing Mountain Lion</title><link href="http://martinbrochhaus.com/mountain-lion.html" rel="alternate"></link><updated>2012-07-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-07-26:mountain-lion.html</id><summary type="html">&lt;p&gt;Out of habit I opened the AppStore on my MacBook Pro yesterday and found a big
 fat new app in the spotlight: OSX 10.8 Mountain Lion. I paid my 15 bucks,
 downloaded the 4GB over night and started the installation this morning. It
 estimated 34 minutes to install but I don't know if that is true because I went
@@ -592,7 +592,7 @@ Profiles --&amp;gt; Default&lt;/code&gt;. Set it back to &lt;code&gt;xterm-256co
 &lt;p&gt;This whole thing took me exactly 4 hours including the writing of this blog
 post. It also took so long because I had to reinstall a huge virtualenv over
 and over again until it finally worked without errors. Not too bad actually and
-I found it quite amazing that MySQL and Postgres still worked.&lt;/p&gt;</summary><category term="apple"></category><category term="osx"></category></entry><entry><title>Solr &amp; Circus</title><link href="/circus.html" rel="alternate"></link><updated>2012-07-13T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-07-13:circus.html</id><summary type="html">&lt;p&gt;Since Webfaction increased the available memory from 40 MB to 250 MB I started
+I found it quite amazing that MySQL and Postgres still worked.&lt;/p&gt;</summary><category term="apple"></category><category term="osx"></category></entry><entry><title>Solr &amp; Circus</title><link href="http://martinbrochhaus.com/circus.html" rel="alternate"></link><updated>2012-07-13T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-07-13:circus.html</id><summary type="html">&lt;p&gt;Since Webfaction increased the available memory from 40 MB to 250 MB I started
 using Solr for more and more of my projects. However, I never really knew how
 to ensure that Solr restarts itself if it crashes and how to easily stop and
 start it in case I have to re-build the &lt;code&gt;schema.xml&lt;/code&gt; file.&lt;/p&gt;
@@ -685,7 +685,7 @@ stop Solr using &lt;code&gt;circusctl&lt;/code&gt;:&lt;/p&gt;
 return &lt;code&gt;[OK]&lt;/code&gt; the process will remain visible for a few seconds after you
 stopped it. Similarly it will not accept requests for a few seconds after it
 has been started. So if you use start and stop in a shell script or Fabric
-task better insert some &lt;code&gt;sleep&lt;/code&gt; seconds before doing anything else with Solr.&lt;/p&gt;</summary><category term="python"></category><category term="solr"></category><category term="circus"></category></entry><entry><title>StartSSL and Webfaction</title><link href="/ssl.html" rel="alternate"></link><updated>2012-06-13T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-13:ssl.html</id><summary type="html">&lt;p&gt;For my next big project it will be mandatory to use a SSL certificate for the
+task better insert some &lt;code&gt;sleep&lt;/code&gt; seconds before doing anything else with Solr.&lt;/p&gt;</summary><category term="python"></category><category term="solr"></category><category term="circus"></category></entry><entry><title>StartSSL and Webfaction</title><link href="http://martinbrochhaus.com/ssl.html" rel="alternate"></link><updated>2012-06-13T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-13:ssl.html</id><summary type="html">&lt;p&gt;For my next big project it will be mandatory to use a SSL certificate for the
 web application. I have never dealt with SSL before, so I am going to take
 some notes here. Let's see how it goes...&lt;/p&gt;
 &lt;p&gt;I chose &lt;a href="https://www.startssl.com/"&gt;StartSSL&lt;/a&gt; because they offer a free
@@ -706,7 +706,7 @@ panel that uses HTTPS and maps the same apps as the non-HTTPS version.&lt;/p&gt;
 from the Webfaction support telling me that everything worked fine and indeed,
 I can now access my website via HTTPS.&lt;/p&gt;
 &lt;p&gt;Wow. That was easy! The whole process took me less than an hour to setup.
-I'm going to use SSL for all my sites from now on.&lt;/p&gt;</summary><category term="ssl"></category><category term="webfaction"></category></entry><entry><title>GMail &amp; Mailing Lists</title><link href="/gmail-groups.html" rel="alternate"></link><updated>2012-06-11T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-11:gmail-groups.html</id><summary type="html">&lt;p&gt;Here is a small trick to manage your mailing list subscriptions with your GMail
+I'm going to use SSL for all my sites from now on.&lt;/p&gt;</summary><category term="ssl"></category><category term="webfaction"></category></entry><entry><title>GMail &amp; Mailing Lists</title><link href="http://martinbrochhaus.com/gmail-groups.html" rel="alternate"></link><updated>2012-06-11T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-11:gmail-groups.html</id><summary type="html">&lt;p&gt;Here is a small trick to manage your mailing list subscriptions with your GMail
 account without cluttering your inbox.&lt;/p&gt;
 &lt;h2&gt;Step 1: Setup multiple inboxes&lt;/h2&gt;
 &lt;ul&gt;
@@ -766,7 +766,7 @@ is another huge plus.&lt;/p&gt;
 them all as read. Another good thing about this is that you will be able to
 perform searches in GMail to find old discussions.&lt;/p&gt;
 &lt;p&gt;Your new inbox should look like this:&lt;/p&gt;
-&lt;p&gt;&lt;img src="/images/mailinglists.png" width="100%" alt="Gmail with multiple inboxes" /&gt;&lt;/p&gt;</summary><category term="google"></category><category term="gmail"></category><category term="lifehacking"></category><category term="productivity"></category></entry><entry><title>Why We Should All Write a Video Game</title><link href="/videogame.html" rel="alternate"></link><updated>2012-06-09T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-09:videogame.html</id><summary type="html">&lt;p&gt;Here are my notes about &lt;a href="https://plus.google.com/100267502615190755251/about"&gt;Richard Jones'&lt;/a&gt;
+&lt;p&gt;&lt;img src="/images/mailinglists.png" width="100%" alt="Gmail with multiple inboxes" /&gt;&lt;/p&gt;</summary><category term="google"></category><category term="gmail"></category><category term="lifehacking"></category><category term="productivity"></category></entry><entry><title>Why We Should All Write a Video Game</title><link href="http://martinbrochhaus.com/videogame.html" rel="alternate"></link><updated>2012-06-09T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-09:videogame.html</id><summary type="html">&lt;p&gt;Here are my notes about &lt;a href="https://plus.google.com/100267502615190755251/about"&gt;Richard Jones'&lt;/a&gt;
 keynote with the title "Why we should all write a video game".&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=jpaSS82Jgbg&lt;/p&gt;
 &lt;p&gt;He starts with a awesomely geeky overview over the history of game computing.
@@ -817,7 +817,7 @@ Just get something done that is fun and playable.&lt;/p&gt;
 &lt;li&gt;Refactor later&lt;/li&gt;
 &lt;li&gt;Simple is better than complex&lt;/li&gt;
 &lt;li&gt;Complex is better than complicated&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Big Data Clouds</title><link href="/big-data-cloud.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:big-data-cloud.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/110893970871115341770/about"&gt;Chris Boesch's&lt;/a&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Big Data Clouds</title><link href="http://martinbrochhaus.com/big-data-cloud.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:big-data-cloud.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/110893970871115341770/about"&gt;Chris Boesch's&lt;/a&gt;
 talk about analyzing big data in the cloud.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=ADjIt6ZbqKU&lt;/p&gt;
 &lt;p&gt;Chris is a professor teaching many IT subjects at Singapore Management
@@ -852,7 +852,7 @@ this:&lt;/p&gt;
 simple, can be done with a few dozen lines of code.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://www.amazon.com/The-Lean-Startup-Entrepreneurs-Continuous/dp/0307887898?tag=duckduckgo-d-20"&gt;The Lean Startup&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Diversity as a Dependency</title><link href="/diversity.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:diversity.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/108526151904394584422/about"&gt;Anna Martelli Ravenscroft's&lt;/a&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Diversity as a Dependency</title><link href="http://martinbrochhaus.com/diversity.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:diversity.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/108526151904394584422/about"&gt;Anna Martelli Ravenscroft's&lt;/a&gt;
 closing keynote on "Diversity as a Dependency".&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=wOpdDxJzNkw&lt;/p&gt;
 &lt;p&gt;She opens her keynote with a question:&lt;/p&gt;
@@ -941,7 +941,7 @@ reason why it is very hard to make them all work together in harmony.&lt;/p&gt;
 Stallman sends to all hosts whenever he come to speak. While it is quite
 amusing and displays him as quite a weirdo, it definitely is a very very
 precise "doc" about the person. Maybe we just could have docs for people?
-Put them on their GitHub profiles?&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Permission for Forgiveness</title><link href="/eafp.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:eafp.html</id><summary type="html">&lt;p&gt;Here are my live notes on &lt;a href="https://plus.google.com/106273672060692715136/about"&gt;Alex Martelli's&lt;/a&gt;
+Put them on their GitHub profiles?&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Permission for Forgiveness</title><link href="http://martinbrochhaus.com/eafp.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:eafp.html</id><summary type="html">&lt;p&gt;Here are my live notes on &lt;a href="https://plus.google.com/106273672060692715136/about"&gt;Alex Martelli's&lt;/a&gt;
 keynote "Permission for Forgiveness".&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=lEtyYEKqUlk&lt;/p&gt;
 &lt;p&gt;He starts with a joke about the font in his presentation which looks like
@@ -1008,7 +1008,7 @@ harmful.&lt;/p&gt;
 and do things, as long as you don't do evil. It's also kind of encouraging to
 try to stand out even when facing seemingly impossible to overcome bureaucratic
 barriers.&lt;/p&gt;
-&lt;p&gt;Slides can be found &lt;a href="http;//www.aleax.it/pycon12ap_fop.pdf"&gt;here&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Functional Programming in Python</title><link href="/functional.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:functional.html</id><summary type="html">&lt;p&gt;Here are my notes for &lt;a href="https://twitter.com/chihiro"&gt;Gavin Bong's&lt;/a&gt;
+&lt;p&gt;Slides can be found &lt;a href="http;//www.aleax.it/pycon12ap_fop.pdf"&gt;here&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Functional Programming in Python</title><link href="http://martinbrochhaus.com/functional.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:functional.html</id><summary type="html">&lt;p&gt;Here are my notes for &lt;a href="https://twitter.com/chihiro"&gt;Gavin Bong's&lt;/a&gt;
 talk about functional programming in Python.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=r75X4Vn_E9k&lt;/p&gt;
 &lt;p&gt;Sorry for the horribly weird notes. I don't know anything about functional
@@ -1055,7 +1055,7 @@ functions, which is the standard in Haskell.&lt;/p&gt;
 &lt;li&gt;You should play with different functional programming languages&lt;/li&gt;
 &lt;li&gt;Structure and Interpretation of Computer Programs is a good book to
   understand functional programming.&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>MongoDB with Python</title><link href="/mongodb.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:mongodb.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://twitter.com/#!/mathias_mongo"&gt;Mathias Stern's&lt;/a&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>MongoDB with Python</title><link href="http://martinbrochhaus.com/mongodb.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:mongodb.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://twitter.com/#!/mathias_mongo"&gt;Mathias Stern's&lt;/a&gt;
 talk about "MongoDB with Python"&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=hU8rkNT6CVk&lt;/p&gt;
 &lt;p&gt;MongoDB should make your life easier. You should be able to start coding
@@ -1102,7 +1102,7 @@ seems to be an awesome tool for tinkering around with new APIs.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://pypi.python.org/pypi/pymongo/"&gt;pymongo&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://bsonspec.org/"&gt;BSON&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Introduction to Game Development</title><link href="/pygame.html" rel="alternate"></link><updated>2012-06-07T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-07:pygame.html</id><summary type="html">&lt;p&gt;I like how &lt;a href="https://twitter.com/pydanny"&gt;Daniel Greenfeld&lt;/a&gt; has the habit of
+&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Introduction to Game Development</title><link href="http://martinbrochhaus.com/pygame.html" rel="alternate"></link><updated>2012-06-07T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-07:pygame.html</id><summary type="html">&lt;p&gt;I like how &lt;a href="https://twitter.com/pydanny"&gt;Daniel Greenfeld&lt;/a&gt; has the habit of
 publishing &lt;a href="http://pydanny-event-notes.readthedocs.org/en/latest/index.html"&gt;live notes&lt;/a&gt;
 when he attends conferences and meet-ups. I don't think that I will have the
 time and money to attend so many conferences that a dedicated repository would
@@ -1255,7 +1255,7 @@ form installing pygame to getting to play a first prototype just works and
 there seem to be free tools available for every aspect of simple game
 development (like creating sound etc.). I definitely want to try this at home!
 This might be the most awesome way to teach my 12 year old brother in law about
-programming.&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Pair Programming With Tmux</title><link href="/pair.html" rel="alternate"></link><updated>2012-05-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-05-26:pair.html</id><summary type="html">&lt;p&gt;At &lt;a href="http://www.bitmazk.com"&gt;Bitmazk&lt;/a&gt; we are a small team of web developers
+programming.&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Pair Programming With Tmux</title><link href="http://martinbrochhaus.com/pair.html" rel="alternate"></link><updated>2012-05-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-05-26:pair.html</id><summary type="html">&lt;p&gt;At &lt;a href="http://www.bitmazk.com"&gt;Bitmazk&lt;/a&gt; we are a small team of web developers
 with members located in Singapore and Germany. Of course we do codereviews
 with Google's awesome &lt;a href="https://code.google.com/p/rietveld/"&gt;Rietveld&lt;/a&gt; but
 often when someone has an immediate problem, pair programming is just so much
@@ -1449,7 +1449,7 @@ very useful.&lt;/p&gt;
 &lt;img alt="wemux server" src="/images/wemux.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Note how wemux determines that my Ubuntu machine has lesser screen resolution
 and automatically scales down the working area on my MacBook. If this is not
-awesome...&lt;/p&gt;</summary><category term="screen"></category><category term="tmux"></category><category term="wemux"></category><category term="vim"></category><category term="ssh"></category><category term="programming"></category></entry><entry><title>Snippets of April 2012</title><link href="/snippets-201204.html" rel="alternate"></link><updated>2012-04-21T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-04-21:snippets-201204.html</id><summary type="html">&lt;p&gt;This is my second post in a series of (almost) monthly posts about small bits
+awesome...&lt;/p&gt;</summary><category term="screen"></category><category term="tmux"></category><category term="wemux"></category><category term="vim"></category><category term="ssh"></category><category term="programming"></category></entry><entry><title>Snippets of April 2012</title><link href="http://martinbrochhaus.com/snippets-201204.html" rel="alternate"></link><updated>2012-04-21T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-04-21:snippets-201204.html</id><summary type="html">&lt;p&gt;This is my second post in a series of (almost) monthly posts about small bits
 and pieces of wisdom that amazed me. You can find the first post here:
 &lt;a href="http://martinbrochhaus.com/2012/02/snippets-201202.html"&gt;Snippets of February 2012&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;Ubuntu: Static Application Switcher&lt;/h1&gt;
@@ -1548,7 +1548,7 @@ Here are some posts that, to me, should be spread as far as possible.&lt;/p&gt;
   It sad but true: This whole Scrumm and Agile movement is a big scam. This
   rant explains why. Thought provoking read.&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</summary><category term="snippets"></category><category term="ubuntu"></category><category term="screen"></category><category term="ssh"></category><category term="mercurial"></category><category term="self growth"></category></entry><entry><title>InnoDB vs. MyISAM</title><link href="/myisam-vs-innodb.md.html" rel="alternate"></link><updated>2012-03-18T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-03-18:myisam-vs-innodb.md.html</id><summary type="html">&lt;p&gt;During the last few months I constantly ran into problems with MySQL which
+&lt;/ul&gt;</summary><category term="snippets"></category><category term="ubuntu"></category><category term="screen"></category><category term="ssh"></category><category term="mercurial"></category><category term="self growth"></category></entry><entry><title>InnoDB vs. MyISAM</title><link href="http://martinbrochhaus.com/myisam-vs-innodb.md.html" rel="alternate"></link><updated>2012-03-18T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-03-18:myisam-vs-innodb.md.html</id><summary type="html">&lt;p&gt;During the last few months I constantly ran into problems with MySQL which
 drove me crazy and I finally decided to use PostgreSQL for all new projects.
 Today I figured out what was going on:&lt;/p&gt;
 &lt;p&gt;On my development machine I have MySQL version 5.1.61 installed. Recent
@@ -1596,7 +1596,7 @@ other engine by simply executing:&lt;/p&gt;
 
 
 &lt;p&gt;So I converted all MyISAM tables into InnoDB tables and all was good. I should
-definitely update my local MySQL installation...&lt;/p&gt;</summary><category term="databases"></category><category term="mysql"></category><category term="django"></category></entry><entry><title>Snippets of February 2012</title><link href="/snippets-201202.html" rel="alternate"></link><updated>2012-02-29T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-02-29:snippets-201202.html</id><summary type="html">&lt;p&gt;Naturally, as a developer I learn new awesome things almost every day.
+definitely update my local MySQL installation...&lt;/p&gt;</summary><category term="databases"></category><category term="mysql"></category><category term="django"></category></entry><entry><title>Snippets of February 2012</title><link href="http://martinbrochhaus.com/snippets-201202.html" rel="alternate"></link><updated>2012-02-29T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-02-29:snippets-201202.html</id><summary type="html">&lt;p&gt;Naturally, as a developer I learn new awesome things almost every day.
 I thought it might be a good idea to keep track of all those small Ah-Ha!
 moments and release a snippets post every month.&lt;/p&gt;
 &lt;h1&gt;Global .gitignore&lt;/h1&gt;
@@ -1647,7 +1647,7 @@ exploded with all kinds of awesomeness.&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Hint: In order for this to work, you need to install git via Homebrew on OSX.&lt;/p&gt;</summary><category term="git"></category><category term="python"></category><category term="vim"></category><category term="snippets"></category></entry><entry><title>Blogging with Pelican and GitHub</title><link href="/pelican.html" rel="alternate"></link><updated>2012-02-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-02-20:pelican.html</id><summary type="html">&lt;p&gt;While it took me indeed just four lines of code and thirty minutes to setup the
+&lt;p&gt;Hint: In order for this to work, you need to install git via Homebrew on OSX.&lt;/p&gt;</summary><category term="git"></category><category term="python"></category><category term="vim"></category><category term="snippets"></category></entry><entry><title>Blogging with Pelican and GitHub</title><link href="http://martinbrochhaus.com/pelican.html" rel="alternate"></link><updated>2012-02-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-02-20:pelican.html</id><summary type="html">&lt;p&gt;While it took me indeed just four lines of code and thirty minutes to setup the
 first version of this blog, I couldn't resist to geek over it for a few more
 hours and create a nice and clean approach to publishing this blog with
 &lt;a href="https://github.com/fabric/fabric"&gt;Fabric&lt;/a&gt;,
@@ -1806,7 +1806,7 @@ information have a look at the instructions about
 &lt;a href="https://twitter.com/ametaireau"&gt;Alexis Metaireau&lt;/a&gt; for the great work on
 Pelican. There is a small and friendly group sitting at #pelican on Freenode
 and while I was writing this post, I submitted a pull request to Pelican which
-got merged almost immediately. The project is really worth a closer look!&lt;/p&gt;</summary><category term="blogging"></category><category term="python"></category></entry><entry><title>I Can Haz Blog</title><link href="/blogging.html" rel="alternate"></link><updated>2012-02-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-02-19:blogging.html</id><summary type="html">&lt;p&gt;I'm a netizen since 1996 or so and I think I have accounts for all major
+got merged almost immediately. The project is really worth a closer look!&lt;/p&gt;</summary><category term="blogging"></category><category term="python"></category></entry><entry><title>I Can Haz Blog</title><link href="http://martinbrochhaus.com/blogging.html" rel="alternate"></link><updated>2012-02-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-02-19:blogging.html</id><summary type="html">&lt;p&gt;I'm a netizen since 1996 or so and I think I have accounts for all major
 blogging services that ever popped into existence. Yet I'm quite sure that I
 have never managed to publish stuff on a regular basis or even build an
 audience. This is a shame. If you know tricks to overcome this laziness, please
