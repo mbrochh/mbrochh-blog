@@ -1,5 +1,6 @@
 Date: 2012-06-07
-Title: PyCon APAC 2012 - Introduction to Game Development
+Title: Introduction to Game Development
+Tagline: PyCon APAC 2012 - Introduction to Game Development
 Slug: pygame
 Category: Blog
 Tags: python, pycon, conferences

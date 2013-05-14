@@ -1,5 +1,6 @@
 Date: 2012-06-13
-Title: Installing Free SSL certificate with StartSSL and Webfaction
+Title: StartSSL and Webfaction
+Tagline: Installing Free SSL certificate with StartSSL and Webfaction
 Slug: ssl
 Category: Blog
 Tags: ssl, webfaction

@@ -1,5 +1,6 @@
 Date: 2012-12-06
 Title: RE: Developer Time
+Tagline: My Answer to Daniel Greenfeld's Post
 Slug: re-developer-time
 Category: Blog
 Tags: programming, management

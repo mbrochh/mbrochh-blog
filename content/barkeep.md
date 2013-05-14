@@ -1,5 +1,6 @@
 Date: 2012-10-13
-Title: Deploying Barkeep on Linode from OSX
+Title: Barkeep on Linode
+Tagline: Deploying Barkeep on Linode from OSX
 Slug: barkeep
 Category: Blog
 Tags: git, codereview, ruby, barkeep

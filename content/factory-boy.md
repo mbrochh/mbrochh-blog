@@ -1,5 +1,6 @@
 Date: 2013-01-22
-Title: Test Models with Generic Foreign Keys and Factory Boy
+Title: Django GFKs & Factory Boy 
+Tagline: Test Models with Generic Foreign Keys and Factory Boy
 Slug: factory-boy
 Category: Blog
 Tags: python, django, testing, howto

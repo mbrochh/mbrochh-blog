@@ -1,5 +1,6 @@
 Date: 2013-01-10
-Title: Daemonizing Solr on Webfaction with Supervisor
+Title: Solr & Supervisor
+Tagline: Daemonizing Solr on Webfaction with Supervisor
 Slug: solr
 Category: Blog
 Tags: solr, webfaction

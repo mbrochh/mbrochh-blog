@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-THEME = '/Users/martin/Forks/pelican-themes/notmyidea-cms'
+THEME = '/Users/martin/Projects/pelican-responsive/src/responsive'
 
 AUTHOR = u'Martin Brochhaus'
 SITENAME = u'martinbrochhaus.com'
-SITEURL = ''
+SITEURL = 'http://martinbrochhaus.com'
+MINI_BIO = u"I build software with Python & Django. Every day. All day long."
 
 TIMEZONE = 'Asia/Singapore'
 
@@ -18,10 +19,6 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 
 # Blogroll
-LINKS =  (('Pelican', 'http://getpelican.com/'),
-          ('Python.org', 'http://python.org/'),
-          ('Jinja2', 'http://jinja.pocoo.org/'),
-          ('You can modify those links in your config file', '#'),)
 LINKS = ()
 
 # Social widget
@@ -37,6 +34,11 @@ DEFAULT_PAGINATION = 10
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = True
 
+STATIC_PATHS = ['images', ]
+
 FILES_TO_COPY = (
     ('extra/CNAME', 'CNAME'),
+    ('extra/avatar.jpg', 'theme/img/avatar.jpg'),
 )
+
+GOOGLE_ANALYTICS = 'UA-XXXXXXX-XX'

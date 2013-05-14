@@ -1,5 +1,6 @@
 Date: 2012-02-19
-Title: My next approach to blogging. Again.
+Title: I Can Haz Blog 
+Tagline: My Next Approach to Blogging. Again.
 Slug: blogging
 Category: Blog
 Tags: blogging, python

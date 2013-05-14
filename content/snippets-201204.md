@@ -1,5 +1,6 @@
 Date: 2012-04-21
 Title: Snippets of April 2012
+Tagline: Small Things That I've Learned This Month.
 Slug: snippets-201204
 Category: Blog
 Tags: snippets, ubuntu, screen, ssh, mercurial, self growth

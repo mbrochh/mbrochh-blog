@@ -1,5 +1,6 @@
 Date: 2012-03-18
-Title: MySQL InnoDB vs. MyISAM and the foreign key constraint of death
+Title: InnoDB vs. MyISAM 
+Tagline: MySQL InnoDB vs. MyISAM and the foreign key constraint of death
 Slug: myisam-vs-innodb.md
 Category: Blog
 Tags: databases, mysql, django

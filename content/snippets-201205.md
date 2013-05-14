@@ -1,5 +1,6 @@
 Date: 2012-05-30
 Title: Snippets of Mai 2012
+Tagline: Small Things That I've Learned This Month.
 Slug: snippets-201205
 Category: Blog
 Tags: snippets

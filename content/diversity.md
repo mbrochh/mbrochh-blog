@@ -1,5 +1,6 @@
 Date: 2012-06-08
-Title: PyCon APAC 2012 - Diversity as a Dependency
+Title: Diversity as a Dependency 
+Tagline: PyCon APAC 2012 - Diversity as a Dependency
 Slug: diversity
 Category: Blog
 Tags: python, pycon, conferences

@@ -1,5 +1,6 @@
 Date: 2012-02-20
 Title: Blogging with Pelican and GitHub
+Tagline: Note: This Post is Outdated. Relasing a New One, Soon. 
 Slug: pelican
 Category: Blog
 Tags: blogging, python

@@ -1,5 +1,6 @@
 Date: 2013-01-17
-Title: How to manage Twitter Bootstrap
+Title: Manage Twitter Bootstrap
+Tagline: How to Manage Twitter Bootstrap. The Sane Way.
 Slug: bootstrap
 Category: Blog
 Tags: css, bootstrap, howto

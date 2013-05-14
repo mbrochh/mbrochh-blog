@@ -1,5 +1,6 @@
 Date: 2012-06-08
-Title: PyCon APAC 2012 - MongoDB with Python
+Title: MongoDB with Python 
+Tagline: PyCon APAC 2012 - MongoDB with Python
 Slug: mongodb
 Category: Blog
 Tags: python, pycon, conferences

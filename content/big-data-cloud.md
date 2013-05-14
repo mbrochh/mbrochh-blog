@@ -1,5 +1,6 @@
 Date: 2012-06-08
-Title: PyCon APAC 2012 - Analyzing Big Data in the Cloud
+Title: Big Data Clouds
+Tagline: PyCon APAC 2012 - Analyzing Big Data in the Cloud
 Slug: big-data-cloud
 Category: Blog
 Tags: python, pycon, conferences

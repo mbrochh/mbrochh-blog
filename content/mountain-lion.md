@@ -1,5 +1,6 @@
 Date: 2012-07-26
-Title: Fixing OSX 10.8 after Mountain Lion upgrade
+Title: Fixing Mountain Lion 
+Tagline: Fixing OSX 10.8 after Mountain Lion upgrade
 Slug: mountain-lion
 Category: Blog
 Tags: apple, osx

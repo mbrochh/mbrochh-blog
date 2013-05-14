@@ -1,5 +1,6 @@
 Date: 2012-05-26
-Title: Secure pair programming with wemux and Vim
+Title: Pair Programming With Tmux 
+Tagline: Secure pair programming with wemux and Vim
 Slug: pair
 Category: Blog
 Tags: screen, tmux, wemux, vim, ssh, programming

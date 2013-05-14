@@ -1,5 +1,6 @@
 Date: 2012-02-29
 Title: Snippets of February 2012
+Tagline: Small Things That I've Learned This Month.
 Slug: snippets-201202
 Category: Blog
 Tags: git, python, vim, snippets

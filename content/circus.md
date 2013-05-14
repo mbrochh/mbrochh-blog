@@ -1,5 +1,6 @@
 Date: 2012-07-13
-Title: Daemonize Solr with Circus 0.5 on Webfaction
+Title: Solr & Circus 
+Tagline: Daemonize Solr with Circus 0.5 on Webfaction
 Slug: circus
 Category: Blog
 Tags: python, solr, circus

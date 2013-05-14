@@ -1,5 +1,6 @@
 Date: 2012-06-11
-Title: Follow mailing lists using GMail
+Title: GMail & Mailing Lists 
+Tagline: How to Follow Mailing Lists Using Google Mail
 Slug: gmail-groups
 Category: Blog
 Tags: google, gmail, lifehacking, productivity
@@ -7,7 +8,7 @@ Tags: google, gmail, lifehacking, productivity
 Here is a small trick to manage your mailing list subscriptions with your GMail
 account without cluttering your inbox.
 
-# Step 1: Setup multiple inboxes
+## Step 1: Setup multiple inboxes
 
 * Open GMail and go to _Settings_
 * Go to _Labs_
@@ -32,7 +33,7 @@ our main inbox that
   seems to be case insensitive)
 * does only display conversations that are unread
 
-# Step 2: Create filters for your mailing lists
+## Step 2: Create filters for your mailing lists
 
 If you are subscribed to _N_ mailing lists you need to create _N+1_ filters
 now.
@@ -56,7 +57,7 @@ one more filter for each subscription:
 So if you are following the Python users mailing list, you would for example
 create a new sub label called _python-users_ under the label _] Groups_.
 
-# Step 3: Profit
+## Step 3: Profit
 
 This setup allowed me to follow 16 mailing lists during the last 2 years
 without drowning in content overflow. If a thread on the list is very active
@@ -73,4 +74,4 @@ perform searches in GMail to find old discussions.
 
 Your new inbox should look like this:
 
-<img src="./images/mailinglists.png" width="100%" alt="Gmail with multiple inboxes" />
+<img src="/images/mailinglists.png" width="100%" alt="Gmail with multiple inboxes" />

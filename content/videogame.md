@@ -1,5 +1,6 @@
 Date: 2012-06-09
-Title: PyCon APAC 2012 - Why we should all write a video game
+Title: Why We Should All Write a Video Game
+tagline: PyCon APAC 2012 - Richard Jone's Keynote 
 Slug: videogame
 Category: Blog
 Tags: python, pycon, conferences

@@ -1,5 +1,6 @@
 Date: 2012-06-08
-Title: PyCon APAC 2012 - Keynote
+Title: Permission for Forgiveness 
+Tagline: PyCon APAC 2012 - Alex Martelli's Keynote
 Slug: eafp
 Category: Blog
 Tags: python, pycon, conferences
