@@ -1,0 +1,1871 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="/" rel="alternate"></link><link href="/feeds/blog.atom.xml" rel="self"></link><id>/</id><updated>2013-01-22T00:00:00+08:00</updated><entry><title>Test Models with Generic Foreign Keys and Factory Boy</title><link href="/factory-boy.html" rel="alternate"></link><updated>2013-01-22T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2013-01-22:factory-boy.html</id><summary type="html">&lt;p&gt;Let's say you are writing a reusable Django app and your app has a model with
+a generic foreign key. An example could be a messaging app where messages can
+attached to any other object (when you think about Facebook, a message can
+be sent to another User, or to his profile timeline, or to a status update
+and so on):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;auth.User&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TextField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;creation_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateTimeField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;auto_now_add&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c"&gt;# Generic FK to the object this message is attached to&lt;/span&gt;
+    &lt;span class="n"&gt;content_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ContentType&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;object_id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;PositiveIntegerField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;content_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;generic&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GenericForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;content_type&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;object_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I like to maintain 100% code coverage in all my projects, so I will even test
+seemingly mundane things like instantiation and saving of all my models. A test
+for this &lt;code&gt;Message&lt;/code&gt; model could look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;TestCase&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;messages.tests.factories&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;MessageFactory&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MessageTestCase&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;TestCase&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Should be able to instantiate and save the model.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+        &lt;span class="n"&gt;obj&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MessageFactory&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;assertTrue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Granted, this is a very simple test but as the model grows this test case would
+obviously grow as well. The interesting question is: How can we write the
+&lt;code&gt;MessageFactory&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The first thought would be to just use one of our other existing models (i.e.
+the Timeline model, if we were cloning Facebook). Unfortunately we can't do
+that because we are writing a reusable app here and the reusable app should be
+distributed on PyPi and therefore doesn't know anything about any of your other
+app's models.&lt;/p&gt;
+&lt;p&gt;So we must create a &lt;code&gt;DummyModel&lt;/code&gt; inside of our reusable app. You could put that
+model into your reusable app's &lt;code&gt;models.py&lt;/code&gt; but then you would create a useless
+table when you run &lt;code&gt;syncdb&lt;/code&gt; or &lt;code&gt;migrate&lt;/code&gt;. So the better solution is to create
+a &lt;code&gt;test_app&lt;/code&gt; inside of your reusable app and only add that app to
+&lt;code&gt;INSTALLED_APPS&lt;/code&gt; in your &lt;code&gt;test_settings.py&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;So let's create a few new files:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;yourapp/tests/factories.py
+yourapp/tests/models_tests.py
+yourapp/tests/test_app/__init__.py
+yourapp/tests/test_app/models.py
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Your test app's &lt;code&gt;models.py&lt;/code&gt; should look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DummyModel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;blank&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we can create our reusable app's factory. There are three things to notice
+here:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;We will also create a factory for the &lt;code&gt;DummyModel&lt;/code&gt; because then we can
+   use it as a sub-factory. And who knows, maybe that model will get more
+   complex as your app grows more complex as well.&lt;/li&gt;
+&lt;li&gt;We are using the &lt;a href="http://django-libs.readthedocs.org/en/latest/factories.html#factories"&gt;UserFactory of django-libs&lt;/a&gt;.
+   django-libs is a collection of useful stuff that I need in almost all my
+   Django projects. Obviously I need to create &lt;code&gt;User&lt;/code&gt; instances all the time
+   in my tests, therefore django-libs provides a &lt;code&gt;UserFactory&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;MessageFactory&lt;/code&gt; uses the &lt;code&gt;content_object&lt;/code&gt; field to add the generic
+   foreign key to our &lt;code&gt;DummyModel&lt;/code&gt;, which is quite convenient. Thankfully, we
+   don't have to wrestle around with the &lt;code&gt;content_type&lt;/code&gt; and &lt;code&gt;object_id&lt;/code&gt; fields
+   of the generic foreign key.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Here is how your &lt;code&gt;factories.py&lt;/code&gt; should look like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;factory&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django_libs.tests.factories&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;UserFactory&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp.tests.test_app.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DummyModel&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Message&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;DummyModelFactory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;factory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Factory&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;FACTORY_FOR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;DummyModel&lt;/span&gt;
+    &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Foobar&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MessageFactory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;factory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Factory&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;FACTORY_FOR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Message&lt;/span&gt;
+    &lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;factory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SubFactory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;UserFactory&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Hello world&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;creation_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;factory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;LazyAttribute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="n"&gt;content_object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;factory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SubFactory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DummyModelFactory&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now, whenever you want to create a &lt;code&gt;Message&lt;/code&gt; in your tests, just call
+&lt;code&gt;MessageFactory()&lt;/code&gt; and there you are. Your message will be tied to an
+instance of a &lt;code&gt;DummyModel&lt;/code&gt; which will be created automagically as well.&lt;/p&gt;
+&lt;p&gt;One last problem is left: When you run your tests, you will get an error
+message saying that there is no table for the &lt;code&gt;DummyModel&lt;/code&gt; in your test
+database. In order to solve this you should create a &lt;code&gt;test_settings.py&lt;/code&gt; which
+adds the &lt;code&gt;test_app&lt;/code&gt; to your &lt;code&gt;INSTALLED_APPS&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;myproject.settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;yourapp.tests.test_app&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Of course your &lt;code&gt;test_settings.py&lt;/code&gt; needs a lot of other stuff. To speed up the
+tests you could to change the db backend to an in-memory sqlite database and
+for better test case recovery you could use a NoseTestRunner. Check out
+my &lt;a href="https://github.com/bitmazk/django-libs/blob/master/django_libs/settings/test_settings.py"&gt;test settings in django-libs&lt;/a&gt;
+for an example that I use in all my projects.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="testing"></category><category term="howto"></category></entry><entry><title>How to manage Twitter Bootstrap</title><link href="/bootstrap.html" rel="alternate"></link><updated>2013-01-17T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2013-01-17:bootstrap.html</id><summary type="html">&lt;p&gt;Without any doubt, &lt;a href="http://twitter.github.com/bootstrap/"&gt;Twitter's Bootstrap&lt;/a&gt;
+is awesome. So far I am using it in more than 10 projects and I don't regret
+anything.&lt;/p&gt;
+&lt;p&gt;Unfortunately, Bootstrap has one major flaw: You can't really add it to your
+project and manipulate it, without editing the source files. Bootstrap offers
+a download page where you can chose the parts that you want and where you can
+enter values for all the variables - but I don't know who on earth works like
+this. I usually don't know about exact color values for my project until
+shortly before go-live and I certainly don't want to come back to the download
+page and download new versions of bootstrap over and over again.&lt;/p&gt;
+&lt;p&gt;Here is what I want:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I want to add Bootstrap to my project and work with the latest files from
+  the github repo&lt;/li&gt;
+&lt;li&gt;Yet I don't want to manipulate them, because&lt;/li&gt;
+&lt;li&gt;I want to be able to update my bootstrap sources at any time without merge
+  conflicts&lt;/li&gt;
+&lt;li&gt;Updating should be a no-brainer&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;My solution might not be the most elegant, but so far it seems to get the job
+done:&lt;/p&gt;
+&lt;h2&gt;Add Bootstrap as a submodule&lt;/h2&gt;
+&lt;p&gt;First I add bootstrap as a git submodule to my Django projects:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;submodule&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;twitter&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;submodules&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It is important to add the submodule to a path inside your project root. This
+way you can place symlinks easily with all relative paths.&lt;/p&gt;
+&lt;h2&gt;Setup your css folder&lt;/h2&gt;
+&lt;p&gt;Surely you will have a folder that holds your project's CSS files somewhere in
+your project. For my Django projects that is usually:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Inside of this folder I like to create a &lt;code&gt;libs&lt;/code&gt; folder which holds CSS files
+of third party plugins or frameworks that I use. In our case this would be
+bootstrap, so let's create a bootstrap folder:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Symlink the bootstrap files&lt;/h2&gt;
+&lt;p&gt;So here is the first part of the trick. Inside of the &lt;code&gt;bootstrap&lt;/code&gt; which we have
+just created, we symlink all the &lt;code&gt;.less&lt;/code&gt; files of the Bootstrap framework:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;submodules&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;&lt;span class="o"&gt;/*&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It would be better to just symlink the whole &lt;code&gt;less&lt;/code&gt; folder instead of all files
+but unfortunately &lt;code&gt;lessc&lt;/code&gt; is not able to follow such symlinks and would fail
+to compile the &lt;code&gt;bootstrap.less&lt;/code&gt; file.&lt;/p&gt;
+&lt;h2&gt;Prepare the working files&lt;/h2&gt;
+&lt;p&gt;Here comes the second part of the trick. We will create copies of the files
+&lt;code&gt;bootstrap.less&lt;/code&gt; and &lt;code&gt;responsive.less&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;static&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="n"&gt;libs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="n"&gt;libs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;responsive&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="n"&gt;touch&lt;/span&gt; &lt;span class="n"&gt;my&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;variables&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;
+&lt;span class="n"&gt;touch&lt;/span&gt; &lt;span class="n"&gt;styles&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I know, I know, we have just symlinked them, why create another copy now? The
+reason is that we won't use the symlinks (you could delete them). Instead
+we will make a three simple changes to those two files. First we need to change
+the paths to all the imported &lt;code&gt;.less&lt;/code&gt; files:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sed&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;s/import &amp;quot;/import &amp;quot;libs\/bootstrap\//g&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;bootstrap&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;
+&lt;span class="n"&gt;sed&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;s/import &amp;quot;/import &amp;quot;libs\/bootstrap\//g&amp;#39;&lt;/span&gt; &lt;span class="n"&gt;responsive&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next we will add an import of our own variables file to both files. The import
+should come right after the import of the original &lt;code&gt;variables.less&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;# Excerpt from your bootstrap.less copy:&lt;/span&gt;
+
+&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="c1"&gt;// CSS Reset&lt;/span&gt;
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;libs/bootstrap/reset.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Core variables and mixins&lt;/span&gt;
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;libs/bootstrap/variables.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;my-variables.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Our own variables overrides&lt;/span&gt;
+
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;libs/bootstrap/mixins.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally we will include our very own &lt;code&gt;styles.less&lt;/code&gt; at the bottom of
+&lt;code&gt;bootstrap.less&lt;/code&gt;. Styles in this file would override everything else from
+bootstrap:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;# Excerpt from your bootstrap.less copy:&lt;/span&gt;
+
+&lt;span class="p"&gt;...&lt;/span&gt;
+&lt;span class="c1"&gt;// Utility classes&lt;/span&gt;
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;libs/bootstrap/utilities.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;// Has to be last to override when necessary&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Our own stuff&lt;/span&gt;
+&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;styles.less&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Repeat the last two steps for &lt;code&gt;responsive.less&lt;/code&gt; as well, of course here you
+would add an import to &lt;code&gt;styles-responsive.less&lt;/code&gt; instead of &lt;code&gt;styles.less&lt;/code&gt; at the 
+bottom.&lt;/p&gt;
+&lt;h2&gt;How to work with this setup?&lt;/h2&gt;
+&lt;p&gt;That's a whole lot of files to deal with, but the rules are actually quite
+simple:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Never touch anything in the &lt;code&gt;/libs/bootstrap/&lt;/code&gt; folder&lt;/li&gt;
+&lt;li&gt;If you would like to change the value of any of Bootstrap's
+  &lt;a href="https://github.com/twitter/bootstrap/blob/master/less/variables.less"&gt;variables&lt;/a&gt;,
+  override that same variable in our &lt;code&gt;my-varibales.less&lt;/code&gt; file.&lt;/li&gt;
+&lt;li&gt;You can even invent new variables here.&lt;/li&gt;
+&lt;li&gt;Whenever you would like to add project specific styles for your site, add
+  them to &lt;code&gt;styles.less&lt;/code&gt; and &lt;code&gt;responsive-styles.less&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When you are done, compile the files &lt;code&gt;bootstrap.less&lt;/code&gt; and &lt;code&gt;responsive.less&lt;/code&gt;. I
+like to save the output as &lt;code&gt;bootstrap.css&lt;/code&gt; and &lt;code&gt;bootstrap-responsive.css&lt;/code&gt; and
+those two files are the ones that I link in my templates.&lt;/p&gt;
+&lt;h2&gt;Why is this awesome?&lt;/h2&gt;
+&lt;p&gt;First of all, you will have your project specific overrides included in the
+rest of the Bootstrap framework and don't need to link it in your templates.
+This saves you one request.&lt;/p&gt;
+&lt;p&gt;Secondly, we are symlinking to a git submodule, so if a new version or even
+just a minor bugfix is released, we can just &lt;code&gt;cd&lt;/code&gt; into the
+&lt;code&gt;submodules/bootstrap&lt;/code&gt; folder and run &lt;code&gt;git pull&lt;/code&gt;. After that we need to
+re-compile our files and that's it - we just updated our Bootstrap files.&lt;/p&gt;
+&lt;h2&gt;What can go wrong?&lt;/h2&gt;
+&lt;p&gt;There is one thing that can and will still go wrong: The two file that we have
+modified and copied (&lt;code&gt;bootstrap.less&lt;/code&gt; and &lt;code&gt;responsive.less&lt;/code&gt;) might differ
+when you pull the latest Bootstrap version. Especially when a major new release
+happened, there will most definitely be new imports in those files. Luckily
+those files are really simple, so you can probably spot the new import at a
+glance. A new import would also mean that there is a new file that should be
+symlinked.&lt;/p&gt;
+&lt;p&gt;So in this case, the best workflow would be this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Delete all symlinks and re-create them&lt;/li&gt;
+&lt;li&gt;Copy &lt;code&gt;bootstrap.less&lt;/code&gt; and &lt;code&gt;responsive.less&lt;/code&gt; again&lt;/li&gt;
+&lt;li&gt;Run the &lt;code&gt;sed&lt;/code&gt; commands again&lt;/li&gt;
+&lt;li&gt;Add the imports to &lt;code&gt;my-variables.less&lt;/code&gt; and &lt;code&gt;styles.less&lt;/code&gt; again.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You could even create a shell script for this task, therefore I consider it
+a no-brainer :)&lt;/p&gt;
+&lt;h2&gt;tl;dr&lt;/h2&gt;
+&lt;p&gt;We want to use bootstrap as a git submodule because then we can update it
+simply via &lt;code&gt;git pull&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We can't really touch any of the sourcefiles because that would result in merge
+conflicts when we pull a new version, but the &lt;code&gt;variables.less&lt;/code&gt; file is full of
+gold and really needs to be changed.&lt;/p&gt;
+&lt;p&gt;As a solution, we just create our own &lt;code&gt;my-variables.less&lt;/code&gt; file and import it
+in copies of &lt;code&gt;bootstrap.less&lt;/code&gt; and &lt;code&gt;responsive.less&lt;/code&gt; - those files are just as
+likely to change but if they do, we can re-create them in no time.&lt;/p&gt;</summary><category term="css"></category><category term="bootstrap"></category><category term="howto"></category></entry><entry><title>Daemonizing Solr on Webfaction with Supervisor</title><link href="/solr.html" rel="alternate"></link><updated>2013-01-10T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2013-01-10:solr.html</id><summary type="html">&lt;p&gt;A while ago I wrote how to &lt;a href="http://martinbrochhaus.com/2012/07/circus.html"&gt;daemonize Solr on Webfaction with Circus &lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Unfortunately this solution has not proven to be as stable as I wished, plus
+I think there is a security issue because in theory other Webfaction users on
+the same machine could communicate with my own Circus instance.&lt;/p&gt;
+&lt;p&gt;Today I tried to use &lt;a href="http://supervisord.org/"&gt;supervisord&lt;/a&gt; for the first time.
+Here is what I learned:&lt;/p&gt;
+&lt;h2&gt;Install supervisor on Webfaction&lt;/h2&gt;
+&lt;p&gt;Kudos to &lt;a href="http://jamiecurle.co.uk/blog/webfaction-installing-configuring-supervisor/"&gt;Jamie Curle&lt;/a&gt;
+for describing the process nice enough for a dummy like me.&lt;/p&gt;
+&lt;p&gt;Following his instructions I made sure that I have not activated any
+virtualenv, then I ran&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;pip install supervisor
+
+&lt;span class="c"&gt;# Let&amp;#39;s create some folders we will need later on&lt;/span&gt;
+mkdir ~/tmp
+mkdir -p ~/mylogs/cron
+mkdir ~/etc &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; ~/etc
+vim supervisor.conf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Here is what my &lt;code&gt;supervisor.conf&lt;/code&gt; looks like. Of course you would need to
+insert your webfaction username and adjust the path to your solr installation:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[unix_http_server]&lt;/span&gt;
+&lt;span class="na"&gt;file&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/username/tmp/supervisor.sock&lt;/span&gt;
+
+&lt;span class="k"&gt;[supervisord]&lt;/span&gt;
+&lt;span class="na"&gt;logfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/username/mylogs/supervisord.log&lt;/span&gt;
+&lt;span class="na"&gt;logfile_maxbytes&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;50MB&lt;/span&gt;
+&lt;span class="na"&gt;logfile_backups&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;10&lt;/span&gt;
+&lt;span class="na"&gt;loglevel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;info&lt;/span&gt;
+&lt;span class="na"&gt;pidfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/username/tmp/supervisord.pid&lt;/span&gt;
+
+&lt;span class="k"&gt;[rpcinterface:supervisor]&lt;/span&gt;
+&lt;span class="na"&gt;supervisor.rpcinterface_factory&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;supervisor.rpcinterface:make_main_rpcinterface&lt;/span&gt;
+
+&lt;span class="k"&gt;[supervisorctl]&lt;/span&gt;
+&lt;span class="na"&gt;serverurl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;unix:///home/username/tmp/supervisor.sock&lt;/span&gt;
+
+&lt;span class="k"&gt;[program:solr]&lt;/span&gt;
+&lt;span class="na"&gt;directory&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/home/username/opt/apache-solr-3.5.0/example&lt;/span&gt;
+&lt;span class="na"&gt;command&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;java -Djava.util.logging.config.file=logging.properties -jar start.jar&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The meaning of all these config sections should be obvious and is very well
+documented in the &lt;a href="http://supervisord.org/configuration.html"&gt;supervisor configuration documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Enable solr logging&lt;/h2&gt;
+&lt;p&gt;After having quite some trouble with solr being very instable, I decided to
+figure out this whole logging thing. I found this little gem about
+&lt;a href="https://wiki.apache.org/solr/LoggingInDefaultJettySetup"&gt;solr logging&lt;/a&gt; which
+made things very easy.&lt;/p&gt;
+&lt;p&gt;Just create the file &lt;code&gt;logging.properties&lt;/code&gt; in the same folder where solr's
+&lt;code&gt;start.jar&lt;/code&gt; resides. Mine looks like this (again, replace username with your
+webfaction account name):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Default global logging level:&lt;/span&gt;
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;INFO&lt;/span&gt;
+
+&lt;span class="c"&gt;# Write to a file:&lt;/span&gt;
+&lt;span class="n"&gt;handlers&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileHandler&lt;/span&gt;
+
+&lt;span class="c"&gt;# Write log messages in XML format:&lt;/span&gt;
+&lt;span class="c"&gt;# Use java.util.logging.SimpleFormatter to log like Solr logs to the screen by default&lt;/span&gt;
+&lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileHandler&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;formatter&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;XMLFormatter&lt;/span&gt;
+
+&lt;span class="c"&gt;# Log to the current working directory, with log files named solrxxx.log&lt;/span&gt;
+&lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileHandler&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pattern&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nb"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mylogs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt;&lt;span class="c"&gt;%u.log&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If you are wondering what different options for logging levels there are, have
+a look at this page about &lt;a href="http://lucidworks.lucidimagination.com/display/solr/Configuring+Logging"&gt;solr logging&lt;/a&gt;.
+&lt;code&gt;INFO&lt;/code&gt; might be a bit too much if you are running a site where thousands of
+users send hundreds of search queries per day - each query would be logged.&lt;/p&gt;
+&lt;h2&gt;Create crontab to restart supervisor&lt;/h2&gt;
+&lt;p&gt;The last question is: Who watches the watchmen? Crontab does. Thankfully you
+cannot run the &lt;code&gt;supervisord&lt;/code&gt; command twice - it would warn you that another
+instance is already running. Therefore we can safely schedule a cronjob to run
+&lt;code&gt;supervisord&lt;/code&gt; every five minutes:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;*/&lt;/span&gt;5 &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;supervisord&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mylogs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;cron&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;supervisord&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nb"&gt;log&lt;/span&gt; 2&lt;span class="o"&gt;&amp;gt;&amp;amp;&lt;/span&gt;1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Manage solr&lt;/h2&gt;
+&lt;p&gt;If you ever need to start, stop or restart solr, you can do so via
+&lt;code&gt;supervisorctl start|stop|restart solr&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You could also just run &lt;code&gt;supervisorctl&lt;/code&gt; and would get into a manage console.
+Then type &lt;code&gt;help&lt;/code&gt; and see what commands are available. There seems to be an
+&lt;a href="https://github.com/Supervisor/supervisor/issues/121"&gt;open bug&lt;/a&gt; with the
+&lt;code&gt;reload&lt;/code&gt; command at the moment, so better don't use that one for the time
+being.&lt;/p&gt;
+&lt;h2&gt;Bonus: Fabfile to rebuild the index&lt;/h2&gt;
+&lt;p&gt;Every now and then you will introduce changes to your models and your search
+index that will require a rebuild of the index. I like to automate that with
+a Fabric task. Here it is:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;run_rebuild_index&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Rebuilds the Solr index on the server.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;supervisorctl stop solr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;workon envname &amp;amp;&amp;amp; $HOME/webapps/django/myproject/manage.py build_solr_schema &amp;gt; $HOME/opt/apache-solr-3.5.0/example/solr/conf/schema.xml&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;supervisorctl start solr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;workon envname &amp;amp;&amp;amp; $HOME/webapps/django/myproject/manage.py rebuild_index --noinput&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="solr"></category><category term="webfaction"></category></entry><entry><title>RE: Developer Time</title><link href="/re-developer-time.html" rel="alternate"></link><updated>2012-12-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-12-06:re-developer-time.html</id><summary type="html">&lt;p&gt;I just came across &lt;a href="http://pydanny.com/developer-time.html"&gt;Daniel Greenfeld's post about Developer time&lt;/a&gt;
+and when I was halfway entering my reply into the comment field I realised
+that this might be worth a blog post on it's own. So here is my two cents:&lt;/p&gt;
+&lt;p&gt;I believe that there are good ways to maximise developer time, they might just
+not work in traditional office jobs. So I especially aggree to Daniel's points
+number three and four: "New Desk Location" and "Get a new job".&lt;/p&gt;
+&lt;p&gt;I did just that, and founded my own company: &lt;a href="http://www.bitmazk.com"&gt;Bitmazk Pte. Ltd.&lt;/a&gt;.
+We are a team of three and 90% of our time is pure "developer time". It is the
+most awesome work experience I ever had and here is how we achieve this:&lt;/p&gt;
+&lt;h2&gt;1. Distributed team&lt;/h2&gt;
+&lt;p&gt;We are a distributed team. I'm sitting in Singapore, Tobi and Daniel are
+sitting in Germany... and if you knew our crazy sleeping patterns, you might as
+well argue that even Tobi and Daniel are living in different timezones.&lt;/p&gt;
+&lt;p&gt;The bad thing about this situation is, that it is very hard to create and
+maintain a good company culture. We recently bought Nexus 7 devices for
+everyone and use them as little windows into our virtual office. The plan is
+to just let a Google Hangout running all the time and whenever someone wakes
+up, he will join and say hi. This gives you kind of a feeling like "going to
+the office". We haven't been very strict about this culture, thought, yet.
+Turns out that even this is already too much of a distraction.&lt;/p&gt;
+&lt;p&gt;The good thing about this is, if you don't want to be interrupted, you simply
+quit Skype and IRC and you do your work. The key is &lt;em&gt;trust&lt;/em&gt;. Just because I
+don't see Tobi being online at 1pm (his time) doesn't mean that he is slacking
+off. I will just assume that whatever he does is in the best interest of the
+company.&lt;/p&gt;
+&lt;h2&gt;2. IRC for near-synchronous communication&lt;/h2&gt;
+&lt;p&gt;We use IRC as our main communication tool. Everyone is free to chose a client
+of choice but it is encouraged to use &lt;a href="http://irccloud.com"&gt;irccloud.com&lt;/a&gt;.
+First of all it is another program moved into the cloud. The only program left
+that I actually have to install from CD when setting up a new machine is
+Photoshop. I can't wait for this sucker to die as well (I'm looking at you,
+Chromebook!).&lt;/p&gt;
+&lt;p&gt;Secondly it functions as a bouncer. This means, when you close the browser tab,
+no one will notice it. Irccloud will keep you online forever. This also means
+that when you login the next time, you can scroll back all the history in all
+your channels and see what you have missed. It is &lt;em&gt;really&lt;/em&gt; awesome. There even
+is TapChat, an awesome Android client which can connect via irccloud and will
+soon offer push notifications.&lt;/p&gt;
+&lt;p&gt;Our rules for IRC are simple: We do not expect anyone to look at the chat,
+ever. If you want the attention of someone, nudge him by writing his name. He
+will hear a beep or see a desktop notification and if he is free, he will
+answer. If he is not free, which is the more common case, he will mention your
+name as well, when answering minutes or hours later.&lt;/p&gt;
+&lt;p&gt;Again: The beep or notification is a minimal distraction and usually by just
+peeping at the message for a split second you can safely decide if the question
+is important and would justify a conversation or if you would rather like to
+stick with your code.&lt;/p&gt;
+&lt;p&gt;And of course, you can opt out. Just close IRC.&lt;/p&gt;
+&lt;h2&gt;3. Email and mailing list for asynchronous communication&lt;/h2&gt;
+&lt;p&gt;Every now and then it happens that you hit an obstacle which you just can't
+solve yourself. In the old office world, you would visit the nerdy genius
+colleague who always knows all answers to all questions and disturb him. In the
+new world you have to stop this task, send an email and do something else.&lt;/p&gt;
+&lt;p&gt;For things that are not of greater interest to the team, we would send an email
+to a person, for topics that might need a discussion or are just too cool
+to get lost in someone's inbox, we send a mail to our internal mailing list.&lt;/p&gt;
+&lt;p&gt;Did you know that you can start closed invite only Google Groups these days?
+Yep! Setting up an awesome, easy to use, easy to manage and searchable mailing
+list has never been easier.&lt;/p&gt;
+&lt;p&gt;Since we use IRC for "fast" communication, no one expects fast answers to
+emails, which again means: You can opt out. Just ignore your inbox for a whole
+day. Doesn't matter at all.&lt;/p&gt;
+&lt;p&gt;There is a catch: This only works because everyone is allowed to work on
+anything at any time. We don't have a hierarchy nor do we have job
+descriptions, other than "be great", maybe. Therefore, if you hit a wall, you
+can just turn around and walk into another direction and solve another one of
+our problems. We are three guys working on &lt;a href="https://github.com/bitmazk"&gt;23 public&lt;/a&gt;
+and just as many private repositories. There is &lt;em&gt;always&lt;/em&gt; something that you
+do.&lt;/p&gt;
+&lt;h2&gt;4. We use trello.com&lt;/h2&gt;
+&lt;p&gt;We don't do meetings. Of course we have Skype sessions or hangouts whenever
+we need to plan something and typing it all into IRC would just be too slow.
+Apart from that, there are no meetings. Ever. Meetings are evil. When I
+was working for a large multinational corporation for 6 years I think I did not
+attend a single meeting that was worth the time. Even at the much cooler,
+smaller and hipper company I worked for after that, basically 99% of all
+meetings were a complete waste of time.&lt;/p&gt;
+&lt;p&gt;Why is that? Because of the managers! In most companies meetings serve the
+single purpose of gathering everyone in one room for reporting their progress,
+so that the manager knows what is going on.&lt;/p&gt;
+&lt;p&gt;Enter &lt;a href="https://trello.com"&gt;trello.com&lt;/a&gt; for the rescue! Trello solves &lt;em&gt;so many&lt;/em&gt;
+problems, but above all it allows me (as a manager), to asnwer the question
+"So, what are you currently working on?". The person in questino doesn't even
+have to be around and I don't need to disturb anyone for this.&lt;/p&gt;
+&lt;p&gt;We even ask our customers to use Trello, which eliminates the single most
+disturbing source of distraction: A customer calling, wanting to know about
+the progress.&lt;/p&gt;
+&lt;p&gt;Seriously, if I ever meet Joel Spolsky in person, I will fall on my knees and
+praise him for giving us stackoverflow &lt;em&gt;and&lt;/em&gt; Trello. These are probably the two
+most important sites that allow me and my team to pursue the dream that we are
+currently living.&lt;/p&gt;
+&lt;p&gt;By the way, I believe that the guys at 37 signals and at Github work in a very
+similar way, they even published &lt;a href="http://www.amazon.com/ReWork-ebook/dp/B003ELY7PG/ref=sr_1_2?ie=UTF8&amp;amp;qid=1354795715&amp;amp;sr=8-2&amp;amp;keywords=rework"&gt;a book about it&lt;/a&gt;.
+Sure, that book is old news by now and in the end it's just marketing - but at
+the same time it is actually true and it simply works.&lt;/p&gt;
+&lt;h2&gt;But: Pomodoro&lt;/h2&gt;
+&lt;p&gt;So far I totally agree with Daniel but here is some food for though:&lt;/p&gt;
+&lt;p&gt;I don't think that 5 minute interruptions are bad in every case. At Bitmazk we
+are tracking our times meticulously and one interesting pattern is clearly
+visible: While we have the freedom to code 10 hours without interruption, if we
+want to, everyone of us instinctively choses to have short breaks (5 to 15
+minutes) every thirty to ninety minues. In fact, I have actively practiced the
+&lt;a href="http://www.pomodorotechnique.com/"&gt;Pomodoro technique&lt;/a&gt; for a few weeks and I
+still think that those where the most productive weeks of my life. For software
+development, there simply isn't any better way of structuring your work time.&lt;/p&gt;
+&lt;p&gt;And by the way, the act of standing up every 20 minutes is probably &lt;a href="http://www.medicalbillingandcoding.org/sitting-kills/"&gt;saving
+your life&lt;/a&gt;, but on top
+of the physical health bonus, you get a huge mental bonus as well: When I
+really get deeply into the zone, I forget eating, drinking and moving. The
+result is always the same: After 3 hours or so, my thinking slows down. After
+5 hours, my code is actually &lt;em&gt;really&lt;/em&gt; bad. Try it! Compare the quality of code
+you wrote in the first hours to the code you wrote in the last hour of a six
+hour coding block.&lt;/p&gt;
+&lt;p&gt;Small interruptions aren't that bad. The problem are the interruptions that we
+can't schedule ourselves.&lt;/p&gt;</summary><category term="programming"></category><category term="management"></category></entry><entry><title>Fixing OSX 10.8 after Mountain Lion upgrade</title><link href="/mountain-lion.html" rel="alternate"></link><updated>2012-07-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-07-26:mountain-lion.html</id><summary type="html">&lt;p&gt;Out of habit I opened the AppStore on my MacBook Pro yesterday and found a big
+fat new app in the spotlight: OSX 10.8 Mountain Lion. I paid my 15 bucks,
+downloaded the 4GB over night and started the installation this morning. It
+estimated 34 minutes to install but I don't know if that is true because I went
+back to sleep.&lt;/p&gt;
+&lt;p&gt;When I got up, the Mountain Lion login screen greeted me. If this is not an
+awesome upgrade experience, I don't know what is. 15 EUR and three clicks,
+other than that totally unattended update. I cannot see any way how Microsoft
+and Windows will survive the next decade.&lt;/p&gt;
+&lt;p&gt;I guess from a user point of view this is the best experience possible. For us
+developers it doesn't look that good, but that is to be expected and the same
+happens on Ubuntu as well, so I won't complain here.&lt;/p&gt;
+&lt;p&gt;Here is what I had to do to get my Python projects back up and running:&lt;/p&gt;
+&lt;h2&gt;Re-Install Command Line Tools&lt;/h2&gt;
+&lt;p&gt;With the Mountain Lion upgrade I also upgraded a few other apps, such as XCode.
+Unfortunately it seems that the Command Line Tools I had installed are no
+longer working, so the natural thing to do is, login to the Apple Developer
+site and download the latest version. Turns out that version is not compatible
+with OSX 10.8. &lt;strong&gt;What the fuck?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Some googling revealed that you can install these tools now via XCode by going
+to &lt;code&gt;Preferences --&amp;gt; Downloads&lt;/code&gt;. I clicked at the &lt;code&gt;Install&lt;/code&gt; button next to
+&lt;code&gt;Command Line Tools&lt;/code&gt; and had to enter my Apple Developer ID and password.
+After a few seconds XCode tells me that I don't have access to that download
+and that I should contact Apple to resolve access problems. Turns out this is
+a bug in XCode that has been fixed for some but not for others. I'm seem to be
+one of the others. &lt;strong&gt;What the fuck?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Some more googling revealed that you can download a special, older version
+of the Command Line Tools and install it from the &lt;code&gt;.dmg&lt;/code&gt; file. This works
+although that version's description is exactly the same, I don't see why the
+latest version does not work. &lt;strong&gt;What the fuck?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Anyways, the link is here: &lt;a href="http://adcdownload.apple.com/ios/ios_simulator__resigned/cltools_mountainliondp2_march12.dmg"&gt;cltools_mountainliondp2_march12.dmg&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Re-Install Parallels&lt;/h2&gt;
+&lt;p&gt;I should have started Parallels before upgrading to Mountain Lion, then it
+would have upgraded itself. Instead after logging in to Mountain Lion it
+told me that it found incompatible software which it moved to some graveyard
+folder. No more Parallels for me. Thankfully I could login at the Parallels
+website and retrieve a download link for the latest version &lt;a href="http://www.parallels.com/download/build/desktop/"&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Update zsh&lt;/h2&gt;
+&lt;p&gt;Something in my zsh seemed to be broken because whenever I tried to use TAB
+for folder completion I got this error:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eval&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;&lt;span class="n"&gt;setopt&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;3&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt; &lt;span class="n"&gt;such&lt;/span&gt; &lt;span class="n"&gt;option&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;NO_ignoreclosebraces&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Updating zsh can only be done if you went through the various what-the-fucks of
+updating your Command Line Tools first, after that it simply is:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
+&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;uninstall&lt;/span&gt; &lt;span class="n"&gt;zsh&lt;/span&gt;
+&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;zsh&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And fixed my problem right away.&lt;/p&gt;
+&lt;h2&gt;Re-Install Python&lt;/h2&gt;
+&lt;p&gt;I actually did this at the end of my journey because it turned out that even
+though I updated virtualenv and virtualenvwrapper I was not able to install
+anything into my virtualenvs because pip always tried to install it into
+&lt;code&gt;/Library/Python/2.7/site-packages/&lt;/code&gt; which of course resulted in &lt;code&gt;Permission
+denied&lt;/code&gt; errors. &lt;code&gt;brew list&lt;/code&gt; showed that I actually installed Python via
+homebrew for some reason (I assume because of pygame), so I thought it might
+be a good idea to re-install Python:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;uninstall&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt;
+&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;framework&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;After this I ran into several other problems. I'm not sure if this is really
+necessary but setting up my &lt;code&gt;PATH&lt;/code&gt; like this seemed to help:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;export&lt;/span&gt; &lt;span class="n"&gt;PATH&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sbin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;share&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;$&lt;span class="n"&gt;PATH&lt;/span&gt;
+# &lt;span class="n"&gt;Include&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;bin&lt;/span&gt; &lt;span class="n"&gt;folder&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt; &amp;quot;$&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&amp;quot; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;then&lt;/span&gt;
+    &lt;span class="n"&gt;export&lt;/span&gt; &lt;span class="n"&gt;PATH&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&amp;quot;$&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;$&lt;span class="n"&gt;PATH&lt;/span&gt;&amp;quot;
+&lt;span class="n"&gt;fi&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Re-Install Python stuff&lt;/h2&gt;
+&lt;p&gt;It turned out that I could no longer activate my virtualenvs. Here is what I
+had to do:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;easy_install&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;easy_install&lt;/span&gt; &lt;span class="n"&gt;mercurial&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;virtualenv&lt;/span&gt;
+&lt;span class="n"&gt;sduo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;virtualenvwrapper&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;touch&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Library&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Frameworks&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Python&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;framework&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Versions&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;7&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;python2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;7&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;distutils&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The last one is wonderful. Somehow Apple ships the Python stuff as compiled
+&lt;code&gt;.pyc&lt;/code&gt; files without the &lt;code&gt;.py&lt;/code&gt; files. I can't remember if it was when I
+tried to use &lt;code&gt;pip install&lt;/code&gt; or &lt;code&gt;workon&lt;/code&gt; but I got that error telling me
+that &lt;code&gt;/distutils/__init__.py&lt;/code&gt; cannot be found. Google told me that I can
+just create that missing &lt;code&gt;.py&lt;/code&gt; file. &lt;strong&gt;What the fuck?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I also re-installed some packages that I like to install globally instead of
+installing them into each and every virtualenv:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;psycopg2&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;mysql&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;PIL&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Re-Install Java&lt;/h2&gt;
+&lt;p&gt;When I tried to start solr a pop-up offered to download the latest Java version.&lt;/p&gt;
+&lt;h2&gt;Set iTerm to xterm-256color&lt;/h2&gt;
+&lt;p&gt;You might have a problem when running Vim inside of GNU Screen or tmux. It
+might no longer show the correct color theme. This is because iTerm forgot it's
+setting for &lt;code&gt;Report Terminal Type&lt;/code&gt;, which you can set at &lt;code&gt;Preferences --&amp;gt;
+Profiles --&amp;gt; Default&lt;/code&gt;. Set it back to &lt;code&gt;xterm-256color&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;That's it&lt;/h2&gt;
+&lt;p&gt;This whole thing took me exactly 4 hours including the writing of this blog
+post. It also took so long because I had to reinstall a huge virtualenv over
+and over again until it finally worked without errors. Not too bad actually and
+I found it quite amazing that MySQL and Postgres still worked.&lt;/p&gt;</summary><category term="apple"></category><category term="osx"></category></entry><entry><title>Daemonize Solr with Circus 0.5 on Webfaction</title><link href="/circus.html" rel="alternate"></link><updated>2012-07-13T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-07-13:circus.html</id><summary type="html">&lt;p&gt;Since Webfaction increased the available memory from 40 MB to 250 MB I started
+using Solr for more and more of my projects. However, I never really knew how
+to ensure that Solr restarts itself if it crashes and how to easily stop and
+start it in case I have to re-build the &lt;code&gt;schema.xml&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;Then I found out about &lt;a href="http://circus.readthedocs.org/en/0.5/index.html"&gt;Circus 0.5&lt;/a&gt;
+and got curious.&lt;/p&gt;
+&lt;p&gt;Here is what I did to install zeromq, solr and circus on a Webfaction server:&lt;/p&gt;
+&lt;h2&gt;Install zeromq&lt;/h2&gt;
+&lt;p&gt;Since we cannot install anything as root, I chose to install zeromq into
+the folder &lt;code&gt;/opt/zeromq-2.2.0&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;
+&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;
+&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;
+&lt;span class="n"&gt;wget&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;download&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tar&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt;
+&lt;span class="n"&gt;tar&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;xvf&lt;/span&gt; &lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tar&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0
+&lt;span class="o"&gt;./&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;$&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Install Circus&lt;/h2&gt;
+&lt;p&gt;Now we can install Circus. I assume that you are using virtualenv and
+virtualenvwrapper:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;workon&lt;/span&gt; &lt;span class="n"&gt;yourvenv&lt;/span&gt;
+&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;circus&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will fail because of the custom installation folder of zeromq. Thankfully
+the failed zeromq build will remain in your virtualenv's build folder so that
+you can install it again manually, this time giving it the path to your
+zeromq installation:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;your&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Venv&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;pyzmq&lt;/span&gt;
+&lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;zmq&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;zeromq&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;0
+&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;circus&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Install Solr&lt;/h2&gt;
+&lt;p&gt;Now let's install Solr, following &lt;a href="http://django-haystack.readthedocs.org/en/latest/installing_search_engines.html#solr"&gt;this post&lt;/a&gt;.
+All you really need to do is download and unpack it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; $&lt;span class="n"&gt;HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;
+&lt;span class="n"&gt;curl&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;O&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;apache&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mirrors&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tds&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lucene&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;3&lt;span class="p"&gt;.&lt;/span&gt;5&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;apache&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;3&lt;span class="p"&gt;.&lt;/span&gt;5&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tgz&lt;/span&gt;
+&lt;span class="n"&gt;tar&lt;/span&gt; &lt;span class="n"&gt;xvzf&lt;/span&gt; &lt;span class="n"&gt;apache&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;3&lt;span class="p"&gt;.&lt;/span&gt;5&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tgz&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Configure Circus&lt;/h2&gt;
+&lt;p&gt;Create a &lt;code&gt;circus.ini&lt;/code&gt; file somewhere on your file system. The following file
+works great for me, just replace the path to your Solr installation
+(usually just change your username):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[circus]&lt;/span&gt;
+&lt;span class="na"&gt;check_delay&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;5&lt;/span&gt;
+&lt;span class="na"&gt;endpoint&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;tcp://127.0.0.1:5555&lt;/span&gt;
+
+&lt;span class="k"&gt;[watcher:solr]&lt;/span&gt;
+&lt;span class="na"&gt;cmd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;java&lt;/span&gt;
+&lt;span class="na"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;-Djava.util.logging.config.file=logging.properties -jar start.jar&lt;/span&gt;
+&lt;span class="na"&gt;working_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/&amp;lt;USERNAME&amp;gt;/opt/apache-solr-3.5.0/example&lt;/span&gt;
+&lt;span class="na"&gt;warmup_delay&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;0&lt;/span&gt;
+&lt;span class="na"&gt;numprocesses&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;span class="na"&gt;singleton&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;True&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Start circus:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;circusd&lt;/span&gt; &lt;span class="n"&gt;circus&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ini&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That's it. On my Webfaction server circus eats 15MB RAM. You can now start and
+stop Solr using &lt;code&gt;circusctl&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;circusctl&lt;/span&gt; &lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="n"&gt;solr&lt;/span&gt;
+&lt;span class="n"&gt;circusctl&lt;/span&gt; &lt;span class="n"&gt;stop&lt;/span&gt; &lt;span class="n"&gt;solr&lt;/span&gt;
+&lt;span class="n"&gt;circusctl&lt;/span&gt; &lt;span class="n"&gt;start&lt;/span&gt; &lt;span class="n"&gt;solr&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Or try to kill Solr. Circus will immediately restart it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ps&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;grep&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;
+&lt;span class="n"&gt;kill&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;solr&lt;/span&gt; &lt;span class="n"&gt;PID&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;ps&lt;/span&gt; &lt;span class="n"&gt;aux&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;grep&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You need to be careful when starting and stopping Solr. Even though Circus will
+return &lt;code&gt;[OK]&lt;/code&gt; the process will remain visible for a few seconds after you
+stopped it. Similarly it will not accept requests for a few seconds after it
+has been started. So if you use start and stop in a shell script or Fabric
+task better insert some &lt;code&gt;sleep&lt;/code&gt; seconds before doing anything else with Solr.&lt;/p&gt;</summary><category term="python"></category><category term="solr"></category><category term="circus"></category></entry><entry><title>Installing Free SSL certificate with StartSSL and Webfaction</title><link href="/ssl.html" rel="alternate"></link><updated>2012-06-13T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-13:ssl.html</id><summary type="html">&lt;p&gt;For my next big project it will be mandatory to use a SSL certificate for the
+web application. I have never dealt with SSL before, so I am going to take
+some notes here. Let's see how it goes...&lt;/p&gt;
+&lt;p&gt;I chose &lt;a href="https://www.startssl.com/"&gt;StartSSL&lt;/a&gt; because they offer a free
+certificate.&lt;/p&gt;
+&lt;p&gt;I had to provide my name, address, phone number and email. After that I got an
+activation link immediately. Interestingly I don't have to authenticate myself
+on the StartSSL website via username and password. Instead they installed a
+client certificate in my browser, which I exported and securely saved in my
+Dropbox account, in case that I reinstall my system in the future.&lt;/p&gt;
+&lt;p&gt;From here on it is just following a wizard to create a new certificate for a
+new domain. After following all instructions given by the wizard, I ended up
+with a bunch of file (.crt, .pem, .key) which I all copied into my Webfaction
+server, as described in the &lt;a href="https://docs.webfaction.com/user-guide/websites.html#secure-sites-https"&gt;SSL docs at Webfaction&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I opened a support request in my Webfaction account and asked for activation
+of the certificate. In the meantime I created another website in the control
+panel that uses HTTPS and maps the same apps as the non-HTTPS version.&lt;/p&gt;
+&lt;p&gt;Just a few minutes after opening the support ticket I got a friendly response
+from the Webfaction support telling me that everything worked fine and indeed,
+I can now access my website via HTTPS.&lt;/p&gt;
+&lt;p&gt;Wow. That was easy! The whole process took me less than an hour to setup.
+I'm going to use SSL for all my sites from now on.&lt;/p&gt;</summary><category term="ssl"></category><category term="webfaction"></category></entry><entry><title>Follow mailing lists using GMail</title><link href="/gmail-groups.html" rel="alternate"></link><updated>2012-06-11T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-11:gmail-groups.html</id><summary type="html">&lt;p&gt;Here is a small trick to manage your mailing list subscriptions with your GMail
+account without cluttering your inbox.&lt;/p&gt;
+&lt;h1&gt;Step 1: Setup multiple inboxes&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Open GMail and go to &lt;em&gt;Settings&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Go to &lt;em&gt;Labs&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Search for &lt;em&gt;Multiple Inboxes&lt;/em&gt; and enable it&lt;/li&gt;
+&lt;li&gt;Save your changes&lt;/li&gt;
+&lt;li&gt;Go to &lt;em&gt;Settings&lt;/em&gt; again&lt;/li&gt;
+&lt;li&gt;Go to &lt;em&gt;Multiple Inboxes&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Replace the search query for &lt;em&gt;Pane 0&lt;/em&gt; with this: &lt;code&gt;-label:muted
+  label:]-groups is:unread&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Delete the search query for &lt;em&gt;Pane 1&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Set &lt;em&gt;Extra panel positioning&lt;/em&gt; to &lt;em&gt;Below the inbox&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Go to &lt;em&gt;Settings&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Got to &lt;em&gt;Labels&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Create a new label &lt;em&gt;] Groups&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;What have we done so far? We have told GMail that we want a second inbox below
+our main inbox that&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;does not display muted posts. This is a nice hack, it turns out that &lt;em&gt;muted&lt;/em&gt;
+  is a hidden label in Gmail, so you can filter for muted conversations&lt;/li&gt;
+&lt;li&gt;does display anything that has the label &lt;em&gt;] Groups&lt;/em&gt; (filtering for labels
+  seems to be case insensitive)&lt;/li&gt;
+&lt;li&gt;does only display conversations that are unread&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Step 2: Create filters for your mailing lists&lt;/h1&gt;
+&lt;p&gt;If you are subscribed to &lt;em&gt;N&lt;/em&gt; mailing lists you need to create &lt;em&gt;N+1&lt;/em&gt; filters
+now.&lt;/p&gt;
+&lt;p&gt;First create one big filter for all your mailing lists. Set it up like so:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Has the words&lt;/em&gt;: &lt;code&gt;list1@example.com OR list2@example.com ... OR listN@example.com&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Skip inbox&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Apply label&lt;/em&gt;: &lt;em&gt;] Groups&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;At this point you would be able to see how many unread mailing list posts there
+are because the &lt;em&gt;] Groups&lt;/em&gt; label would become bold and display a number
+behind itself. However, it would be nice if you could see exactly how many
+unread items &lt;em&gt;each&lt;/em&gt; of your subscriptions has. For this you simply need to add
+one more filter for each subscription:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Has the words&lt;/em&gt;: &lt;code&gt;listX@example.com&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Skip inbox&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Apply label&lt;/em&gt;: &lt;em&gt;] Groups/listX&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So if you are following the Python users mailing list, you would for example
+create a new sub label called &lt;em&gt;python-users&lt;/em&gt; under the label &lt;em&gt;] Groups&lt;/em&gt;.&lt;/p&gt;
+&lt;h1&gt;Step 3: Profit&lt;/h1&gt;
+&lt;p&gt;This setup allowed me to follow 16 mailing lists during the last 2 years
+without drowning in content overflow. If a thread on the list is very active
+but you already know that you are not interested in following the discussion,
+just mute the conversation and it will no longer pop up in your second inbox.&lt;/p&gt;
+&lt;p&gt;Because the new filters make sure that those messages skip the main inbox, you
+will not get notifications on your Android phone for all these messages, which
+is another huge plus.&lt;/p&gt;
+&lt;p&gt;From now on it is just scanning through the headlines in your inbox and marking
+them all as read. Another good thing about this is that you will be able to
+perform searches in GMail to find old discussions.&lt;/p&gt;
+&lt;p&gt;Your new inbox should look like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src="./images/mailinglists.png" width="100%" alt="Gmail with multiple inboxes" /&gt;&lt;/p&gt;</summary><category term="google"></category><category term="gmail"></category><category term="lifehacking"></category><category term="productivity"></category></entry><entry><title>PyCon APAC 2012 - Why we should all write a video game</title><link href="/videogame.html" rel="alternate"></link><updated>2012-06-09T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-09:videogame.html</id><summary type="html">&lt;p&gt;Here are my notes about &lt;a href="https://plus.google.com/100267502615190755251/about"&gt;Richard Jones'&lt;/a&gt;
+keynote with the title "Why we should all write a video game".&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=jpaSS82Jgbg&lt;/p&gt;
+&lt;p&gt;He starts with a awesomely geeky overview over the history of game computing.
+It turns out that with an Amiga or C64 you basically boot up into an
+environment that allows you start developing software for that same system.&lt;/p&gt;
+&lt;p&gt;Unthinkable how much fun we would have if an XBox or PlayStation would allow
+us to do the same. It turns out, that a MacBook or a Ubuntu machine comes with
+Python installed.&lt;/p&gt;
+&lt;p&gt;Forward further into the future where iPads and similar consumer devices might
+rule the world, it is questionable where the future developers should come
+from, since it is almost impossible or at least very very hard and limited to
+tinker with these devices. Another problem is, that even &lt;em&gt;if&lt;/em&gt; you figure out
+how to develop for an iPad, you are again bound to strict rules within the
+Apple App Store.&lt;/p&gt;
+&lt;h1&gt;Tinkering&lt;/h1&gt;
+&lt;p&gt;Lego is great for exploration, as kids can play with architecture and physics.
+Other great projects are &lt;a href="https://github.com/hugs/bitbeam"&gt;bitbeam&lt;/a&gt;,
+&lt;a href="http://www.arduino.cc/"&gt;Arduino&lt;/a&gt; and of course the
+&lt;a href="http://www.raspberrypi.org/"&gt;Raspberry Pie&lt;/a&gt;, which is currently by far the
+cheapest computer in the world. Richard gives some examples of awesome projects
+that people have come up with using these tools.&lt;/p&gt;
+&lt;h1&gt;Code Literacy&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://codeyear.com/"&gt;http://codeyear.com/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Everyone should learn coding, but not to become a professional programmer but
+rather to get insights into all the gadgets that they are using every day.&lt;/p&gt;
+&lt;h1&gt;Game programming&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.ludumdare.com/"&gt;http://www.ludumdare.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.indiegamethemovie.com/"&gt;http://www.indiegamethemovie.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://pyweek.org/"&gt;http://pyweek.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://pyopengl.sourceforge.net/"&gt;http://pyopengl.sourceforge.net/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://pyglet.org/"&gt;http://pyglet.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://cocos2d.org/"&gt;http://cocos2d.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://kivy.org/#home"&gt;http://kivy.org/#home&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Getting started&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://inventwithpython.com/"&gt;Invent your own games with python&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.amazon.com/Beginning-Game-Development-Python-Pygame/dp/1590598725?tag=duckduckgo-d-20"&gt;Beginning Game Development with Python and Pygame&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Participate in PyWeek and just create something! Don't worry about graphics.
+Just get something done that is fun and playable.&lt;/p&gt;
+&lt;h1&gt;Some Zen&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Get things done!&lt;/li&gt;
+&lt;li&gt;Refactor later&lt;/li&gt;
+&lt;li&gt;Simple is better than complex&lt;/li&gt;
+&lt;li&gt;Complex is better than complicated&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>PyCon APAC 2012 - Analyzing Big Data in the Cloud</title><link href="/big-data-cloud.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:big-data-cloud.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/110893970871115341770/about"&gt;Chris Boesch's&lt;/a&gt;
+talk about analyzing big data in the cloud.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=ADjIt6ZbqKU&lt;/p&gt;
+&lt;p&gt;Chris is a professor teaching many IT subjects at Singapore Management
+University.  He advertises the cool idea to let the students teach themselves
+at their own pace. He will be there to answer questions but he says no one ever
+comes back to him. Once thrown into the cold water, people just want to figure
+it out themselves.&lt;/p&gt;
+&lt;p&gt;He developed &lt;a href="http://www.singpath.com/eli/index.html"&gt;Singpath&lt;/a&gt;, a playful
+approach on learning Python online via a web powered tournament system. It runs
+on Python on Google App Engine.&lt;/p&gt;
+&lt;p&gt;He asks his students to develop games and put them on Google App Engine. Then
+he asks each team to play against the games of all other teams. A big
+spreadsheet will show which group manages to beat which other group's game
+which tuns out to be a great motivation for students to try harder and
+implement their game more thoroughly. With Tic Tac Toe, where every game should
+actually be a tie and the computer should never lose, this can be done nicely.
+When students see that other groups are beating their Tic Tac Toe, that is
+motivation enough to dive back into code and improve the AI.&lt;/p&gt;
+&lt;p&gt;He also uses &lt;a href="https://www.coderbuddy.com/"&gt;Coderbuddy&lt;/a&gt;, a service that helps
+to deploy and test websites on Google App Engine.&lt;/p&gt;
+&lt;h1&gt;Agile is different&lt;/h1&gt;
+&lt;p&gt;Chris discovered that when teaching people how to program using the cloud,
+some of them instinctively start working extremely agile. This raises
+interesting problems because you need teach a whole new bunch of topics like
+unit testing or split testing. For Google App Engine there are some tools for
+this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://code.google.com/p/gaeunit/"&gt;gaeunit&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/kamens/gae_bingo"&gt;gae-bingo&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Uploading and downloading massive amounts of data into Google App Engine is
+simple, can be done with a few dozen lines of code.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.amazon.com/The-Lean-Startup-Entrepreneurs-Continuous/dp/0307887898?tag=duckduckgo-d-20"&gt;The Lean Startup&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>PyCon APAC 2012 - Diversity as a Dependency</title><link href="/diversity.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:diversity.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/108526151904394584422/about"&gt;Anna Martelli Ravenscroft's&lt;/a&gt;
+closing keynote on "Diversity as a Dependency".&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=wOpdDxJzNkw&lt;/p&gt;
+&lt;p&gt;She opens her keynote with a question:&lt;/p&gt;
+&lt;p&gt;"What do you think of when you hear the word diversity?"&lt;/p&gt;
+&lt;p&gt;Someone in the audience says women, and while this causes laughter it is of
+course what she wanted to hear.&lt;/p&gt;
+&lt;p&gt;In most institutions that thrive to have diversity, the whole process is driven
+by guilt. Guilt is not a good motivator.&lt;/p&gt;
+&lt;h1&gt;Small town&lt;/h1&gt;
+&lt;p&gt;She shows us a study about who is most creative in Small Town. It turned out
+that those people who had connections to more diverse groups were the most
+creative and influential.&lt;/p&gt;
+&lt;h1&gt;Science&lt;/h1&gt;
+&lt;p&gt;Another example is science. Science solves hard problems mostly by discovering
+unexpected results. Also, some of the greatest scientific breakthroughs
+depended on conceptual changes (like assuming a different atom model).&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;Interactions among individuals with &lt;em&gt;different&lt;/em&gt; perspectives create the most
+innovation.&lt;/p&gt;
+&lt;h1&gt;Kinds of diversity&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;needs / motivations&lt;/li&gt;
+&lt;li&gt;skill sets&lt;/li&gt;
+&lt;li&gt;perspectives&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Remarkably there is no gender on this list, because it would be a wrong
+motivator. Python &lt;em&gt;does&lt;/em&gt; need diversity, that is diversity in motivations,
+skills and perspectives.&lt;/p&gt;
+&lt;p&gt;This is especially true in open true, because people usually do it because they
+have an itch to be scratched, and everyone has a different itch to be
+scratched. Here we have different needs and motivations.&lt;/p&gt;
+&lt;h1&gt;Universal Design&lt;/h1&gt;
+&lt;p&gt;Lowered curbs are useful for people who are pulling luggage but they have
+actually been designed for people in wheelchairs. Another example is text to
+speech. It was designed for the blind but it can be useful to anyone who wants
+to drive a car and listen to his book, for example.&lt;/p&gt;
+&lt;h1&gt;Community Growth&lt;/h1&gt;
+&lt;p&gt;Boston Python User Group only had 1% of women in their base of members. They
+started to give workshops for women and increased their user base by 15%, which
+is obviously something that every community would want. If you want to grow
+your community just target a group of people that currently does not seem to
+recognize you.&lt;/p&gt;
+&lt;h1&gt;Financial success&lt;/h1&gt;
+&lt;p&gt;A study about women in business has shown that female CEOs outperform male
+CEOs.&lt;/p&gt;
+&lt;h1&gt;Differing skill-sets&lt;/h1&gt;
+&lt;p&gt;In a soccer team, everyone has a different skill set. Only the team as a whole
+can win. This is similar in programming. Our craft requires so many different
+skill sets that no single one person could ever combine them all in himself.&lt;/p&gt;
+&lt;p&gt;As a Python community we even need people who know how to organize conferences.
+This person would not necessarily need to be an outstanding programmer but his
+very special and "diverse" skill would be a great addition to the community as
+a whole.&lt;/p&gt;
+&lt;h1&gt;Problem solving&lt;/h1&gt;
+&lt;p&gt;Some of us might be individual geniuses, some of us might not, but as a group
+no matter what, we will have a collective intelligence that allow us to solve
+problems that are much bigger than us.&lt;/p&gt;
+&lt;p&gt;Interesting: Our brains are lazy. Whatever has worked in the past, will be
+remembered better than anything else. This means sooner or later we will kind
+of be doomed to try to use the same solution for all problems, first. Only
+diversity in the community can guarantee that fresh solutions for new hard
+problems will be invented.&lt;/p&gt;
+&lt;p&gt;This lazy brain problem also is the reason why we create stereotypes.&lt;/p&gt;
+&lt;p&gt;Anna gives many more lazy brain examples by quoting studies that analyse
+people's behavior and perception in different situation. I think the point is
+that even when we think that we are totally right and that we are deciding on
+facts and with best intentions. In all examples the problem is that we try to
+act conform to everyone else in the group, which can result in extremely stupid
+behavior. One example is an experiment where three people sit in a room that
+fills with smoke. When two just stay calm, the third one will most likely stay
+calm as well and just assume that someone else will come and help. This is
+called the trap of group think.&lt;/p&gt;
+&lt;p&gt;We need diversity to break the group think.&lt;/p&gt;
+&lt;h1&gt;Diversity is hard&lt;/h1&gt;
+&lt;p&gt;While it is good that everyone is so different, at the same time it is also the
+reason why it is very hard to make them all work together in harmony.&lt;/p&gt;
+&lt;p&gt;How can make it work?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Education&lt;/li&gt;
+&lt;li&gt;Facilitating communication&lt;/li&gt;
+&lt;li&gt;Clear process and goal-setting&lt;/li&gt;
+&lt;li&gt;Clear decision making (thank god that we have a BDFL in Python)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;People are harder, because none of us come with docs :)&lt;/p&gt;
+&lt;p&gt;This last slide makes me think about that instructions email that Richard
+Stallman sends to all hosts whenever he come to speak. While it is quite
+amusing and displays him as quite a weirdo, it definitely is a very very
+precise "doc" about the person. Maybe we just could have docs for people?
+Put them on their GitHub profiles?&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>PyCon APAC 2012 - Keynote</title><link href="/eafp.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:eafp.html</id><summary type="html">&lt;p&gt;Here are my live notes on &lt;a href="https://plus.google.com/106273672060692715136/about"&gt;Alex Martelli's&lt;/a&gt;
+keynote "Permission for Forgiveness".&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=lEtyYEKqUlk&lt;/p&gt;
+&lt;p&gt;He starts with a joke about the font in his presentation which looks like
+Comic Sans but is actually Apple's Chalkboard.&lt;/p&gt;
+&lt;p&gt;We learn about &lt;a href="https://en.wikipedia.org/wiki/Grace_Hopper"&gt;Grace Hopper&lt;/a&gt; who
+ironically won the first "CS &lt;em&gt;man&lt;/em&gt; of the year" award in 1969. Alex talks a lot
+about her many achievements, one remarkable story is how she &lt;em&gt;caught&lt;/em&gt; the first
+&lt;a href="https://en.wikipedia.org/wiki/File:H96566k.jpg"&gt;computer bug&lt;/a&gt; in the Mark I.&lt;/p&gt;
+&lt;p&gt;This is fantastic! I always knew about the story why bugs are called bugs but I
+never knew about this image of the actual first bug being filed.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://docs.python.org/glossary.html#term-eafp"&gt;EAFP&lt;/a&gt; means "Easier to ask
+forgiveness than permission" and it was Hopper's secret recipe for being
+successful and innovative inside a huge and bureaucratic organization (the
+Navy). Now that I found this reference in the Python glossary I'm beginning to
+understand why this is a good keynote for a Python conference :)&lt;/p&gt;
+&lt;h1&gt;Why does EAFP work?&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;If you ask for permission, the bureaucrat is likely to deny it, because it
+  might just be the easiest thing for him to do and because he might see
+  approval as a risk for his own career, since he needs to take responsibility
+  for something he probably only remotely understand.&lt;/li&gt;
+&lt;li&gt;The bureaucrat is more likely to grant forgiveness since again, this would
+  be the easier thing for him to do, especially if the project turned out to
+  be successful.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;EAFP and Python&lt;/h1&gt;
+&lt;p&gt;Alex gives a nice example of reading files. Many people (me included, shame on
+me) would first check if the file exists and then access the file. However,
+this is really stupid because one second after your check another process might
+just delete the file and renders your check worthless. Better just read the
+file and capture any exception. Or in other words, ask for forgiveness.&lt;/p&gt;
+&lt;p&gt;Another common example is the &lt;code&gt;hasattr&lt;/code&gt; call. Python often has defaults,
+so you could just as well just call &lt;code&gt;getattr&lt;/code&gt; and return a default if
+the attribute cannot be found.&lt;/p&gt;
+&lt;h1&gt;EAFP in software&lt;/h1&gt;
+&lt;p&gt;Interesting example. &lt;a href="https://en.wikipedia.org/wiki/Optimistic_concurrency_control"&gt;Optimistic concurrency&lt;/a&gt;:
+Instead of creating blocks of code that are protected by locks (asking for
+permission), just do it, but have means to detect if the object you are working
+on, has been changed while working, also make sure that your work is in a
+transaction that can be reversed. Now, if the object changes while you are
+working on it, just rollback and try again. This is very common with relational
+databases and I really wonder how this could be implemented when working with
+Python objects.&lt;/p&gt;
+&lt;p&gt;Source control is another example. In most modern version control systems you
+can just push your code and the system will try to just do it and ask for your
+help if someone else pushed just before you. Ironically Microsoft's Visual
+Source Save locks files (at least a few years ago when I last worked with it).
+How fitting for a large bureaucratic organization.&lt;/p&gt;
+&lt;h1&gt;EAFP in startups&lt;/h1&gt;
+&lt;p&gt;At least for modern tech startups, the agile approach has clearly won. Just
+launch a beta of your software as quickly as possible and see what happens.
+When I think about it, Facebook clearly follows this model and shoots first,
+asks for forgiveness later. Well... actually they never really ask for
+forgiveness, I think :)&lt;/p&gt;
+&lt;h1&gt;Considerations&lt;/h1&gt;
+&lt;p&gt;You shouldn't do EAFP everywhere and all the time. Where there are rules that
+make sense and that have protocols attached to them that make it possible to
+actually work with the rules, you should, obviously, follow them.&lt;/p&gt;
+&lt;p&gt;Highly security relevant systems might be an example where EAFP would be rather
+harmful.&lt;/p&gt;
+&lt;p&gt;EAFP is not a license to do evil and ask for permission later.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;Great keynote for a PyCon. I like the general theme and idea to just go ahead
+and do things, as long as you don't do evil. It's also kind of encouraging to
+try to stand out even when facing seemingly impossible to overcome bureaucratic
+barriers.&lt;/p&gt;
+&lt;p&gt;Slides can be found &lt;a href="http;//www.aleax.it/pycon12ap_fop.pdf"&gt;here&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>PyCon APAC 2012 - Functional Programming in Python</title><link href="/functional.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:functional.html</id><summary type="html">&lt;p&gt;Here are my notes for &lt;a href="https://twitter.com/chihiro"&gt;Gavin Bong's&lt;/a&gt;
+talk about functional programming in Python.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=r75X4Vn_E9k&lt;/p&gt;
+&lt;p&gt;Sorry for the horribly weird notes. I don't know anything about functional
+programming and got lost during the talk more than once. :/&lt;/p&gt;
+&lt;p&gt;Gavin describes key features of functional programming. Given the common
+definition for functional languages, Python is &lt;em&gt;not&lt;/em&gt; a functional language.&lt;/p&gt;
+&lt;p&gt;However, it provides many features of functional languages, like immutable
+containers (tuple, forzenset) or lambda functions. Unfortunately Python
+lambdas can only contain a single expression.&lt;/p&gt;
+&lt;p&gt;Good to know: Gavin used Haskell to teach himself functional programming...
+that's what I tried as well a few months ago. I guess I should pick it up
+again.&lt;/p&gt;
+&lt;h1&gt;High order functions&lt;/h1&gt;
+&lt;p&gt;These are functions that accept other functions as parameters. Python has some
+built-in functions that heavily rely on this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;map&lt;/li&gt;
+&lt;li&gt;filter&lt;/li&gt;
+&lt;li&gt;reduce&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;An alternative to filter would be list comprehensions, which also have a
+similar syntax to Haskell.&lt;/p&gt;
+&lt;h1&gt;Recursion&lt;/h1&gt;
+&lt;p&gt;Functional languages do not have looping constructs. They use recursion
+instead, which of course can be done in Python as well. The problem is that
+Python needs to maintain the stack frame for each recursion, so you can easily
+end up with a stack overflow when doing naive recursion. Many functional
+languages optimise this by reusing the stack frame (Tail Recursion
+Elimination).&lt;/p&gt;
+&lt;p&gt;Python cannot do this because it would result in useless stack traces and make
+debugging too hard.&lt;/p&gt;
+&lt;p&gt;It seems as if this can somehow be emulated by creating a "trampoline" (he gave
+a code example by &lt;a href="https://twitter.com/#!/jtauber"&gt;James Tauber&lt;/a&gt;) but I did not
+quite understand how this works.  And it is very very slow, so not really an
+option.&lt;/p&gt;
+&lt;h1&gt;Currying&lt;/h1&gt;
+&lt;p&gt;Transforms a function that takes multiple arguments into a chain of unary
+functions, which is the standard in Haskell.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Gavin says that learning functional programming can make you a better Python
+  programmer.&lt;/li&gt;
+&lt;li&gt;You have to know a lot of math like category theory and type theory&lt;/li&gt;
+&lt;li&gt;You should play with different functional programming languages&lt;/li&gt;
+&lt;li&gt;Structure and Interpretation of Computer Programs is a good book to
+  understand functional programming.&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>PyCon APAC 2012 - My lightning talk, yay!</title><link href="/lightning.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:lightning.html</id><summary type="html">&lt;p&gt;Hello world&lt;/p&gt;
+&lt;h1&gt;Heading 1&lt;/h1&gt;
+&lt;h2&gt;Headin 2&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://www.google.com"&gt;wwww.google.com&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>PyCon APAC 2012 - MongoDB with Python</title><link href="/mongodb.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-08:mongodb.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://twitter.com/#!/mathias_mongo"&gt;Mathias Stern's&lt;/a&gt;
+talk about "MongoDB with Python"&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=hU8rkNT6CVk&lt;/p&gt;
+&lt;p&gt;MongoDB should make your life easier. You should be able to start coding
+as fast as possible.&lt;/p&gt;
+&lt;p&gt;Starting the database is as simple as creating a &lt;code&gt;~/mongodb/data/&lt;/code&gt; folder
+and starting &lt;code&gt;mongod&lt;/code&gt; giving it that path to the desired db folder.&lt;/p&gt;
+&lt;p&gt;Every object has an &lt;code&gt;_id&lt;/code&gt; attribute. The id's are of type &lt;code&gt;ObjectId&lt;/code&gt; which
+are similar to UIDs.&lt;/p&gt;
+&lt;p&gt;Creating objects is very simple:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pymongo&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bson&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ObjectId&lt;/span&gt;
+
+&lt;span class="c"&gt;# TODO create connection&lt;/span&gt;
+
+&lt;span class="n"&gt;post&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;_id&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;ObjectId&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;author&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;mathias&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;I wrote something&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;My First Post&amp;#39;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;posts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finding is similar:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pprint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;posts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find_one&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;id&amp;quot;: post[&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;_id&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;]}))&lt;/span&gt;
+&lt;span class="c"&gt;# or&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;post&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;posts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;pprint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that there is no schema at all. We can start doing this right away, no
+need to define any tables or something. We also don't need to alter tables
+to add new columns. We would just save or update a post that has the new
+column. Now we would have two kinds of posts in the database: Some have the
+new column and some don't.&lt;/p&gt;
+&lt;p&gt;From here on there was too much shown to keep up with taking notes.
+Overall it seems to be very very simple and straightforward to work with
+MongoDB. I shall try it out in a future project.&lt;/p&gt;
+&lt;p&gt;The presentation was done in &lt;a href="http://ipython.org/"&gt;Ipython Notebook&lt;/a&gt;, which
+seems to be an awesome tool for tinkering around with new APIs.&lt;/p&gt;
+&lt;p&gt;Some links:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://pypi.python.org/pypi/pymongo/"&gt;pymongo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://bsonspec.org/"&gt;BSON&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>PyCon APAC 2012 - Introduction to Game Development</title><link href="/pygame.html" rel="alternate"></link><updated>2012-06-07T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-06-07:pygame.html</id><summary type="html">&lt;p&gt;I like how &lt;a href="https://twitter.com/pydanny"&gt;Daniel Greenfeld&lt;/a&gt; has the habit of
+publishing &lt;a href="http://pydanny-event-notes.readthedocs.org/en/latest/index.html"&gt;live notes&lt;/a&gt;
+when he attends conferences and meet-ups. I don't think that I will have the
+time and money to attend so many conferences that a dedicated repository would
+make sense but I guess that I can give this a try right here in my blog.&lt;/p&gt;
+&lt;p&gt;So here are my notes on &lt;a href="https://plus.google.com/100267502615190755251/posts"&gt;Richard Jone's&lt;/a&gt;
+tutorial on game development with Python:&lt;/p&gt;
+&lt;p&gt;We got a .zip file with a whole game inside. Richard was nice enough to put it
+into public domain, so we can tinker with it and build upon it.&lt;/p&gt;
+&lt;h1&gt;Display Something&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;We can display images, draw primitives, draw fonts or use OpenGL.&lt;/li&gt;
+&lt;li&gt;Not going to cover OpenGL today, unfortunately.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A first pygame program is really simple:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pygame&lt;/span&gt;
+&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;screen&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;display&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_mode&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;640&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;480&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Better put some structure to your code. Create a Game() class with a main()
+method. Don't use global variables.&lt;/p&gt;
+&lt;p&gt;In pygame, unlike in modern frameworks, the coordinate &lt;code&gt;0,0&lt;/code&gt; is the top left
+corner. This is because video hardware draws like this. More modern systems
+like OpenGL separate the drawing part from the display part so that we can use
+a more sane coordinate system with &lt;code&gt;0,0&lt;/code&gt; at bottom left. Pygame is not that
+modern unfortunately.&lt;/p&gt;
+&lt;p&gt;Let's draw something:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;image&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;player.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;screen&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c"&gt;# Fill the screen with a background color&lt;/span&gt;
+&lt;span class="n"&gt;screen&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;blit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;320&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;240&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;  &lt;span class="c"&gt;# Copies the image to that position on screen&lt;/span&gt;
+&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;display&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pygame uses RGB colors.&lt;/p&gt;
+&lt;p&gt;We learn about "tearing". If we draw to the screen directly, the screen might
+refresh while we change what is on the screen so we will see something in
+between. Therefore we will write to a second screen buffer first and once we
+are done drawing everything we will &lt;code&gt;flip&lt;/code&gt; the buffers so that the display will
+re-draw the now new buffer. I assume that the &lt;code&gt;display.flip()&lt;/code&gt; method does
+somehow know when the display finished drawing one whole screen and will only
+flip once that is done.&lt;/p&gt;
+&lt;p&gt;Via &lt;code&gt;pygame.tick.Clock()&lt;/code&gt; we can put the main loop to sleep. No need to
+stress our CPU like crazy. 30 FPS should be a good frame rate for any video
+game.&lt;/p&gt;
+&lt;p&gt;Our first animation is just adding 10 pixels to the image position.&lt;/p&gt;
+&lt;h1&gt;User input&lt;/h1&gt;
+&lt;p&gt;While Pygame can tell us, if a key down event has recently happened, it can
+also tell us which keys are currently being pressed:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_pressed&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;K_LEFT&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+    &lt;span class="n"&gt;image_x&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Both can be useful. Since the main loop runs with a clock and goes to sleep
+every 30 seconds, it can very well happen that the user pressed the escape key
+to quit the game while we have been sleeping. In this case we would check like
+this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;event&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;type&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;KEYDOWN&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;event&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;K_ESCAPE&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Sprites&lt;/h1&gt;
+&lt;p&gt;To put things together, we can define sprites, which are images, that know how
+they look like and where they are on screen. We can give them an &lt;code&gt;update&lt;/code&gt;
+method and handle their user input, which pulls out a lot of clutter from our
+main loop:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Player&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sprite&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sprite&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Player&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;groups&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;player.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rect&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Rect&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;320&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;240&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;image&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_size&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;update&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_pressed&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;K_LEFT&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You would want to pass the amount of time that has passed since the last loop
+call and pass it into the update method. Then don't just jump 10 pixels but
+multiply the passed time with a value. This will make the game feel more smooth
+and more equal on different hardware.&lt;/p&gt;
+&lt;h1&gt;Collision detection&lt;/h1&gt;
+&lt;p&gt;Axis-Aligned bounding box is the most common collision detection. The name says
+it all, think about it.&lt;/p&gt;
+&lt;p&gt;An alternative would be to use circles as bounding boxes.&lt;/p&gt;
+&lt;p&gt;A third alternatives is to use a hash map, which is useful for 2D games with
+thousands of sprite on screen. This is usually used for so called &lt;a href="https://en.wikipedia.org/wiki/Bullet_hell#Bullet_hell"&gt;Bullet
+Hell&lt;/a&gt; games. Didn't know
+about this term before. I'm feeling ashamed.&lt;/p&gt;
+&lt;p&gt;You could finally do pixel perfect collision detection but that might be quite
+slow. It would be used in games like Worms, where you can blow up the whole
+environment, which results in shapes that cannot be handled by bounding boxes
+any more.&lt;/p&gt;
+&lt;h1&gt;Tile maps&lt;/h1&gt;
+&lt;p&gt;.tmx is a common format for tile maps that make up the game world.  It has an
+editor called &lt;a href="http://mapeditor.org"&gt;Tiled&lt;/a&gt;. You can kind of paint the map of
+that level. The tile map also has a layer of trigger tiles which are invisible
+but can be accessed by the game program. Therefore, thanks to the .tmx
+standard, the game can know about the position, the look and the type (trigger)
+of any tile of the game world.&lt;/p&gt;
+&lt;p&gt;The player only sees a fraction of the whole tile map. This is called the view
+port.&lt;/p&gt;
+&lt;p&gt;From here on it is pretty much all about doing lots of if and else clauses
+reacting to collisions and inputs. It seems to me that the hardest part about
+game development is structuring your code as efficient as possible because it
+can quickly grow into a huge amount of spaghetti code.&lt;/p&gt;
+&lt;h1&gt;Sound&lt;/h1&gt;
+&lt;p&gt;As expected, adding sound is extremely easy as well:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jump&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pygame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mixer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Sound&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;jump.wav&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;jump&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;play&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;a href="https://code.google.com/p/sfxr/"&gt;SFXR&lt;/a&gt; is a great little tool that emulates
+the sound chip of the C64 and allows you to model cute 8bit sounds for your
+game.&lt;/p&gt;
+&lt;h1&gt;Special effects&lt;/h1&gt;
+&lt;p&gt;You can use &lt;code&gt;pip install lepton&lt;/code&gt;, a library for particles. Richard repeats:
+"Every single game improves with particles" :) He mentions a talk called
+&lt;a href="https://www.youtube.com/watch?v=Fy0aCDmgnxg"&gt;Juice it or lose it&lt;/a&gt; which is
+about techniques to juice up your game with special effects.&lt;/p&gt;
+&lt;h1&gt;Where to go from here&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://pygame.org"&gt;pygame.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://inventwithpython.com"&gt;inventwithpython&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://pyweek.org"&gt;pyweek.org&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Tools&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://mapeditor.org"&gt;mapeditor.org&lt;/a&gt; - Creates tile maps&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://code.google.com/p/sfxr/"&gt;SFXR&lt;/a&gt; - Creates sound files&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://danikgames.com/stuff/pyxeledit/"&gt;Pyxel Edit&lt;/a&gt; - Creates seamless
+  tiles.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://pixenapp.com/"&gt;Pixen&lt;/a&gt; - Creates moving animatinos for characters&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://cocos2d.org/doc.html"&gt;cocos2d.org&lt;/a&gt; - Helps with adding juice&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.py2exe.org/"&gt;py2exe&lt;/a&gt; - Bundle your game and distribute it as an
+  .exe file&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://svn.pythonmac.org/py2app"&gt;py2app&lt;/a&gt; - Bundle your game and distribute
+  as an OSX application&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;It is &lt;em&gt;amazingly&lt;/em&gt; simple to start with game development and Python. Everything
+form installing pygame to getting to play a first prototype just works and
+there seem to be free tools available for every aspect of simple game
+development (like creating sound etc.). I definitely want to try this at home!
+This might be the most awesome way to teach my 12 year old brother in law about
+programming.&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Secure pair programming with wemux and Vim</title><link href="/pair.html" rel="alternate"></link><updated>2012-05-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-05-26:pair.html</id><summary type="html">&lt;p&gt;At &lt;a href="http://www.bitmazk.com"&gt;Bitmazk&lt;/a&gt; we are a small team of web developers
+with members located in Singapore and Germany. Of course we do codereviews
+with Google's awesome &lt;a href="https://code.google.com/p/rietveld/"&gt;Rietveld&lt;/a&gt; but
+often when someone has an immediate problem, pair programming is just so much
+more efficient.&lt;/p&gt;
+&lt;p&gt;We used to use Skype for talking and Teamviewer for screen sharing, which
+worked very well for a while but after recent updates both tools became so
+unreliable that they started affecting our work. More importantly: Even when
+those tools worked perfectly well there is significant lag between what I say
+and what my coworker sees. It's just not an optimal solution for staring at a
+terminal.&lt;/p&gt;
+&lt;p&gt;I first tried to set this up with GNU Screen and it almost worked but at the
+final step I ran into a dead end. It seems as if
+&lt;a href="http://superuser.com/questions/117684/gnu-screen-multiuser-mode-is-broken-in-os-x-10-6-snow-leopard"&gt;multiuser support on OSX 10.7 is broken&lt;/a&gt;.
+Or maybe I was just too stupid to get the permissions for the guest user right. &lt;/p&gt;
+&lt;p&gt;As a last resort I tried to achieve my goal with
+&lt;a href="https://github.com/zolrath/wemux"&gt;wemux&lt;/a&gt;. It worked right out of the box and
+took me less than 5 minutes to setup. Goodbye GNU Screen, I guess.&lt;/p&gt;
+&lt;p&gt;The process I am going to describe here looks complex but it is really really
+simple. Please don't give up here!&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Setup a new user &lt;code&gt;pairprogger&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Authorize your colleagues to ssh into that user's account&lt;/li&gt;
+&lt;li&gt;Setup port forwarding in your router's settings&lt;/li&gt;
+&lt;li&gt;Enable remote login (OSX) / start an openssh-server (Ubuntnu)&lt;/li&gt;
+&lt;li&gt;Install tmux and wemux&lt;/li&gt;
+&lt;li&gt;Start a wemux server&lt;/li&gt;
+&lt;li&gt;Join a wemux server&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;It will blow your mind even more if you had two machines at your disposal but
+you will of course be able to test this with just one machine and two
+terminals.&lt;/p&gt;
+&lt;p&gt;But rest assured that you won't be able to sleep until you find a real person
+on the internet who you can show this little trick. You have been warned. ;)&lt;/p&gt;
+&lt;h2&gt;Step 1: Create a guest user account&lt;/h2&gt;
+&lt;p&gt;You will ask your colleagues to ssh into your machine for pair programming.
+When I set this up I didn't bother about security at first as I just wanted
+to see how this feels. I invited a very close friend of mine to test this
+and I can tell you that it feels weird. You really don't want anyone in your
+machine with access to your whole home folder. Especially not if he is a
+hacker. At least I could come up with a dozen evil pranks immediately...&lt;/p&gt;
+&lt;p&gt;So let's create a new user called &lt;code&gt;pairprogger&lt;/code&gt;. For OSX I have created a
+file &lt;code&gt;create_user.sh&lt;/code&gt;. Replace the three variables at the top and execute it.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OSX&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# find out your staff group id (for me it is 20)&lt;/span&gt;
+&lt;span class="c"&gt;# dscacheutil -q group&lt;/span&gt;
+&lt;span class="n"&gt;STAFF_GROUP_ID&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="n"&gt;XX&lt;/span&gt;
+&lt;span class="n"&gt;USERNAME&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;pairprogger&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;PASSWORD&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;yourpassword&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;MAXID&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;$&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt; &lt;span class="n"&gt;UniqueID&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;awk&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="nb"&gt;sort&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ug&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;tail&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;1&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;NEWID&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;$&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;MAXID&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;1&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;UserShell&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bash&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;UniqueID&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$NEWID&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;PrimaryGroupID&lt;/span&gt; $&lt;span class="n"&gt;STAFF_GROUP_ID&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;RealName&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Pair Programmer&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; &lt;span class="n"&gt;NFSHomeDirectory&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;passwd&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;$&lt;span class="n"&gt;USERNAME&lt;/span&gt; $&lt;span class="n"&gt;PASSWORD&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;dscl&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Groups&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apple&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;access_ssh&lt;/span&gt; &lt;span class="n"&gt;GroupMembership&lt;/span&gt; $&lt;span class="n"&gt;USERNAME&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;createhomedir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;u&lt;/span&gt; $&lt;span class="n"&gt;USERNAME&lt;/span&gt;
+&lt;span class="c"&gt;# make sure that there is /Users/pairprogger/ on your disk now&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I wont take credit for this insane user creation script for OSX.
+This thread on serverfault about
+&lt;a href="http://serverfault.com/questions/20702/how-do-i-create-user-accounts-from-the-terminal-in-mac-os-x-10-5"&gt;how to create a user account on OSX&lt;/a&gt;
+certainly saved my ass.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;useradd&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bash&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;passwd&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You should be able to test this by logging out. The new user should appear
+on your login screen.&lt;/p&gt;
+&lt;h2&gt;Step 2: Restrict access via public RSA keys&lt;/h2&gt;
+&lt;p&gt;You know the password of &lt;code&gt;pairprogger&lt;/code&gt; but you are not going to give it
+away, as it cold get leaked and all kinds of people would be able to ssh into
+your machine. Instead you will create a &lt;code&gt;.ssh&lt;/code&gt; folder for the new user
+and paste your colleagues public RSA keys into the &lt;code&gt;authorized_keys&lt;/code&gt; file:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OSX / Ubuntu&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;su&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;
+&lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;
+&lt;span class="n"&gt;chmod&lt;/span&gt; 700 &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;
+&lt;span class="n"&gt;touch&lt;/span&gt; &lt;span class="n"&gt;authorized_keys&lt;/span&gt;
+&lt;span class="n"&gt;chmod&lt;/span&gt; 600 &lt;span class="n"&gt;authorized_keys&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now copy the public RSA keys of the users you want to work with into the
+&lt;code&gt;authorized_keys&lt;/code&gt; file. You might want to add your own key as well in order
+to test your setup later.&lt;/p&gt;
+&lt;h2&gt;Setp 3: Enable port forwarding&lt;/h2&gt;
+&lt;p&gt;There are certainly more elegant solutions where you tell your router that
+this computer should &lt;em&gt;always&lt;/em&gt; get that IP and where you setup dyndns and all
+but I will describe a simpler approach here. Of course the drawback is that
+your IP will change all the time and every day you might have to repeat these
+steps.&lt;/p&gt;
+&lt;p&gt;Note down your &lt;a href="https://duckduckgo.com/?q=ip"&gt;public IP&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Note down your local IP:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OSX&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ipconfig&lt;/span&gt; &lt;span class="n"&gt;getifaddr&lt;/span&gt; &lt;span class="n"&gt;en1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ifconfig&lt;/span&gt; &lt;span class="n"&gt;wlan0&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;grep&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;inet addr&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;sed&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;s/.*inet addr:\([0-9.]*\).*/\1/&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To setup port forwarding go to &lt;code&gt;192.168.0.1&lt;/code&gt;. This IP might differ on your
+router. Usually you should find a section for advanced settings which should
+have a section for port forwarding or just forwarding. You should see a table
+where you can enter your machine's local IP address and define which ports
+should be forwarded. You should forward port 22 for SSH and 8000 for your
+Django development server. The latter will enable you to do some pair
+programming and then have a look at the result together, each worker in their
+own browser.&lt;/p&gt;
+&lt;h2&gt;Step 4: Enable remote access&lt;/h2&gt;
+&lt;p&gt;Next you should start your local ssh server so that people can actually ssh
+into your machine. If anyone knows how to do this on the command line in OSX,
+please let me know in the comments! On Ubuntu I just had to install
+&lt;code&gt;openssh-server&lt;/code&gt; and it worked immediately. We will be extra paranoid here
+and restrict access only to the &lt;code&gt;pairprogger&lt;/code&gt; user and we will disallow
+password authentication, which would allow people to crack your password
+via bruteforce.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OSX&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Go to &lt;code&gt;System Preferences&lt;/code&gt; --&amp;gt; &lt;code&gt;Sharing&lt;/code&gt; --&amp;gt; &lt;code&gt;Remote login&lt;/code&gt;. Add
+&lt;code&gt;Pair Programmer&lt;/code&gt; to the list &lt;code&gt;Allow access for&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sshd_config&lt;/span&gt;
+# &lt;span class="n"&gt;Set&lt;/span&gt; &lt;span class="n"&gt;PasswordAuthentication&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt;
+# &lt;span class="n"&gt;Set&lt;/span&gt; &lt;span class="n"&gt;ChallengeResponseAuthentication&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt;
+# &lt;span class="n"&gt;Set&lt;/span&gt; &lt;span class="n"&gt;UsePAM&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;openssh&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;server&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sshd_config&lt;/span&gt;
+# &lt;span class="n"&gt;Set&lt;/span&gt; &lt;span class="n"&gt;PasswordAuthentication&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;no&lt;/span&gt;
+# &lt;span class="n"&gt;Add&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;following&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;bottom&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+# &lt;span class="n"&gt;AllowUsers&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Please note that I am not a security expert. I have added these ssh
+restrictions while writing this post and have not tested them thoroughly. It
+would probably be a good idea to also make sure that the user &lt;code&gt;pairprogger&lt;/code&gt;
+is not allowed to leave his home folder and give him some quota so that he
+cannot flood your hard drive with porn. If anyone knows useful settings to
+further restrict this account, please leave them in the comments.&lt;/p&gt;
+&lt;p&gt;So this was the hard part. Now to the fun part...&lt;/p&gt;
+&lt;h2&gt;Step 5: Install tmux and wemux&lt;/h2&gt;
+&lt;p&gt;Since wemux seems to be based on tmux, you need to install both, but that
+should be a no-brainer:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OSX&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;wemux&lt;/span&gt;
+&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;downloads&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;zolrath&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wemux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wemux&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rb&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Ubuntu&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;tmux&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;On Ubuntu follow the instructions at https://github.com/zolrath/wemux for
+manual installation.&lt;/p&gt;
+&lt;h2&gt;Step 6: Start the wemux server&lt;/h2&gt;
+&lt;p&gt;You are ready to go. Type the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;wemux&lt;/span&gt; &lt;span class="n"&gt;start&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Step 7: Join the wemux server&lt;/h2&gt;
+&lt;p&gt;Now tell your friend to join you:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ssh&lt;/span&gt; &lt;span class="n"&gt;pairprogger&lt;/span&gt;&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;your&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;public&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ip&lt;/span&gt;
+&lt;span class="n"&gt;wemux&lt;/span&gt; &lt;span class="n"&gt;attach&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Bonus: Your first tmux config&lt;/h2&gt;
+&lt;p&gt;If you used GNU screen and if you are a Vim user, you will most likely find the 
+settings in my &lt;a href="https://github.com/mbrochh/mbrochh-dotfiles/blob/master/.tmux.conf"&gt;.tmux.conf&lt;/a&gt;
+very useful.&lt;/p&gt;
+&lt;p&gt;I hope I didn't forget anything. If so, please let me know in the comments!&lt;/p&gt;
+&lt;p&gt;Oh and: This is how it is going to look like:
+&lt;img alt="wemux server" src="./images/wemux.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Note how wemux determines that my Ubuntu machine has lesser screen resolution
+and automatically scales down the working area on my MacBook. If this is not
+awesome...&lt;/p&gt;</summary><category term="screen"></category><category term="tmux"></category><category term="wemux"></category><category term="vim"></category><category term="ssh"></category><category term="programming"></category></entry><entry><title>Snippets of April 2012</title><link href="/snippets-201204.html" rel="alternate"></link><updated>2012-04-21T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-04-21:snippets-201204.html</id><summary type="html">&lt;p&gt;This is my second post in a series of (almost) monthly posts about small bits
+and pieces of wisdom that amazed me. You can find the first post here:
+&lt;a href="http://martinbrochhaus.com/2012/02/snippets-201202.html"&gt;Snippets of February 2012&lt;/a&gt;&lt;/p&gt;
+&lt;h1&gt;Ubuntu: Static Application Switcher&lt;/h1&gt;
+&lt;p&gt;App switiching with ALT+TAB became a major pain since Ubuntu introduced that
+horrible Unity interface. The simple solution is to open CompizConfig Settings
+Manager and enable "Static Application Switcher" under "Window Management".&lt;/p&gt;
+&lt;p&gt;I think it is much much more intuitive and effective to have a static list of
+windows instead of an endlessly rotating one.&lt;/p&gt;
+&lt;h1&gt;Scrolling and Copy &amp;amp; Paste in GNU Screen&lt;/h1&gt;
+&lt;p&gt;I really got to love screen during the past 4 months and usually work in a
+session with 7 windows open. The problem is, when I swtich to window 1 to see
+the output of my tests and there is a huge traceback, I cannot use my terminal
+to scroll up because I will scroll into whatever I saw in the windows before
+(probably Vim).&lt;/p&gt;
+&lt;p&gt;The trick is to use Screen's scroll mode by pressing &lt;code&gt;CTRL+A ESC&lt;/code&gt;. It will
+display a message saying that copy mode is activated and now you can move the
+cursor with the usual Vim keybindings. Pressing &lt;code&gt;SPACE&lt;/code&gt; or &lt;code&gt;ENTER&lt;/code&gt; once
+sets a marker and pressing it again will copy everything between the first and
+second marker into the clipboard.&lt;/p&gt;
+&lt;p&gt;You can paste the clipboard via &lt;code&gt;CTRL+A ]&lt;/code&gt;. Yea, I know. Read the fucking
+manual... :)&lt;/p&gt;
+&lt;h1&gt;SSH Keep Alive&lt;/h1&gt;
+&lt;p&gt;Whenever I need to SSH into my various servers I get connection timeouts all
+the time. Somehow most people don't suffer from this so this seems to be a
+problem with my Ubuntu installation, but recently I found a solution that works
+for me:&lt;/p&gt;
+&lt;p&gt;On my servers, I now set this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# in ~/.ssh/config:
+ServerAliveInterval 60
+
+# in ~/.screenrc
+caption always &amp;#39;%c:%s&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now I just need to remember to start a screen session right after I login. The
+screen setting will render a clock at the bottom of the screen which is enough
+to have a steady bit of traffic going through SSH for not kicking me out of the
+server any more.&lt;/p&gt;
+&lt;h1&gt;Nerdy IT Jargon&lt;/h1&gt;
+&lt;p&gt;I can't remember where I learned about these but I love them:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;=&amp;gt;&lt;/code&gt; is called the spaceship operator&lt;/li&gt;
+&lt;li&gt;Writing variable names &lt;code&gt;LikeThis&lt;/code&gt; is called CamelCase. I knew this for
+  years, but:&lt;/li&gt;
+&lt;li&gt;Writing variable names &lt;code&gt;like_this&lt;/code&gt; is called &lt;code&gt;snake_case&lt;/code&gt;. Very Pythonic,
+  isn't it?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;HG Facepalm&lt;/h1&gt;
+&lt;p&gt;I can't believe that this actually happened, but if you have something from
+Bitbucket in your requirements.txt and try to pip install it, you might get
+a weird error saying that the pip call to Bitbucket returned code 1 and this
+pip stops installing.&lt;/p&gt;
+&lt;p&gt;This is because a recent version of Mercurial returns 1 if &lt;code&gt;hg pull&lt;/code&gt; doesn't
+return any new changes (which happens most of the time).&lt;/p&gt;
+&lt;p&gt;However, pip (and almost every other software on this planet) thinks that a
+return value of 1 means a failure and just stops.&lt;/p&gt;
+&lt;p&gt;Thankfully Mercurial fixed this quickly and reverted that change, so if you are
+suffering from the "bad" version, you might want to upgrade your Mercurial
+installation.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://mercurial.selenic.com/wiki/UpgradeNotes"&gt;Mercurial upgrade notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/pypa/pip/issues/454"&gt;Relevant GitHub issue for pip&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Great blog posts&lt;/h1&gt;
+&lt;p&gt;I currently have 190 subsriptions in Google Reader and I am following 298
+awesome people on Twitter. These lists are carefully curated by myself and I
+usually enjoy reading almost everything that comes in through those streams.
+Here are some posts that, to me, should be spread as far as possible.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.dailygood.org/view.php?sid=194"&gt;9 Essential Skills Kids Should Learn&lt;/a&gt;
+  The longer I work on my own company Bitmazk Pte. Ltd. the more I realize that
+  (at least in the IT business) traditional education is completely worthless.
+  I have the feeling that I will put in quite some effort to educate my own
+  kids in a very different way than I was educated myself. This post gives some
+  very very nice ideas.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://www.stumbleupon.com/su/9IbGnD/zenhabits.net/the-only-guide-to-happiness-youll-ever-need/"&gt;The Only Guide to Happiness You’ll Ever Need&lt;/a&gt;
+  The title says it all. After reading "Mindfulness in Plain English" several
+  times, the pursuit of hapiness has become a very important part of my life
+  that I try to consciously improve day after day. I've surely not mastered
+  this aspect of my life but I can tell that this list nails it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://carl.flax.ie/dothingstellpeople.html"&gt;Do things, tell people&lt;/a&gt;
+  This. Absolutely true. Whenever I did something in the open, no matter how
+  small, lame or unimportant, an incredible chain of events unfolded itself
+  in front of me that enriched my life in ways that I can't put into words.
+  Please! If you have a little bit of energy left at the end of your day, get
+  your ass up, do things, and tell people!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://steve-yegge.blogspot.com/2006/09/good-agile-bad-agile_27.html"&gt;Good Agile, Bad Agile&lt;/a&gt;
+  It sad but true: This whole Scrumm and Agile movement is a big scam. This
+  rant explains why. Thought provoking read.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="snippets"></category><category term="ubuntu"></category><category term="screen"></category><category term="ssh"></category><category term="mercurial"></category><category term="self growth"></category></entry><entry><title>MySQL InnoDB vs. MyISAM and the foreign key constraint of death</title><link href="/myisam-vs-innodb.md.html" rel="alternate"></link><updated>2012-03-18T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-03-18:myisam-vs-innodb.md.html</id><summary type="html">&lt;p&gt;During the last few months I constantly ran into problems with MySQL which
+drove me crazy and I finally decided to use PostgreSQL for all new projects.
+Today I figured out what was going on:&lt;/p&gt;
+&lt;p&gt;On my development machine I have MySQL version 5.1.61 installed. Recent
+Webfaction servers however ship with MySQL version 5.5.16. I think, the newer
+version creates new tables with the much better engine InnoDB while my older
+version defaults to MyISAM.&lt;/p&gt;
+&lt;p&gt;I was developing a big Django project in a highly agile way during the last
+few months and my workflow looked roughly like this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Write tests&lt;/li&gt;
+&lt;li&gt;Create fixtures&lt;/li&gt;
+&lt;li&gt;Implement feature&lt;/li&gt;
+&lt;li&gt;Rebuild database with the new fixtures&lt;/li&gt;
+&lt;li&gt;Deploy feature at Webfaction&lt;/li&gt;
+&lt;li&gt;Export local database&lt;/li&gt;
+&lt;li&gt;Import local database on Webfacion server&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This means for the last few months my customer and me were testing the app with
+testdata only (which looked very close to the real data anyways). However, this
+month the app matured enough so that I stopped importing my local database into
+the Webfaction server. From now on I would create South migrations and deploy
+them as usual.&lt;/p&gt;
+&lt;p&gt;Yesterday I created a new app within the project. The model of that app had a
+foreign key to a model of one of the older apps. I'm sure you already know what
+comes now: Because I used to import my local database into the Webfaction
+server for many months, all tables had the old MyISAM engine. When I deployed
+my latest feature last night and ran the South migrations everything worked
+fine but when I tested the app in a browser, I got the foreign key constraint
+error or death.&lt;/p&gt;
+&lt;p&gt;So I imported the server's datbase locally and asked some stupid questions in
+the #mysql channel. A friendly user named &lt;code&gt;salle&lt;/code&gt; answered within a second
+and I learned about a cool SQL command which I never needed before:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;SHOW&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="n"&gt;STATUS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This shows, among many other informatoin, which engine each of your tables has
+and at the first glance I could see that the newly created tables that came
+with the South migration on the server had a different engine than all the
+rest.&lt;/p&gt;
+&lt;p&gt;Another stupid question later I learned that I can convert the tables to the
+other engine by simply executing:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;ALTER&lt;/span&gt; &lt;span class="k"&gt;TABLE&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;tablename&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ENGINE&lt;/span&gt;&lt;span class="o"&gt;=&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;engine&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;So I converted all MyISAM tables into InnoDB tables and all was good. I should
+definitely update my local MySQL installation...&lt;/p&gt;</summary><category term="databases"></category><category term="mysql"></category><category term="django"></category></entry><entry><title>Snippets of February 2012</title><link href="/snippets-201202.html" rel="alternate"></link><updated>2012-02-29T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-02-29:snippets-201202.html</id><summary type="html">&lt;p&gt;Naturally, as a developer I learn new awesome things almost every day.
+I thought it might be a good idea to keep track of all those small Ah-Ha!
+moments and release a snippets post every month.&lt;/p&gt;
+&lt;h1&gt;Global .gitignore&lt;/h1&gt;
+&lt;p&gt;When I wanted to contribute code to
+&lt;a href="https://github.com/ametaireau/pelican"&gt;Pelican&lt;/a&gt; I naively added
+&lt;code&gt;.ropeproject&lt;/code&gt; to that repo's &lt;code&gt;.gitignore&lt;/code&gt; file. As a result, I was told in
+the codereview that I should not pollute other project's &lt;code&gt;.gitignore&lt;/code&gt; files
+with unrelated stuff but rather use a global &lt;code&gt;.gitignore&lt;/code&gt; file instead. How
+could I not know about this until now?!?&lt;/p&gt;
+&lt;p&gt;Just add the following code to your .gitconfig:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;[core]
+excludesfile = $HOME/.gitignore_global
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then create the &lt;code&gt;.gitignore_global&lt;/code&gt; file and put stuff inside that your
+editors of choice might produce.&lt;/p&gt;
+&lt;h1&gt;Better Omni Completion in Vim&lt;/h1&gt;
+&lt;p&gt;So I finally got the &lt;code&gt;hjkl&lt;/code&gt; keys for movement into my muscle memory. Now it
+annoys me that I have to use the arrow keys when I want to browse through the
+various options that the code completion suggests. There is a vimbit for that:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;set completeopt=longest,menuone
+
+&amp;quot; found here: http://stackoverflow.com/a/2170800/70778
+function! OmniPopup(action)
+    if pumvisible()
+        if a:action == &amp;#39;j&amp;#39;
+            return &amp;quot;\&amp;lt;C-N&amp;gt;&amp;quot;
+        elseif a:action == &amp;#39;k&amp;#39;
+            return &amp;quot;\&amp;lt;C-P&amp;gt;&amp;quot;
+        endif
+    endif
+    return a:action
+endfunction
+inoremap &amp;lt;silent&amp;gt;&amp;lt;C-j&amp;gt; &amp;lt;C-R&amp;gt;=OmniPopup(&amp;#39;j&amp;#39;)&amp;lt;CR&amp;gt;
+inoremap &amp;lt;silent&amp;gt;&amp;lt;C-k&amp;gt; &amp;lt;C-R&amp;gt;=OmniPopup(&amp;#39;k&amp;#39;)&amp;lt;CR&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Vimbits&lt;/h1&gt;
+&lt;p&gt;Speaking of vimbits: &lt;a href="http://vimbits.com/"&gt;vimbits.com&lt;/a&gt; recently flew through
+my Twitter stream. I spent an hour there. As a result my &lt;code&gt;.vimrc&lt;/code&gt; just
+exploded with all kinds of awesomeness.&lt;/p&gt;
+&lt;h1&gt;Showing git branch in prompt&lt;/h1&gt;
+&lt;p&gt;I thought that I was typing &lt;code&gt;git branch&lt;/code&gt; way too often (actually I type
+&lt;code&gt;git br&lt;/code&gt;, of course).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;export PS1=&amp;#39;\w\[\033[31m\]$(__git_ps1 &amp;quot;(%s)&amp;quot;) \[\033[01;34m\]$\[\033[00m\] &amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Hint: In order for this to work, you need to install git via Homebrew on OSX.&lt;/p&gt;</summary><category term="git"></category><category term="python"></category><category term="vim"></category><category term="snippets"></category></entry><entry><title>Blogging with Pelican and GitHub</title><link href="/pelican.html" rel="alternate"></link><updated>2012-02-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-02-20:pelican.html</id><summary type="html">&lt;p&gt;While it took me indeed just four lines of code and thirty minutes to setup the
+first version of this blog, I couldn't resist to geek over it for a few more
+hours and create a nice and clean approach to publishing this blog with
+&lt;a href="https://github.com/fabric/fabric"&gt;Fabric&lt;/a&gt;,
+&lt;a href="https://github.com/ametaireau/pelican"&gt;Pelican&lt;/a&gt; and
+&lt;a href="http://github.com"&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;What to expect&lt;/h1&gt;
+&lt;p&gt;When you follow these instructions, you can expect the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A simple static blog website with a simple yet beautiful theme.&lt;/li&gt;
+&lt;li&gt;Possibility to change any aspect of the site as you wish.&lt;/li&gt;
+&lt;li&gt;Writing your blog posts in the editor of your choice with
+  &lt;a href="http://daringfireball.net/projects/markdown/"&gt;Markdown&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;All your content is under version control on GitHub. This means that people
+  can send you pull requests and suggest improvements to your posts, which is
+  just awesome.&lt;/li&gt;
+&lt;li&gt;Publishing your posts by simply calling &lt;code&gt;fab publish:'Commit message'&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Free hosting on GitHub. I guess you don't need to worry to make it to the
+  front page of &lt;a href="http://news.ycombinator.com/"&gt;Hacker News&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I should mention that Pelican is a Python project and therefore it wouldn't
+hurt if you knew a bit about Python. I will assume basic Python knowledge here.
+Let's get started:&lt;/p&gt;
+&lt;h1&gt;Activate GitHub Pages&lt;/h1&gt;
+&lt;p&gt;Just create a new repository called &lt;code&gt;username.github.com&lt;/code&gt;. Whatever you place
+in here will be served at &lt;code&gt;http://username.github.com&lt;/code&gt;. For more information
+please see the &lt;a href="http://pages.github.com/"&gt;GitHub Pages Documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;Setup your repository&lt;/h1&gt;
+&lt;p&gt;First create a folder on your disk for the new project:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;mkdir &lt;span class="nv"&gt;$HOME&lt;/span&gt;/Projects/myblog
+&lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/Projects/myblog
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next setup your &lt;code&gt;source&lt;/code&gt; folder. This is the folder where you will write your
+articles and call pelican to generate your static html output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;mkdir &lt;span class="nb"&gt;source&lt;/span&gt;
+&lt;span class="nb"&gt;cd source&lt;/span&gt;
+
+&lt;span class="c"&gt;# We will steal some files from my own repo here:&lt;/span&gt;
+wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/requirements.txt
+wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/fabfile.py
+wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/settings.py.sample settings.py
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The sample &lt;code&gt;settings.py&lt;/code&gt; you just got from my own repo will need some changes
+now. Have a look at it and edit it so that it fits your needs.&lt;/p&gt;
+&lt;h1&gt;Setup your virtualenv&lt;/h1&gt;
+&lt;p&gt;If you have never used virtualenv and virtualenvwrapper before, now is the
+time to learn about it. Usually this is what you need to do to install it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo easy_install pip
+sudo pip install virtualenv
+sudo pip install virtualenvwrapper
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;WORKON_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;~/Envs
+&lt;span class="nb"&gt;source&lt;/span&gt; /usr/local/bin/virtualenvwrapper.sh
+&lt;span class="c"&gt;# also add export WORKON_HOME=~/Envs to your .bashrc file&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We will use virtualenv to install fabric and pelican:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;mkvirtualenv -p python2.7 blog
+workon blog
+pip install -r requirements.txt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Create your first post&lt;/h1&gt;
+&lt;p&gt;Now is the time to create your first post:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the source/ folder&lt;/span&gt;
+mkdir -p posts/2012/02/  &lt;span class="c"&gt;# insert appropriate year and month here&lt;/span&gt;
+&lt;span class="nb"&gt;cd &lt;/span&gt;posts/2012/02/
+touch hello-world.md
+nano hello-world.md
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To learn more about how to write your articles with Markdown or
+reStructuredText for Pelican, have a look at
+&lt;a href="http://pelican.notmyidea.org/en/latest/getting_started.html#writing-articles-using-pelican"&gt;writing articles using pelican&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Your article should look similar to this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Date: 2012-02-20
+Title: Hello world
+Category: Blog
+Tags: blogging, test
+
+Lorem ipsum
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I like to create meaningful commit messages for the edits of my &lt;code&gt;.md&lt;/code&gt; files and
+separate them from the changes that the Pelican output generates, therefore now
+it is a good time to create a commit:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;git add .
+git commit -am &lt;span class="s2"&gt;&amp;quot;Created my first post.&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Publish your first post&lt;/h1&gt;
+&lt;p&gt;This is the interesting part! You will use Pelican now to generate the output
+for your blog:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the source/ folder&lt;/span&gt;
+pelican . -o ../ -s settings.py
+git status
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;When you run &lt;code&gt;git status&lt;/code&gt; you will see that Pelican generated a whole bunch
+of files in your root directory. Open your &lt;code&gt;index.html&lt;/code&gt; and have a look at
+your new blog.&lt;/p&gt;
+&lt;p&gt;If you see that something went wrong, you might want to destroy the generated
+output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the root folder and be sure that your .md file changes&lt;/span&gt;
+&lt;span class="c"&gt;# have been committed&lt;/span&gt;
+git clean -df
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now you can edit your &lt;code&gt;.md&lt;/code&gt; files again and generate the output again. If you
+are happy with your output, it is time to publish it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# make sure to be in the root folder&lt;/span&gt;
+git add .
+git commit -am &lt;span class="s2"&gt;&amp;quot;Pelican output&amp;quot;&lt;/span&gt;
+git push origin master
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Publishing with fabric&lt;/h1&gt;
+&lt;p&gt;As you have seen, the workflow of editing your posts is always the same. First
+you edit your &lt;code&gt;.md&lt;/code&gt; files, next you commit your changes and give a meaningful
+commit message and at last you generate the output and commit it with a
+standard commit message. Finally you push to Github which will make your
+changes visible.&lt;/p&gt;
+&lt;p&gt;To make this workflow easier, I have created a little Fabric script. Now you
+can just edit your &lt;code&gt;.md&lt;/code&gt; files and once you are done, call Fabric:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;fab publish:&lt;span class="s1"&gt;&amp;#39;My commit message&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;Setting up a custom domain&lt;/h1&gt;
+&lt;p&gt;As if all this isn't awesome enough, GitHub makes it really easy to create
+custom domains for your GitHub page. All you need is to place a file called
+&lt;code&gt;CNAME&lt;/code&gt; in the root of your project and add the following content:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;yourdomain.com
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then point the A record of your domain to the IP address of GitHub. For more
+information have a look at the instructions about
+&lt;a href="http://pages.github.com/#custom_domains"&gt;custom domains on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;How to embed images?&lt;/h1&gt;
+&lt;p&gt;If you need to embed images, you can just add them to the folder
+&lt;code&gt;source/images/&lt;/code&gt; and link to them in your &lt;code&gt;.md&lt;/code&gt; files like so:
+&lt;code&gt;![Alt text](./static/images/yourimage.png)&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;Thanks!&lt;/h1&gt;
+&lt;p&gt;That's it. I hope I didn't forget anything. I would like to thank
+&lt;a href="https://twitter.com/ametaireau"&gt;Alexis Metaireau&lt;/a&gt; for the great work on
+Pelican. There is a small and friendly group sitting at #pelican on Freenode
+and while I was writing this post, I submitted a pull request to Pelican which
+got merged almost immediately. The project is really worth a closer look!&lt;/p&gt;</summary><category term="blogging"></category><category term="python"></category></entry><entry><title>My next approach to blogging. Again.</title><link href="/blogging.html" rel="alternate"></link><updated>2012-02-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:,2012-02-19:blogging.html</id><summary type="html">&lt;p&gt;I'm a netizen since 1996 or so and I think I have accounts for all major
+blogging services that ever popped into existence. Yet I'm quite sure that I
+have never managed to publish stuff on a regular basis or even build an
+audience. This is a shame. If you know tricks to overcome this laziness, please
+let me know in the comments!&lt;/p&gt;
+&lt;p&gt;I think there are two reasons for this:&lt;/p&gt;
+&lt;h1&gt;1. I suck at writing&lt;/h1&gt;
+&lt;p&gt;Writing meaningful content feels like a chore to me. One problem is that I am
+not a native English speaker yet for the topics I would like to write about I
+expect an English speaking audience. I guess this is just a matter of
+training and self growth, so this should be a problem that can be overcome.&lt;/p&gt;
+&lt;h1&gt;2. Technology moves too fast&lt;/h1&gt;
+&lt;p&gt;In the past I have created numerous accounts at worpress.com, blogger.com,
+tumblr.com. While setting up those blogs is a piece of cake, I always felt
+uneasy about locking-in all this content into one service. Yes, yes, there
+are probably export and import tools that should help you to get your data in
+and out of all those blogging platforms but I am quite sure that migrating a
+whole blog from one service to the other will result in major pain. And
+let's face it. Every year or so a new hot service (like tumblr) pops up and
+makes you constantly wonder if you should move on.&lt;/p&gt;
+&lt;p&gt;So I did the next obvious thing and hosted my own Wordpress instances on
+Webfaction servers. While they run smoothly and fast most of the time I am
+pretty sure that I would never be able to survive a slashdot effect. Besides
+that, I know enough about software to not be so naive to think that you are
+done when you ran the installer of Wordpress and see the initial setup. I
+would fix various security issues like changing the prefix for the database
+tables, the URL for the admin login, the name of the admin user and whatnot.
+I would spend a day or two on optimizing my Apache settings and the .htaccess
+file, even more on finding and optimizing a good theme and on installing
+more than a dozen plugins. Instead of writing articles I would constantly
+come back and make small improvements to the setup here and there and make
+sure that everything stays up to date.&lt;/p&gt;
+&lt;p&gt;And then, just when you think that you have the perfect setup, smartphones
+and tablets take over the world and you realize that you need to get a new
+theme that is optimized for mobile agents and the whole trouble starts over
+again.&lt;/p&gt;
+&lt;p&gt;Hosting Wordpress is just painful and definitely not fun. When you do
+something in your spare time it should always be fun.&lt;/p&gt;
+&lt;h1&gt;What I want&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;I want to be able to write my articles in Vim&lt;/li&gt;
+&lt;li&gt;I want to write my posts in Markdown.&lt;/li&gt;
+&lt;li&gt;I want to be able to put my articles under version control.&lt;/li&gt;
+&lt;li&gt;I don't want to think about hosting and scaling.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A few weeks ago I discovered two services, &lt;a href="http://www.calepin.co"&gt;calepin.co&lt;/a&gt;
+and &lt;a href="http://www.scriptogr.am"&gt;scriptogr.am&lt;/a&gt; which looked very promising and
+very close to my needs. Unfortunately the creator of calepin.co has some
+strange opinions about the future of publishing and therefore keeps the service
+way too minimalistic. While scriptogr.am looks like a very decent service, the
+only problem here is that you have to host your stuff on Dropbox. While this
+somehow meets my requirements of version control, I would prefer &lt;em&gt;real&lt;/em&gt; version
+control on Github.&lt;/p&gt;
+&lt;p&gt;Thankfully out of a sudden &lt;a href="https://twitter.com/#!/pydanny/status/171102804574875648"&gt;Daniel
+Greenfeld&lt;/a&gt; posted
+about his Pelican powered blog on Github. Luckily he included a first blog post
+which describes how to setup a similar blog with just four simple lines of
+code.&lt;/p&gt;
+&lt;p&gt;I was hooked. So I set up this blog in an hour or so. Let's see if I can
+finally meet my goal to publish meaningful content on a regular basis :)&lt;/p&gt;</summary><category term="blogging"></category><category term="python"></category></entry></feed>

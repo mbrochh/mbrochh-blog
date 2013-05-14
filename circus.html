@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Daemonize Solr with Circus 0.5 on Webfaction</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+        <link href="/" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="/css/ie.css"/>
+                <script src="/js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="/css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/index.html">martinbrochhaus.com </a></h1>
+                <nav><ul>
+                                                                                <li><a href="/">Archives</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+
+        <section id="content" class="body">
+<article>
+        <header> <h1 class="entry-title"><a href="circus.html"
+        rel="bookmark" title="Permalink to Daemonize Solr with Circus 0.5 on Webfaction">Daemonize Solr with Circus 0.5 on Webfaction</a></h1>  </header>
+        <div class="entry-content">
+        <footer class="post-info">
+        <abbr class="published" title="2012-07-13T00:00:00">
+                Fri 13 July 2012
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="/author/martin-brochhaus.html">Martin Brochhaus</a>
+        </address>
+        <p>In <a href="/category/blog.html">Blog</a>. </p>
+<p>tags: <a href="/tag/python.html">python</a><a href="/tag/solr.html">solr</a><a href="/tag/circus.html">circus</a></p></p></footer><!-- /.post-info --><!-- /.post-info -->
+        <p>Since Webfaction increased the available memory from 40 MB to 250 MB I started
+using Solr for more and more of my projects. However, I never really knew how
+to ensure that Solr restarts itself if it crashes and how to easily stop and
+start it in case I have to re-build the <code>schema.xml</code> file.</p>
+<p>Then I found out about <a href="http://circus.readthedocs.org/en/0.5/index.html">Circus 0.5</a>
+and got curious.</p>
+<p>Here is what I did to install zeromq, solr and circus on a Webfaction server:</p>
+<h2>Install zeromq</h2>
+<p>Since we cannot install anything as root, I chose to install zeromq into
+the folder <code>/opt/zeromq-2.2.0</code>:</p>
+<div class="highlight"><pre><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">src</span>
+<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">opt</span>
+<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">etc</span>
+<span class="n">cd</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">src</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="p">.</span><span class="n">zeromq</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0<span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0<span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+<span class="n">cd</span> <span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0
+<span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span><span class="p">=</span>$<span class="n">HOME</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0
+<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>
+</pre></div>
+
+
+<h2>Install Circus</h2>
+<p>Now we can install Circus. I assume that you are using virtualenv and
+virtualenvwrapper:</p>
+<div class="highlight"><pre><span class="n">workon</span> <span class="n">yourvenv</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">circus</span>
+</pre></div>
+
+
+<p>This will fail because of the custom installation folder of zeromq. Thankfully
+the failed zeromq build will remain in your virtualenv's build folder so that
+you can install it again manually, this time giving it the path to your
+zeromq installation:</p>
+<div class="highlight"><pre><span class="n">cd</span> <span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">Venv</span><span class="o">/</span>
+<span class="n">cd</span> <span class="n">build</span>
+<span class="n">cd</span> <span class="n">pyzmq</span>
+<span class="n">python</span> <span class="n">setup</span><span class="p">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">zmq</span><span class="p">=</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">username</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">zeromq</span><span class="o">-</span>2<span class="p">.</span>2<span class="p">.</span>0
+<span class="n">pip</span> <span class="n">install</span> <span class="n">circus</span>
+</pre></div>
+
+
+<h2>Install Solr</h2>
+<p>Now let's install Solr, following <a href="http://django-haystack.readthedocs.org/en/latest/installing_search_engines.html#solr">this post</a>.
+All you really need to do is download and unpack it:</p>
+<div class="highlight"><pre><span class="n">cd</span> $<span class="n">HOME</span><span class="o">/</span><span class="n">opt</span>
+<span class="n">curl</span> <span class="o">-</span><span class="n">O</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="p">.</span><span class="n">mirrors</span><span class="p">.</span><span class="n">tds</span><span class="p">.</span><span class="n">net</span><span class="o">/</span><span class="n">lucene</span><span class="o">/</span><span class="n">solr</span><span class="o">/</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">solr</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span>
+<span class="n">tar</span> <span class="n">xvzf</span> <span class="n">apache</span><span class="o">-</span><span class="n">solr</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span>
+</pre></div>
+
+
+<h2>Configure Circus</h2>
+<p>Create a <code>circus.ini</code> file somewhere on your file system. The following file
+works great for me, just replace the path to your Solr installation
+(usually just change your username):</p>
+<div class="highlight"><pre><span class="k">[circus]</span>
+<span class="na">check_delay</span> <span class="o">=</span> <span class="s">5</span>
+<span class="na">endpoint</span> <span class="o">=</span> <span class="s">tcp://127.0.0.1:5555</span>
+
+<span class="k">[watcher:solr]</span>
+<span class="na">cmd</span> <span class="o">=</span> <span class="s">java</span>
+<span class="na">args</span> <span class="o">=</span> <span class="s">-Djava.util.logging.config.file=logging.properties -jar start.jar</span>
+<span class="na">working_dir</span> <span class="o">=</span> <span class="s">/home/&lt;USERNAME&gt;/opt/apache-solr-3.5.0/example</span>
+<span class="na">warmup_delay</span> <span class="o">=</span> <span class="s">0</span>
+<span class="na">numprocesses</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">singleton</span> <span class="o">=</span> <span class="s">True</span>
+</pre></div>
+
+
+<p>Start circus:</p>
+<div class="highlight"><pre><span class="n">circusd</span> <span class="n">circus</span><span class="p">.</span><span class="n">ini</span> <span class="o">&amp;</span>
+</pre></div>
+
+
+<p>That's it. On my Webfaction server circus eats 15MB RAM. You can now start and
+stop Solr using <code>circusctl</code>:</p>
+<div class="highlight"><pre><span class="n">circusctl</span> <span class="n">status</span> <span class="n">solr</span>
+<span class="n">circusctl</span> <span class="n">stop</span> <span class="n">solr</span>
+<span class="n">circusctl</span> <span class="n">start</span> <span class="n">solr</span>
+</pre></div>
+
+
+<p>Or try to kill Solr. Circus will immediately restart it:</p>
+<div class="highlight"><pre><span class="n">ps</span> <span class="n">aux</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">java</span>
+<span class="n">kill</span> <span class="o">&lt;</span><span class="n">solr</span> <span class="n">PID</span><span class="o">&gt;</span>
+<span class="n">ps</span> <span class="n">aux</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">java</span>
+</pre></div>
+
+
+<p>You need to be careful when starting and stopping Solr. Even though Circus will
+return <code>[OK]</code> the process will remain visible for a few seconds after you
+stopped it. Similarly it will not accept requests for a few seconds after it
+has been started. So if you use start and stop in a shell script or Fabric
+task better insert some <code>sleep</code> seconds before doing anything else with Solr.</p>
+        </div><!-- /.entry-content -->
+                <div class="comments">
+        <h2>Comments !</h2>
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+               var disqus_identifier = "circus.html";
+               (function() {
+               var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+               dsq.src = 'http://martinbrochhauscom.disqus.com/embed.js';
+               (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+              })();
+            </script>
+        </div>
+        
+</article>
+</section>
+
+        <aside id="sidebar">
+                <div class="widget">
+                        <h2>Categories</h2>
+                        <ul>
+                                                   <li class="active"><a href="/category/blog.html">Blog</a></li>
+                                                </ul>
+                </div>
+                                <div class="widget social">
+                        <h2>Social</h2>
+                        <ul>
+                            <li><a href="/" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="https://github.com/mbrochh">Github</a></li>
+                                                    <li><a href="https://plus.google.com/101162916953876296847/about">Google Plus</a></li>
+                                                    <li><a href="https://twitter.com/mbrochh">Twitter</a></li>
+                                                    <li><a href="https://facebook.com/mbrochh">Facebook</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </aside><!-- /#sidebar -->
+
+        <footer id="footer" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is «notmyidea-cms», a modified version of «notmyidea», the default theme.</p>
+        </footer><!-- /#footer -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-1147761-33");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+</body>
+</html>

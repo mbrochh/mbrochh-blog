@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>martinbrochhaus.com - tmux</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+        <link href="/" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="/css/ie.css"/>
+                <script src="/js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="/css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/index.html">martinbrochhaus.com </a></h1>
+                <nav><ul>
+                                                                                <li><a href="/">Archives</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+
+                 <section id="content" class="body">
+        <aside id="featured"><article>
+                <h1 class="entry-title"><a href="/pair.html">Secure pair programming with wemux and Vim</a></h1>
+                <footer class="post-info">
+        <abbr class="published" title="2012-05-26T00:00:00">
+                Sat 26 May 2012
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="/author/martin-brochhaus.html">Martin Brochhaus</a>
+        </address>
+        <p>In <a href="/category/blog.html">Blog</a>. </p>
+<p>tags: <a href="/tag/screen.html">screen</a><a href="/tag/tmux.html">tmux</a><a href="/tag/wemux.html">wemux</a><a href="/tag/vim.html">vim</a><a href="/tag/ssh.html">ssh</a><a href="/tag/programming.html">programming</a></p></p></footer><!-- /.post-info --><!-- /.post-info -->
+                <p>At <a href="http://www.bitmazk.com">Bitmazk</a> we are a small team of web developers
+with members located in Singapore and Germany. Of course we do codereviews
+with Google's awesome <a href="https://code.google.com/p/rietveld/">Rietveld</a> but
+often when someone has an immediate problem, pair programming is just so much
+more efficient.</p>
+<p>We used to use Skype for talking and Teamviewer for screen sharing, which
+worked very well for a while but after recent updates both tools became so
+unreliable that they started affecting our work. More importantly: Even when
+those tools worked perfectly well there is significant lag between what I say
+and what my coworker sees. It's just not an optimal solution for staring at a
+terminal.</p>
+<p>I first tried to set this up with GNU Screen and it almost worked but at the
+final step I ran into a dead end. It seems as if
+<a href="http://superuser.com/questions/117684/gnu-screen-multiuser-mode-is-broken-in-os-x-10-6-snow-leopard">multiuser support on OSX 10.7 is broken</a>.
+Or maybe I was just too stupid to get the permissions for the guest user right. </p>
+<p>As a last resort I tried to achieve my goal with
+<a href="https://github.com/zolrath/wemux">wemux</a>. It worked right out of the box and
+took me less than 5 minutes to setup. Goodbye GNU Screen, I guess.</p>
+<p>The process I am going to describe here looks complex but it is really really
+simple. Please don't give up here!</p>
+<ol>
+<li>Setup a new user <code>pairprogger</code></li>
+<li>Authorize your colleagues to ssh into that user's account</li>
+<li>Setup port forwarding in your router's settings</li>
+<li>Enable remote login (OSX) / start an openssh-server (Ubuntnu)</li>
+<li>Install tmux and wemux</li>
+<li>Start a wemux server</li>
+<li>Join a wemux server</li>
+</ol>
+<p>It will blow your mind even more if you had two machines at your disposal but
+you will of course be able to test this with just one machine and two
+terminals.</p>
+<p>But rest assured that you won't be able to sleep until you find a real person
+on the internet who you can show this little trick. You have been warned. ;)</p>
+<h2>Step 1: Create a guest user account</h2>
+<p>You will ask your colleagues to ssh into your machine for pair programming.
+When I set this up I didn't bother about security at first as I just wanted
+to see how this feels. I invited a very close friend of mine to test this
+and I can tell you that it feels weird. You really don't want anyone in your
+machine with access to your whole home folder. Especially not if he is a
+hacker. At least I could come up with a dozen evil pranks immediately...</p>
+<p>So let's create a new user called <code>pairprogger</code>. For OSX I have created a
+file <code>create_user.sh</code>. Replace the three variables at the top and execute it.</p>
+<p><strong>OSX</strong></p>
+<div class="highlight"><pre><span class="c"># find out your staff group id (for me it is 20)</span>
+<span class="c"># dscacheutil -q group</span>
+<span class="n">STAFF_GROUP_ID</span><span class="p">=</span><span class="n">XX</span>
+<span class="n">USERNAME</span><span class="p">=</span><span class="s">&quot;pairprogger&quot;</span>
+<span class="n">PASSWORD</span><span class="p">=</span><span class="s">&quot;yourpassword&quot;</span>
+
+<span class="n">MAXID</span><span class="p">=</span>$<span class="p">(</span><span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">list</span> <span class="o">/</span><span class="n">Users</span> <span class="n">UniqueID</span> <span class="o">|</span> <span class="n">awk</span> <span class="s">&#39;{print $2}&#39;</span> <span class="o">|</span> <span class="nb">sort</span> <span class="o">-</span><span class="n">ug</span> <span class="o">|</span> <span class="n">tail</span> <span class="o">-</span>1<span class="p">)</span>
+<span class="n">NEWID</span><span class="p">=</span>$<span class="p">((</span><span class="n">MAXID</span><span class="o">+</span>1<span class="p">))</span>
+
+<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span>
+<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">UserShell</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span>
+<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">UniqueID</span> <span class="s">&quot;$NEWID&quot;</span>
+<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">PrimaryGroupID</span> $<span class="n">STAFF_GROUP_ID</span>
+<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">RealName</span> <span class="s">&quot;Pair Programmer&quot;</span>
+<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">create</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> <span class="n">NFSHomeDirectory</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span>
+<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">passwd</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span>$<span class="n">USERNAME</span> $<span class="n">PASSWORD</span>
+<span class="n">sudo</span> <span class="n">dscl</span> <span class="p">.</span> <span class="o">-</span><span class="n">append</span> <span class="o">/</span><span class="n">Groups</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">apple</span><span class="p">.</span><span class="n">access_ssh</span> <span class="n">GroupMembership</span> $<span class="n">USERNAME</span>
+<span class="n">sudo</span> <span class="n">createhomedir</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">u</span> $<span class="n">USERNAME</span>
+<span class="c"># make sure that there is /Users/pairprogger/ on your disk now</span>
+</pre></div>
+
+
+<p>I wont take credit for this insane user creation script for OSX.
+This thread on serverfault about
+<a href="http://serverfault.com/questions/20702/how-do-i-create-user-accounts-from-the-terminal-in-mac-os-x-10-5">how to create a user account on OSX</a>
+certainly saved my ass.</p>
+<p><strong>Ubuntu</strong></p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">useradd</span> <span class="o">-</span><span class="n">m</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span> <span class="n">pairprogger</span>
+<span class="n">sudo</span> <span class="n">passwd</span> <span class="n">pairprogger</span>
+</pre></div>
+
+
+<p>You should be able to test this by logging out. The new user should appear
+on your login screen.</p>
+<h2>Step 2: Restrict access via public RSA keys</h2>
+<p>You know the password of <code>pairprogger</code> but you are not going to give it
+away, as it cold get leaked and all kinds of people would be able to ssh into
+your machine. Instead you will create a <code>.ssh</code> folder for the new user
+and paste your colleagues public RSA keys into the <code>authorized_keys</code> file:</p>
+<p><strong>OSX / Ubuntu</strong></p>
+<div class="highlight"><pre><span class="n">su</span> <span class="o">-</span> <span class="n">pairprogger</span>
+<span class="n">mkdir</span> <span class="p">.</span><span class="n">ssh</span>
+<span class="n">chmod</span> 700 <span class="p">.</span><span class="n">ssh</span>
+<span class="n">cd</span> <span class="p">.</span><span class="n">ssh</span>
+<span class="n">touch</span> <span class="n">authorized_keys</span>
+<span class="n">chmod</span> 600 <span class="n">authorized_keys</span>
+</pre></div>
+
+
+<p>Now copy the public RSA keys of the users you want to work with into the
+<code>authorized_keys</code> file. You might want to add your own key as well in order
+to test your setup later.</p>
+<h2>Setp 3: Enable port forwarding</h2>
+<p>There are certainly more elegant solutions where you tell your router that
+this computer should <em>always</em> get that IP and where you setup dyndns and all
+but I will describe a simpler approach here. Of course the drawback is that
+your IP will change all the time and every day you might have to repeat these
+steps.</p>
+<p>Note down your <a href="https://duckduckgo.com/?q=ip">public IP</a></p>
+<p>Note down your local IP:</p>
+<p><strong>OSX</strong></p>
+<div class="highlight"><pre><span class="n">ipconfig</span> <span class="n">getifaddr</span> <span class="n">en1</span>
+</pre></div>
+
+
+<p><strong>Ubuntu</strong></p>
+<div class="highlight"><pre><span class="n">ifconfig</span> <span class="n">wlan0</span> <span class="o">|</span> <span class="n">grep</span> <span class="s">&#39;inet addr&#39;</span> <span class="o">|</span> <span class="n">sed</span> <span class="s">&#39;s/.*inet addr:\([0-9.]*\).*/\1/&#39;</span>
+</pre></div>
+
+
+<p>To setup port forwarding go to <code>192.168.0.1</code>. This IP might differ on your
+router. Usually you should find a section for advanced settings which should
+have a section for port forwarding or just forwarding. You should see a table
+where you can enter your machine's local IP address and define which ports
+should be forwarded. You should forward port 22 for SSH and 8000 for your
+Django development server. The latter will enable you to do some pair
+programming and then have a look at the result together, each worker in their
+own browser.</p>
+<h2>Step 4: Enable remote access</h2>
+<p>Next you should start your local ssh server so that people can actually ssh
+into your machine. If anyone knows how to do this on the command line in OSX,
+please let me know in the comments! On Ubuntu I just had to install
+<code>openssh-server</code> and it worked immediately. We will be extra paranoid here
+and restrict access only to the <code>pairprogger</code> user and we will disallow
+password authentication, which would allow people to crack your password
+via bruteforce.</p>
+<p><strong>OSX</strong></p>
+<p>Go to <code>System Preferences</code> --&gt; <code>Sharing</code> --&gt; <code>Remote login</code>. Add
+<code>Pair Programmer</code> to the list <code>Allow access for</code>.</p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">vim</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sshd_config</span>
+# <span class="n">Set</span> <span class="n">PasswordAuthentication</span> <span class="n">to</span> <span class="n">no</span>
+# <span class="n">Set</span> <span class="n">ChallengeResponseAuthentication</span> <span class="n">to</span> <span class="n">no</span>
+# <span class="n">Set</span> <span class="n">UsePAM</span> <span class="n">to</span> <span class="n">no</span>
+</pre></div>
+
+
+<p><strong>Ubuntu</strong></p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openssh</span><span class="o">-</span><span class="n">server</span>
+<span class="n">sudo</span> <span class="n">vim</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">sshd_config</span>
+# <span class="n">Set</span> <span class="n">PasswordAuthentication</span> <span class="n">to</span> <span class="n">no</span>
+# <span class="n">Add</span> <span class="n">the</span> <span class="n">following</span> <span class="n">to</span> <span class="n">the</span> <span class="n">bottom</span> <span class="n">of</span> <span class="n">the</span> <span class="n">file</span><span class="p">:</span>
+# <span class="n">AllowUsers</span> <span class="n">pairprogger</span>
+</pre></div>
+
+
+<p>Please note that I am not a security expert. I have added these ssh
+restrictions while writing this post and have not tested them thoroughly. It
+would probably be a good idea to also make sure that the user <code>pairprogger</code>
+is not allowed to leave his home folder and give him some quota so that he
+cannot flood your hard drive with porn. If anyone knows useful settings to
+further restrict this account, please leave them in the comments.</p>
+<p>So this was the hard part. Now to the fun part...</p>
+<h2>Step 5: Install tmux and wemux</h2>
+<p>Since wemux seems to be based on tmux, you need to install both, but that
+should be a no-brainer:</p>
+<p><strong>OSX</strong></p>
+<div class="highlight"><pre><span class="n">brew</span> <span class="n">install</span> <span class="n">wemux</span>
+<span class="n">brew</span> <span class="n">install</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">downloads</span><span class="o">/</span><span class="n">zolrath</span><span class="o">/</span><span class="n">wemux</span><span class="o">/</span><span class="n">wemux</span><span class="p">.</span><span class="n">rb</span>
+</pre></div>
+
+
+<p><strong>Ubuntu</strong></p>
+<div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">tmux</span>
+</pre></div>
+
+
+<p>On Ubuntu follow the instructions at https://github.com/zolrath/wemux for
+manual installation.</p>
+<h2>Step 6: Start the wemux server</h2>
+<p>You are ready to go. Type the following command:</p>
+<div class="highlight"><pre><span class="n">wemux</span> <span class="n">start</span>
+</pre></div>
+
+
+<h2>Step 7: Join the wemux server</h2>
+<p>Now tell your friend to join you:</p>
+<div class="highlight"><pre><span class="n">ssh</span> <span class="n">pairprogger</span><span class="p">@</span><span class="n">your</span><span class="o">-</span><span class="n">public</span><span class="o">-</span><span class="n">ip</span>
+<span class="n">wemux</span> <span class="n">attach</span>
+</pre></div>
+
+
+<h2>Bonus: Your first tmux config</h2>
+<p>If you used GNU screen and if you are a Vim user, you will most likely find the 
+settings in my <a href="https://github.com/mbrochh/mbrochh-dotfiles/blob/master/.tmux.conf">.tmux.conf</a>
+very useful.</p>
+<p>I hope I didn't forget anything. If so, please let me know in the comments!</p>
+<p>Oh and: This is how it is going to look like:
+<img alt="wemux server" src="./images/wemux.png" /></p>
+<p>Note how wemux determines that my Ubuntu machine has lesser screen resolution
+and automatically scales down the working area on my MacBook. If this is not
+awesome...</p>
+        </article></aside><!-- /#featured -->
+            </ol><!-- /#posts-list -->
+</section><!-- /#content -->
+
+        <aside id="sidebar">
+                <div class="widget">
+                        <h2>Categories</h2>
+                        <ul>
+                                                   <li ><a href="/category/blog.html">Blog</a></li>
+                                                </ul>
+                </div>
+                                <div class="widget social">
+                        <h2>Social</h2>
+                        <ul>
+                            <li><a href="/" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="https://github.com/mbrochh">Github</a></li>
+                                                    <li><a href="https://plus.google.com/101162916953876296847/about">Google Plus</a></li>
+                                                    <li><a href="https://twitter.com/mbrochh">Twitter</a></li>
+                                                    <li><a href="https://facebook.com/mbrochh">Facebook</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </aside><!-- /#sidebar -->
+
+        <footer id="footer" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is «notmyidea-cms», a modified version of «notmyidea», the default theme.</p>
+        </footer><!-- /#footer -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-1147761-33");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+</body>
+</html>

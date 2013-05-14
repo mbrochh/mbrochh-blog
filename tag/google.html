@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>martinbrochhaus.com - google</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+        <link href="/" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="/css/ie.css"/>
+                <script src="/js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="/css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/index.html">martinbrochhaus.com </a></h1>
+                <nav><ul>
+                                                                                <li><a href="/">Archives</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+
+                 <section id="content" class="body">
+        <aside id="featured"><article>
+                <h1 class="entry-title"><a href="/gmail-groups.html">Follow mailing lists using GMail</a></h1>
+                <footer class="post-info">
+        <abbr class="published" title="2012-06-11T00:00:00">
+                Mon 11 June 2012
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="/author/martin-brochhaus.html">Martin Brochhaus</a>
+        </address>
+        <p>In <a href="/category/blog.html">Blog</a>. </p>
+<p>tags: <a href="/tag/google.html">google</a><a href="/tag/gmail.html">gmail</a><a href="/tag/lifehacking.html">lifehacking</a><a href="/tag/productivity.html">productivity</a></p></p></footer><!-- /.post-info --><!-- /.post-info -->
+                <p>Here is a small trick to manage your mailing list subscriptions with your GMail
+account without cluttering your inbox.</p>
+<h1>Step 1: Setup multiple inboxes</h1>
+<ul>
+<li>Open GMail and go to <em>Settings</em></li>
+<li>Go to <em>Labs</em></li>
+<li>Search for <em>Multiple Inboxes</em> and enable it</li>
+<li>Save your changes</li>
+<li>Go to <em>Settings</em> again</li>
+<li>Go to <em>Multiple Inboxes</em></li>
+<li>Replace the search query for <em>Pane 0</em> with this: <code>-label:muted
+  label:]-groups is:unread</code></li>
+<li>Delete the search query for <em>Pane 1</em></li>
+<li>Set <em>Extra panel positioning</em> to <em>Below the inbox</em></li>
+<li>Go to <em>Settings</em></li>
+<li>Got to <em>Labels</em></li>
+<li>Create a new label <em>] Groups</em></li>
+</ul>
+<p>What have we done so far? We have told GMail that we want a second inbox below
+our main inbox that</p>
+<ul>
+<li>does not display muted posts. This is a nice hack, it turns out that <em>muted</em>
+  is a hidden label in Gmail, so you can filter for muted conversations</li>
+<li>does display anything that has the label <em>] Groups</em> (filtering for labels
+  seems to be case insensitive)</li>
+<li>does only display conversations that are unread</li>
+</ul>
+<h1>Step 2: Create filters for your mailing lists</h1>
+<p>If you are subscribed to <em>N</em> mailing lists you need to create <em>N+1</em> filters
+now.</p>
+<p>First create one big filter for all your mailing lists. Set it up like so:</p>
+<ul>
+<li><em>Has the words</em>: <code>list1@example.com OR list2@example.com ... OR listN@example.com</code></li>
+<li><em>Skip inbox</em></li>
+<li><em>Apply label</em>: <em>] Groups</em></li>
+</ul>
+<p>At this point you would be able to see how many unread mailing list posts there
+are because the <em>] Groups</em> label would become bold and display a number
+behind itself. However, it would be nice if you could see exactly how many
+unread items <em>each</em> of your subscriptions has. For this you simply need to add
+one more filter for each subscription:</p>
+<ul>
+<li><em>Has the words</em>: <code>listX@example.com</code></li>
+<li><em>Skip inbox</em></li>
+<li><em>Apply label</em>: <em>] Groups/listX</em></li>
+</ul>
+<p>So if you are following the Python users mailing list, you would for example
+create a new sub label called <em>python-users</em> under the label <em>] Groups</em>.</p>
+<h1>Step 3: Profit</h1>
+<p>This setup allowed me to follow 16 mailing lists during the last 2 years
+without drowning in content overflow. If a thread on the list is very active
+but you already know that you are not interested in following the discussion,
+just mute the conversation and it will no longer pop up in your second inbox.</p>
+<p>Because the new filters make sure that those messages skip the main inbox, you
+will not get notifications on your Android phone for all these messages, which
+is another huge plus.</p>
+<p>From now on it is just scanning through the headlines in your inbox and marking
+them all as read. Another good thing about this is that you will be able to
+perform searches in GMail to find old discussions.</p>
+<p>Your new inbox should look like this:</p>
+<p><img src="./images/mailinglists.png" width="100%" alt="Gmail with multiple inboxes" /></p>
+        </article></aside><!-- /#featured -->
+            </ol><!-- /#posts-list -->
+</section><!-- /#content -->
+
+        <aside id="sidebar">
+                <div class="widget">
+                        <h2>Categories</h2>
+                        <ul>
+                                                   <li ><a href="/category/blog.html">Blog</a></li>
+                                                </ul>
+                </div>
+                                <div class="widget social">
+                        <h2>Social</h2>
+                        <ul>
+                            <li><a href="/" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="https://github.com/mbrochh">Github</a></li>
+                                                    <li><a href="https://plus.google.com/101162916953876296847/about">Google Plus</a></li>
+                                                    <li><a href="https://twitter.com/mbrochh">Twitter</a></li>
+                                                    <li><a href="https://facebook.com/mbrochh">Facebook</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </aside><!-- /#sidebar -->
+
+        <footer id="footer" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is «notmyidea-cms», a modified version of «notmyidea», the default theme.</p>
+        </footer><!-- /#footer -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-1147761-33");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+</body>
+</html>
