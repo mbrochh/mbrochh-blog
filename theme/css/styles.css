@@ -1,0 +1,157 @@
+body {
+    background-color: #fefefe;
+    color: #2d2d2d;
+    font-family: 'Bitter', serif;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+h1 {
+    font-family: 'Bitter', serif;
+}
+
+h2 {
+    font-family: 'Cantora One', sans-serif;
+}
+
+.light {
+    opacity: 0.6;
+    filter:alpha(opacity=60);
+}
+
+.miniBio {
+    background-color: #efefef;
+    margin: 30px 0px;
+    padding: 30px 0px;
+}
+
+.brand img {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #929292;
+    border-radius: 40px;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    margin-right: 20px;
+}
+
+.navbar-inner {
+    background: none;
+    border: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.articleListItem {
+    border-top: 1px solid #d2d2d2;
+    padding-top: 40px;
+    margin-top: 80px;
+}
+
+.articleListItem.first {
+    border-top: none;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+.articleInfo {
+    padding-top: 20px;
+}
+
+.articleTags {
+    width: 80%;
+}
+
+.articleListItem h1 {
+    font-size: 36px;
+}
+
+.articleListItem h1 a i {
+    vertical-align: middle;
+}
+
+.articleListItem h2 {
+    font-size: 18px;
+}
+
+.articleListItem h1 a {
+    color: #232323;
+}
+
+.articleListItem h1 a:hover {
+    text-decoration: none;
+    background-color: yellow;
+}
+
+.articleDetailHeadline h1 {
+    font-size: 72px;
+    line-height: 72px;
+}
+
+.articleDetailHeadline h2 {
+    font-size: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+    margin-bottom: 60px;
+}
+
+.articleDetailContent {
+    padding-top: 15px;
+}
+
+.articleDetailContent p {
+    text-align: justify;
+}
+
+.pagination {
+    margin-top: 60px;
+}
+
+
+@media (max-width: 767px) {
+    body {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+
+    .container {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .miniBio {
+        text-align: center;
+    }
+
+    .miniBio .brand {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 10px;
+    }
+
+    .miniBio .brand img {
+        margin-right: 0px;
+    }
+
+    .miniBioText {
+        display: block;
+        padding: 0px 25px;
+    }
+
+    .articleListItem h1 {
+        font-size: 26px;
+    }
+
+    .articleDetailHeadline h1 {
+        font-size: 37px;
+        line-height: 37px;
+    }
+
+    .articleDetailHeadline h2 {
+        font-size: 18px;
+        line-height: 18px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+} 

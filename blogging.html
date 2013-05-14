@@ -1,48 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-        <title>My next approach to blogging. Again.</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
-        <link href="/" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com ATOM Feed" />
-        
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="/theme/css/styles.css" rel="stylesheet" media="screen">
 
-        <!--[if IE]>
-                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-
-        <!--[if lte IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="/css/ie.css"/>
-                <script src="/js/IE8.js" type="text/javascript"></script><![endif]-->
-
-        <!--[if lt IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href="/css/ie6.css"/><![endif]-->
-
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
 </head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="./index.html" title="martinbrochhaus.com"><img src="/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText light">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/index.html">martinbrochhaus.com </a></h1>
-                <nav><ul>
-                                                                                <li><a href="/">Archives</a></li>
-                                </ul></nav>
-        </header><!-- /#banner -->
+    <div class="container">
+        <div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>I Can Haz Blog</h1>
+            <h2>My Next Approach to Blogging. Again.</h2>
+        </div>
+    </div>
+</div>
 
-        <section id="content" class="body">
-<article>
-        <header> <h1 class="entry-title"><a href="blogging.html"
-        rel="bookmark" title="Permalink to My next approach to blogging. Again.">My next approach to blogging. Again.</a></h1>  </header>
-        <div class="entry-content">
-        <footer class="post-info">
-        <abbr class="published" title="2012-02-19T00:00:00">
-                Sun 19 February 2012
-        </abbr>
-
-                <address class="vcard author">
-                By <a class="url fn" href="/author/martin-brochhaus.html">Martin Brochhaus</a>
-        </address>
-        <p>In <a href="/category/blog.html">Blog</a>. </p>
-<p>tags: <a href="/tag/blogging.html">blogging</a><a href="/tag/python.html">python</a></p></p></footer><!-- /.post-info --><!-- /.post-info -->
-        <p>I'm a netizen since 1996 or so and I think I have accounts for all major
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+            <p><i class="icon-calendar"></i>&nbsp;Sun 19 February 2012</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+                    <a href="/tag/blogging.html">blogging</a>
+                    <a href="/tag/python.html">python</a>
+            </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>I'm a netizen since 1996 or so and I think I have accounts for all major
 blogging services that ever popped into existence. Yet I'm quite sure that I
 have never managed to publish stuff on a regular basis or even build an
 audience. This is a shame. If you know tricks to overcome this laziness, please
@@ -102,59 +100,30 @@ which describes how to setup a similar blog with just four simple lines of
 code.</p>
 <p>I was hooked. So I set up this blog in an hour or so. Let's see if I can
 finally meet my goal to publish meaningful content on a regular basis :)</p>
-        </div><!-- /.entry-content -->
-                <div class="comments">
-        <h2>Comments !</h2>
-            <div id="disqus_thread"></div>
             <script type="text/javascript">
-               var disqus_identifier = "blogging.html";
-               (function() {
-               var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-               dsq.src = 'http://martinbrochhauscom.disqus.com/embed.js';
-               (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-              })();
-            </script>
+    var disqus_shortname = 'martinbrochhauscom';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
         </div>
-        
-</article>
-</section>
-
-        <aside id="sidebar">
-                <div class="widget">
-                        <h2>Categories</h2>
-                        <ul>
-                                                   <li class="active"><a href="/category/blog.html">Blog</a></li>
-                                                </ul>
-                </div>
-                                <div class="widget social">
-                        <h2>Social</h2>
-                        <ul>
-                            <li><a href="/" rel="alternate">atom feed</a></li>
-                            
-                                                    <li><a href="https://github.com/mbrochh">Github</a></li>
-                                                    <li><a href="https://plus.google.com/101162916953876296847/about">Google Plus</a></li>
-                                                    <li><a href="https://twitter.com/mbrochh">Twitter</a></li>
-                                                    <li><a href="https://facebook.com/mbrochh">Facebook</a></li>
-                                                </ul>
-                </div><!-- /.social -->
-                </aside><!-- /#sidebar -->
-
-        <footer id="footer" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is «notmyidea-cms», a modified version of «notmyidea», the default theme.</p>
-        </footer><!-- /#footer -->
-
-    <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </div>
+</div>
+    </div>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
     </script>
-    <script type="text/javascript">
-    try {
-        var pageTracker = _gat._getTracker("UA-1147761-33");
-    pageTracker._trackPageview();
-    } catch(err) {}</script>
 </body>
 </html>
