@@ -74,4 +74,4 @@ perform searches in GMail to find old discussions.
 
 Your new inbox should look like this:
 
-<img src="/images/mailinglists.png" width="100%" alt="Gmail with multiple inboxes" />
+![Gmail with multiple inboxes](|filename|/images/mailinglists.png)
