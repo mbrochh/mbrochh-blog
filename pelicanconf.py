@@ -28,6 +28,9 @@ SOCIAL = (
     ('Google Plus', 'https://plus.google.com/101162916953876296847/about', '&#xe039;'),
     ('Twitter', 'https://twitter.com/mbrochh', '&#xe086;'),
     ('Facebook', 'https://facebook.com/mbrochh', '&#xe027;'),
+    ('Foursquare', 'https://foursquare.com/mbrochh', '&#xe032;'),
+    ('LinkedIN', 'http://www.linkedin.com/in/mbrochh', '&#xe052;'),
+    ('Flickr', 'https://secure.flickr.com/photos/mbrochh/', '&#xe029;'),
 )
 
 DEFAULT_PAGINATION = 10
