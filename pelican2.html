@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="./index.html" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Pelican and Github Pages</h1>
+            <h2>Blogging on The Shoulders of Pelican, Markdown & Github Pages</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+            <p><i class="icon-calendar"></i>&nbsp;Wed 15 May 2013</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+                    <a href="http://martinbrochhaus.com/tag/blogging.html">blogging</a>
+                    <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+            </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>One year ago I blogged about <a href="http://martinbrochhaus.com/pelican.html">Pelican</a> and up until
+today this remains the most frequented post in my blog. However, in the
+meantime Pelican got two major version bumps and is much more powerful now (and 
+easier to use). So let's see how to setup your blog with Pelican and host it
+on Github Pages today...</p>
+<h3>Create a virtualenv</h3>
+<p>As usual, before you do anything with Python, create a virtual environment for
+your Project.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre>mkvirtualenv -p python2.7 blogging
+pip install <span class="nv">Pelican</span><span class="o">==</span>3.2
+deactivate
+workon blogging
+</pre></div>
+</td></tr></table>
+
+<h3>Quickstart Pelican</h3>
+<p>Pelican now comes with a <a href="https://pelican.readthedocs.org/en/3.2/getting_started.html#kickstart-your-site">quickstart</a>
+command similar to Sphinx which will setup the recommended folder structure for
+you. When running the command, I think I answered all questions with their
+default answers.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre>mkdir -p ~/blogging/src
+<span class="nb">cd</span> ~/blogging/src
+pelican-quickstart
+</pre></div>
+</td></tr></table>
+
+<p>At this point you will have a nice project structure and you should initiate a
+Git repository and a <code>.gitignore</code> file:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre>git init
+nano .gitignore
+
+<span class="c"># Content of the .gitignore file:</span>
+*.pid
+*.pyc
+*.swp
+output/
+</pre></div>
+</td></tr></table>
+
+<h3>Add some content</h3>
+<p><code>cd</code> into the <code>content</code> folder and create your <a href="https://pelican.readthedocs.org/en/3.2/getting_started.html#writing-content-using-pelican">markdown content</a>
+files there. While you are writing your post, you will likely want to see your
+latest changes in a browser. For this reason pelican now provides a simple
+development server which you can start like so:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>make devserver
+</pre></div>
+</td></tr></table>
+
+<p>Please note that when you quit that command with <code>CTRL+C</code>, the server is still
+somehow running in the background. In order to really quit it, you need to run:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">.</span><span class="o">/</span><span class="n">develop_server</span><span class="p">.</span><span class="n">sh</span> <span class="n">stop</span>
+</pre></div>
+</td></tr></table>
+
+<p>This will also be necessary if you saved a file with incorrect syntax and
+caused an error in the devserver. The server output will usually describe
+nicely what the error was but it will not restart properly once you corrected
+the error, so you need to do that manually.</p>
+<h3>Hosting on Github Pages</h3>
+<p><a href="http://pages.github.com/">Github Pages</a> is a fantastic way to host static
+websites in Github's cloud. In my old post I described how to do this using
+<em>User pages</em> but I would no longer recommend this because it expects you to
+have the output in your project root, which we don't have any longer. Our
+output is in the <code>output</code> directory and it is good that way because we can now
+delete that directory prior to each publish.</p>
+<p>Instead we will use <em>Project Pages</em>. Simply create a new project on Github,
+make your initial commit in your pelican project and push it into your new
+Github project.</p>
+<p>When using a <em>Project Page</em> you need to put your HTML output into a branch
+called <code>gh-pages</code>. I have never really understood how to create and maintain
+this branch, but thankfully there is an awesome script called
+<a href="https://github.com/davisp/ghp-import">ghp-import</a> which will do all the magic
+for you. Simply install that script into your virtualenv:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre>workon blogging
+pip install -e git+git://github.com/davisp/ghp-import.git
+deactivate
+workon blogging
+</pre></div>
+</td></tr></table>
+
+<p>Now you can publish your blog for the first time using one of Pelican's Make
+commands:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>make github
+</pre></div>
+</td></tr></table>
+
+<p>Whoa. That was easy!</p>
+<h3>Use your own domain</h3>
+<p>If you would like to show your blog under your own domain, just set your
+domain's A-Record to <code>204.232.175.78</code>. Now we need to make sure that there is
+a file called <code>CNAME</code> in the output directory. In order to achieve this, <code>cd</code>
+into your <code>content</code> directory and create a folder <code>extra</code> and put that file
+into that folder:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">cd</span> ~/blogging/src/content/
+mkdir extra <span class="o">&amp;&amp;</span> <span class="nb">cd </span>extra
+nano CNAME
+
+<span class="c"># Put your domain name into that file, i.e.:</span>
+example.com
+</pre></div>
+</td></tr></table>
+
+<p>Now add the folowing setting to your <code>pelicanconf.py</code>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre>nano pelicanconf.py
+<span class="nv">FILES_TO_COPY</span> <span class="o">=</span> <span class="o">(</span>
+    <span class="o">(</span><span class="s1">&#39;extra/CNAME&#39;</span>, <span class="s1">&#39;CNAME&#39;</span><span class="o">)</span>,
+<span class="o">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>This makes sure that the <code>CNAME</code> file will be copied from the content folder
+into the output folder on each publish. Don't forget to wait a few hours for
+the CNAME changes to propagate.</p>
+<h3>Themes &amp; Settings</h3>
+<p>If you want another theme, you should check out <a href="https://github.com/getpelican/pelican-themes">pelica-themes</a>.
+Just clone that repository and change your theme setting in <code>pelicanconf.py</code>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre>git clone git://github.com/getpelican/pelican-themes.git ~/pelican-themes
+<span class="nb">cd</span> ~/pelican-themes
+git submodule init
+git submodule update
+
+nano ~/blogging/src/pelicanconf.py
+<span class="c"># Change the THEME setting:</span>
+<span class="nv">THEME</span> <span class="o">=</span> <span class="s1">&#39;/Users/martin/pelican-themes/basic&#39;</span>
+</pre></div>
+</td></tr></table>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                                            <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                                            <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                                            <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                                            <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                                            <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                                    </ul>
+                                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+</html>

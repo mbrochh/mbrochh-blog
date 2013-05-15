@@ -26,7 +26,7 @@
     <div class="row">
         <div class="span12 articleDetailHeadline">
             <h1>Blogging with Pelican and GitHub</h1>
-            <h2>Note: This Post is Outdated. Relasing a New One, Soon.</h2>
+            <h2>Note: This Post is Outdated. Link to new post is in the text.</h2>
         </div>
     </div>
 </div>
@@ -48,7 +48,9 @@ hours and create a nice and clean approach to publishing this blog with
 <a href="https://github.com/fabric/fabric">Fabric</a>,
 <a href="https://github.com/ametaireau/pelican">Pelican</a> and
 <a href="http://github.com">GitHub</a>.</p>
-<h1>What to expect</h1>
+<p><strong>IMPORTANT</strong>: This post is outdated. Please see my new post about
+<a href="http://martinbrochhaus.com/pelican2.html">blogging with Pelican</a></p>
+<h3>What to expect</h3>
 <p>When you follow these instructions, you can expect the following:</p>
 <ul>
 <li>A simple static blog website with a simple yet beautiful theme.</li>
@@ -65,11 +67,11 @@ hours and create a nice and clean approach to publishing this blog with
 <p>I should mention that Pelican is a Python project and therefore it wouldn't
 hurt if you knew a bit about Python. I will assume basic Python knowledge here.
 Let's get started:</p>
-<h1>Activate GitHub Pages</h1>
+<h3>Activate GitHub Pages</h3>
 <p>Just create a new repository called <code>username.github.com</code>. Whatever you place
 in here will be served at <code>http://username.github.com</code>. For more information
 please see the <a href="http://pages.github.com/">GitHub Pages Documentation</a>.</p>
-<h1>Setup your repository</h1>
+<h3>Setup your repository</h3>
 <p>First create a folder on your disk for the new project:</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre>mkdir <span class="nv">$HOME</span>/Projects/myblog
@@ -97,7 +99,7 @@ wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/settings.py
 
 <p>The sample <code>settings.py</code> you just got from my own repo will need some changes
 now. Have a look at it and edit it so that it fits your needs.</p>
-<h1>Setup your virtualenv</h1>
+<h3>Setup your virtualenv</h3>
 <p>If you have never used virtualenv and virtualenvwrapper before, now is the
 time to learn about it. Usually this is what you need to do to install it:</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -123,7 +125,7 @@ pip install -r requirements.txt
 </pre></div>
 </td></tr></table>
 
-<h1>Create your first post</h1>
+<h3>Create your first post</h3>
 <p>Now is the time to create your first post:</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -164,7 +166,7 @@ git commit -am <span class="s2">&quot;Created my first post.&quot;</span>
 </pre></div>
 </td></tr></table>
 
-<h1>Publish your first post</h1>
+<h3>Publish your first post</h3>
 <p>This is the interesting part! You will use Pelican now to generate the output
 for your blog:</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -200,7 +202,7 @@ git push origin master
 </pre></div>
 </td></tr></table>
 
-<h1>Publishing with fabric</h1>
+<h3>Publishing with fabric</h3>
 <p>As you have seen, the workflow of editing your posts is always the same. First
 you edit your <code>.md</code> files, next you commit your changes and give a meaningful
 commit message and at last you generate the output and commit it with a
@@ -212,7 +214,7 @@ can just edit your <code>.md</code> files and once you are done, call Fabric:</p
 </pre></div>
 </td></tr></table>
 
-<h1>Setting up a custom domain</h1>
+<h3>Setting up a custom domain</h3>
 <p>As if all this isn't awesome enough, GitHub makes it really easy to create
 custom domains for your GitHub page. All you need is to place a file called
 <code>CNAME</code> in the root of your project and add the following content:</p>
@@ -223,11 +225,11 @@ custom domains for your GitHub page. All you need is to place a file called
 <p>Then point the A record of your domain to the IP address of GitHub. For more
 information have a look at the instructions about
 <a href="http://pages.github.com/#custom_domains">custom domains on GitHub</a>.</p>
-<h1>How to embed images?</h1>
+<h3>How to embed images?</h3>
 <p>If you need to embed images, you can just add them to the folder
 <code>source/images/</code> and link to them in your <code>.md</code> files like so:
 <code>![Alt text](./static/images/yourimage.png)</code>.</p>
-<h1>Thanks!</h1>
+<h3>Thanks!</h3>
 <p>That's it. I hope I didn't forget anything. I would like to thank
 <a href="https://twitter.com/ametaireau">Alexis Metaireau</a> for the great work on
 Pelican. There is a small and friendly group sitting at #pelican on Freenode

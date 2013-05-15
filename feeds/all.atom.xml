@@ -1,5 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-01-22T00:00:00+08:00</updated><entry><title>Django GFKs &amp; Factory Boy</title><link href="http://martinbrochhaus.com/factory-boy.html" rel="alternate"></link><updated>2013-01-22T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-01-22:factory-boy.html</id><summary type="html">&lt;p&gt;Let's say you are writing a reusable Django app and your app has a model with
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-05-15T00:00:00+08:00</updated><entry><title>Pelican and Github Pages</title><link href="http://martinbrochhaus.com/pelican2.html" rel="alternate"></link><updated>2013-05-15T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-15:pelican2.html</id><summary type="html">&lt;p&gt;One year ago I blogged about &lt;a href="http://martinbrochhaus.com/pelican.html"&gt;Pelican&lt;/a&gt; and up until
+today this remains the most frequented post in my blog. However, in the
+meantime Pelican got two major version bumps and is much more powerful now (and 
+easier to use). So let's see how to setup your blog with Pelican and host it
+on Github Pages today...&lt;/p&gt;
+&lt;h3&gt;Create a virtualenv&lt;/h3&gt;
+&lt;p&gt;As usual, before you do anything with Python, create a virtual environment for
+your Project.&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;mkvirtualenv -p python2.7 blogging
+pip install &lt;span class="nv"&gt;Pelican&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;3.2
+deactivate
+workon blogging
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;h3&gt;Quickstart Pelican&lt;/h3&gt;
+&lt;p&gt;Pelican now comes with a &lt;a href="https://pelican.readthedocs.org/en/3.2/getting_started.html#kickstart-your-site"&gt;quickstart&lt;/a&gt;
+command similar to Sphinx which will setup the recommended folder structure for
+you. When running the command, I think I answered all questions with their
+default answers.&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;mkdir -p ~/blogging/src
+&lt;span class="nb"&gt;cd&lt;/span&gt; ~/blogging/src
+pelican-quickstart
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;At this point you will have a nice project structure and you should initiate a
+Git repository and a &lt;code&gt;.gitignore&lt;/code&gt; file:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;git init
+nano .gitignore
+
+&lt;span class="c"&gt;# Content of the .gitignore file:&lt;/span&gt;
+*.pid
+*.pyc
+*.swp
+output/
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;h3&gt;Add some content&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;cd&lt;/code&gt; into the &lt;code&gt;content&lt;/code&gt; folder and create your &lt;a href="https://pelican.readthedocs.org/en/3.2/getting_started.html#writing-content-using-pelican"&gt;markdown content&lt;/a&gt;
+files there. While you are writing your post, you will likely want to see your
+latest changes in a browser. For this reason pelican now provides a simple
+development server which you can start like so:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;make devserver
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Please note that when you quit that command with &lt;code&gt;CTRL+C&lt;/code&gt;, the server is still
+somehow running in the background. In order to really quit it, you need to run:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;develop_server&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt; &lt;span class="n"&gt;stop&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This will also be necessary if you saved a file with incorrect syntax and
+caused an error in the devserver. The server output will usually describe
+nicely what the error was but it will not restart properly once you corrected
+the error, so you need to do that manually.&lt;/p&gt;
+&lt;h3&gt;Hosting on Github Pages&lt;/h3&gt;
+&lt;p&gt;&lt;a href="http://pages.github.com/"&gt;Github Pages&lt;/a&gt; is a fantastic way to host static
+websites in Github's cloud. In my old post I described how to do this using
+&lt;em&gt;User pages&lt;/em&gt; but I would no longer recommend this because it expects you to
+have the output in your project root, which we don't have any longer. Our
+output is in the &lt;code&gt;output&lt;/code&gt; directory and it is good that way because we can now
+delete that directory prior to each publish.&lt;/p&gt;
+&lt;p&gt;Instead we will use &lt;em&gt;Project Pages&lt;/em&gt;. Simply create a new project on Github,
+make your initial commit in your pelican project and push it into your new
+Github project.&lt;/p&gt;
+&lt;p&gt;When using a &lt;em&gt;Project Page&lt;/em&gt; you need to put your HTML output into a branch
+called &lt;code&gt;gh-pages&lt;/code&gt;. I have never really understood how to create and maintain
+this branch, but thankfully there is an awesome script called
+&lt;a href="https://github.com/davisp/ghp-import"&gt;ghp-import&lt;/a&gt; which will do all the magic
+for you. Simply install that script into your virtualenv:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;workon blogging
+pip install -e git+git://github.com/davisp/ghp-import.git
+deactivate
+workon blogging
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Now you can publish your blog for the first time using one of Pelican's Make
+commands:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;make github
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Whoa. That was easy!&lt;/p&gt;
+&lt;h3&gt;Use your own domain&lt;/h3&gt;
+&lt;p&gt;If you would like to show your blog under your own domain, just set your
+domain's A-Record to &lt;code&gt;204.232.175.78&lt;/code&gt;. Now we need to make sure that there is
+a file called &lt;code&gt;CNAME&lt;/code&gt; in the output directory. In order to achieve this, &lt;code&gt;cd&lt;/code&gt;
+into your &lt;code&gt;content&lt;/code&gt; directory and create a folder &lt;code&gt;extra&lt;/code&gt; and put that file
+into that folder:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; ~/blogging/src/content/
+mkdir extra &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;cd &lt;/span&gt;extra
+nano CNAME
+
+&lt;span class="c"&gt;# Put your domain name into that file, i.e.:&lt;/span&gt;
+example.com
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Now add the folowing setting to your &lt;code&gt;pelicanconf.py&lt;/code&gt;:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;nano pelicanconf.py
+&lt;span class="nv"&gt;FILES_TO_COPY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;
+    &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;extra/CNAME&amp;#39;&lt;/span&gt;, &lt;span class="s1"&gt;&amp;#39;CNAME&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;,
+&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This makes sure that the &lt;code&gt;CNAME&lt;/code&gt; file will be copied from the content folder
+into the output folder on each publish. Don't forget to wait a few hours for
+the CNAME changes to propagate.&lt;/p&gt;
+&lt;h3&gt;Themes &amp;amp; Settings&lt;/h3&gt;
+&lt;p&gt;If you want another theme, you should check out &lt;a href="https://github.com/getpelican/pelican-themes"&gt;pelica-themes&lt;/a&gt;.
+Just clone that repository and change your theme setting in &lt;code&gt;pelicanconf.py&lt;/code&gt;:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;git clone git://github.com/getpelican/pelican-themes.git ~/pelican-themes
+&lt;span class="nb"&gt;cd&lt;/span&gt; ~/pelican-themes
+git submodule init
+git submodule update
+
+nano ~/blogging/src/pelicanconf.py
+&lt;span class="c"&gt;# Change the THEME setting:&lt;/span&gt;
+&lt;span class="nv"&gt;THEME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/Users/martin/pelican-themes/basic&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</summary><category term="blogging"></category><category term="python"></category></entry><entry><title>Django GFKs &amp; Factory Boy</title><link href="http://martinbrochhaus.com/factory-boy.html" rel="alternate"></link><updated>2013-01-22T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-01-22:factory-boy.html</id><summary type="html">&lt;p&gt;Let's say you are writing a reusable Django app and your app has a model with
 a generic foreign key. An example could be a messaging app where messages can
 attached to any other object (when you think about Facebook, a message can
 be sent to another User, or to his profile timeline, or to a status update
@@ -1876,7 +2031,9 @@ hours and create a nice and clean approach to publishing this blog with
 &lt;a href="https://github.com/fabric/fabric"&gt;Fabric&lt;/a&gt;,
 &lt;a href="https://github.com/ametaireau/pelican"&gt;Pelican&lt;/a&gt; and
 &lt;a href="http://github.com"&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-&lt;h1&gt;What to expect&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt;: This post is outdated. Please see my new post about
+&lt;a href="http://martinbrochhaus.com/pelican2.html"&gt;blogging with Pelican&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;What to expect&lt;/h3&gt;
 &lt;p&gt;When you follow these instructions, you can expect the following:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;A simple static blog website with a simple yet beautiful theme.&lt;/li&gt;
@@ -1893,11 +2050,11 @@ hours and create a nice and clean approach to publishing this blog with
 &lt;p&gt;I should mention that Pelican is a Python project and therefore it wouldn't
 hurt if you knew a bit about Python. I will assume basic Python knowledge here.
 Let's get started:&lt;/p&gt;
-&lt;h1&gt;Activate GitHub Pages&lt;/h1&gt;
+&lt;h3&gt;Activate GitHub Pages&lt;/h3&gt;
 &lt;p&gt;Just create a new repository called &lt;code&gt;username.github.com&lt;/code&gt;. Whatever you place
 in here will be served at &lt;code&gt;http://username.github.com&lt;/code&gt;. For more information
 please see the &lt;a href="http://pages.github.com/"&gt;GitHub Pages Documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;h1&gt;Setup your repository&lt;/h1&gt;
+&lt;h3&gt;Setup your repository&lt;/h3&gt;
 &lt;p&gt;First create a folder on your disk for the new project:&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
 2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;mkdir &lt;span class="nv"&gt;$HOME&lt;/span&gt;/Projects/myblog
@@ -1925,7 +2082,7 @@ wget https://github.com/mbrochh/mbrochh.github.com/raw/master/source/settings.py
 
 &lt;p&gt;The sample &lt;code&gt;settings.py&lt;/code&gt; you just got from my own repo will need some changes
 now. Have a look at it and edit it so that it fits your needs.&lt;/p&gt;
-&lt;h1&gt;Setup your virtualenv&lt;/h1&gt;
+&lt;h3&gt;Setup your virtualenv&lt;/h3&gt;
 &lt;p&gt;If you have never used virtualenv and virtualenvwrapper before, now is the
 time to learn about it. Usually this is what you need to do to install it:&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
@@ -1951,7 +2108,7 @@ pip install -r requirements.txt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
-&lt;h1&gt;Create your first post&lt;/h1&gt;
+&lt;h3&gt;Create your first post&lt;/h3&gt;
 &lt;p&gt;Now is the time to create your first post:&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
 2
@@ -1992,7 +2149,7 @@ git commit -am &lt;span class="s2"&gt;&amp;quot;Created my first post.&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
-&lt;h1&gt;Publish your first post&lt;/h1&gt;
+&lt;h3&gt;Publish your first post&lt;/h3&gt;
 &lt;p&gt;This is the interesting part! You will use Pelican now to generate the output
 for your blog:&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
@@ -2028,7 +2185,7 @@ git push origin master
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
-&lt;h1&gt;Publishing with fabric&lt;/h1&gt;
+&lt;h3&gt;Publishing with fabric&lt;/h3&gt;
 &lt;p&gt;As you have seen, the workflow of editing your posts is always the same. First
 you edit your &lt;code&gt;.md&lt;/code&gt; files, next you commit your changes and give a meaningful
 commit message and at last you generate the output and commit it with a
@@ -2040,7 +2197,7 @@ can just edit your &lt;code&gt;.md&lt;/code&gt; files and once you are done, cal
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
-&lt;h1&gt;Setting up a custom domain&lt;/h1&gt;
+&lt;h3&gt;Setting up a custom domain&lt;/h3&gt;
 &lt;p&gt;As if all this isn't awesome enough, GitHub makes it really easy to create
 custom domains for your GitHub page. All you need is to place a file called
 &lt;code&gt;CNAME&lt;/code&gt; in the root of your project and add the following content:&lt;/p&gt;
@@ -2051,11 +2208,11 @@ custom domains for your GitHub page. All you need is to place a file called
 &lt;p&gt;Then point the A record of your domain to the IP address of GitHub. For more
 information have a look at the instructions about
 &lt;a href="http://pages.github.com/#custom_domains"&gt;custom domains on GitHub&lt;/a&gt;.&lt;/p&gt;
-&lt;h1&gt;How to embed images?&lt;/h1&gt;
+&lt;h3&gt;How to embed images?&lt;/h3&gt;
 &lt;p&gt;If you need to embed images, you can just add them to the folder
 &lt;code&gt;source/images/&lt;/code&gt; and link to them in your &lt;code&gt;.md&lt;/code&gt; files like so:
 &lt;code&gt;![Alt text](./static/images/yourimage.png)&lt;/code&gt;.&lt;/p&gt;
-&lt;h1&gt;Thanks!&lt;/h1&gt;
+&lt;h3&gt;Thanks!&lt;/h3&gt;
 &lt;p&gt;That's it. I hope I didn't forget anything. I would like to thank
 &lt;a href="https://twitter.com/ametaireau"&gt;Alexis Metaireau&lt;/a&gt; for the great work on
 Pelican. There is a small and friendly group sitting at #pelican on Freenode
