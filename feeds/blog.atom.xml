@@ -90,7 +90,7 @@ simply install it like so: &lt;/p&gt;
 &lt;p&gt;Don't forget to run &lt;code&gt;brew doctor&lt;/code&gt; and &lt;code&gt;brew update&lt;/code&gt;, when you are done. It will
 probably find some problems. For example you might have to add some folders to
 your &lt;code&gt;$PATH&lt;/code&gt; environment variable. You might want to put this into your
-&lt;code&gt;~/.bash_profile&lt;/code&gt;&lt;/p&gt;
+&lt;code&gt;~/.bash_profile&lt;/code&gt; and your &lt;code&gt;~/.zshrc&lt;/code&gt;&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/bin:/usr/local/bin:/usr/local/sbin:/usr/local/share/python:&lt;span class="nv"&gt;$PATH&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
