@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="./index.html" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>OSX Django Toolbelt</h1>
+            <h2>Everything You Need to Build Django Apps on OSX</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+            <p><i class="icon-calendar"></i>&nbsp;Thu 16 May 2013</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+                    <a href="http://martinbrochhaus.com/tag/osx.html">osx</a>
+                    <a href="http://martinbrochhaus.com/tag/django.html">django</a>
+            </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>Every time I mentor someone about web development with Django, we spend 
+countless hours setting up his or her development machine. I'm getting sick of
+it, so I thought I might write it all down.</p>
+<p>This post will help you to setup a fresh MacBook in such a way that enables you
+to start building complex Django sites. It will take a very long time, probably
+between six to ten hours and it will be frustrating because I didn't test
+everything presented here (I don't have a clean machine at hand). </p>
+<p>Take that as part of the fun. After all, web development (or software 
+development in general) is just that: It is frustrating. Things never work like
+they should but you will be amazed how accurately Google will solve your
+problems when you read all those error messages and search for them.</p>
+<p>Let's get started...</p>
+<h3>Get Yourself a Butler</h3>
+<p>Before you do anything with your Mac, do yourself a favor and install <a href="https://itunes.apple.com/de/app/alfred/id405843582?l=en&amp;mt=12">Alfred</a>
+from the AppStore. It allows you to press <code>OPTION+SPACE</code> and type whatever you
+want to start. It's awesome. I never have icons on my desktop and I never use
+the icon bar at the bottom. What is it even called? Really. Trust me. Nothing
+beats Alfred. </p>
+<blockquote>
+<p>Hint: You can even use Alfred as a quick calculator or start
+Google / Wikipedia / Amazon searches from it.</p>
+</blockquote>
+<h3>Install XCode &amp; Command Line Tools</h3>
+<p>When you get your new MacBook, it is just an expensive toy. The first thing you 
+need to do is to go to the AppStore and install XCode. This will take a very 
+long time. Afterwards you need to start XCode and agree to the terms and 
+conditions. Finally you need to install the Command Line Tools in order to be
+able to compile the many other tools you will install later.</p>
+<p>In order to install Command Line Tools, open XCode, go to </p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>Preferences --&gt; Downloads --&gt; Components
+</pre></div>
+</td></tr></table>
+
+<p>and click the <em>Install</em> button next to <em>Command Line Tools</em>. This will also
+take quite some time and might require a reboot.</p>
+<p>Congratulations! Now you have taken the first big step to turn your expensive
+toy into a life companion that will allow you to build things and change the
+world. ;)</p>
+<h3>Install Database Stuff</h3>
+<h4>Postgres.app</h4>
+<p>While XCode is downloading, you can use your time and install a few more tools.
+First of all you should install <a href="http://postgresapp.com/">Postgres.app</a>.</p>
+<blockquote>
+<p><strong>IMPORTANT</strong>: After downloading the app, DO NOT EXECUTE IT! Move it into the
+<em>Applications</em> first, then execute it for the first time. </p>
+</blockquote>
+<p>You might want to add the app to your startup applications. If not, remember to 
+restart it after a reboot.</p>
+<h4>pgadmin3</h4>
+<p>Now that you have postgres installed, you should install <a href="http://pgadmin.org/download/macosx.php">pgadmin3</a>.
+Once installed, start it and click at</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>File --&gt; Add Server
+</pre></div>
+</td></tr></table>
+
+<p>Fill it out like so:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre>Name: Any name <span class="o">(</span>i.e. localhost<span class="o">)</span>
+Host: localhost
+Port: 5432
+Username: username
+</pre></div>
+</td></tr></table>
+
+<p>Username is the important thing here. <em>Postgres.app</em> does not install a
+postgres user, like the usual installation would do. Instead it uses your admin
+user account to manage the database. So you should fill in your OSX username
+here. Press OK and double click your newly created server. If all went well,
+you should see <em>Databases</em>, <em>Tablespaces</em>, <em>Group Roles</em> and <em>Login
+Roles</em>.</p>
+<h3>Pimp Your Terminal</h3>
+<h4>iTerm2</h4>
+<p>First of all, install <a href="http://www.iterm2.com/">iTerm2</a>. This will save you some
+trouble with copy and paste issues and color schemes and it has proper 
+implementation of the fullscreen mode (which I use all the time) and has other
+neat things like notification and beeps when something has changed in one of
+your many open tabs.</p>
+<p>By the way: I like to use the <a href="https://code.google.com/p/iterm2/wiki/ColorGallery">Solarized Dark Theme</a>
+for my terminal.</p>
+<h4>Install Homebrew</h4>
+<p>From here onwards we will need to install a ton of tools via homebrew, so
+simply install it like so: </p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>ruby -e <span class="s2">&quot;$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)&quot;</span>
+</pre></div>
+</td></tr></table>
+
+<p>Don't forget to run <code>brew doctor</code> and <code>brew update</code>, when you are done. It will
+probably find some problems. For example you might have to add some folders to
+your <code>$PATH</code> environment variable. You might want to put this into your
+<code>~/.bash_profile</code></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$HOME</span>/bin:/usr/local/bin:/usr/local/sbin:/usr/local/share/python:<span class="nv">$PATH</span>
+</pre></div>
+</td></tr></table>
+
+<p>Don't forget to create your own <code>~/bin</code> folder. Finally install wget already,
+because we will need it in the next step:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>brew install wget
+</pre></div>
+</td></tr></table>
+
+<h4>zsh</h4>
+<p>If you are developing software, you will probably use the terminal all the time.
+You should make it an awesome place to be. Thanks to homebrew, installation is
+really simple:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>wget --no-check-certificate https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
+</pre></div>
+</td></tr></table>
+
+<p>It will make zsh your default shell, so after installation, quit the 
+terminal and start a new one and you should see a slightly different command 
+prompt.</p>
+<p>zsh can do a million things, I don't even know one percent of them but here is
+what you will use all the time:</p>
+<p><strong>autojump</strong> learns which folders you use often. If you are always cd-ing
+around in a folder called <code>~/Projects/django/myapp</code>, you can now simply type 
+<code>j my</code> and autojump will magically cd into that folder.</p>
+<p><strong>Tab completion</strong> even works when you type any part of filenames, not just the
+beginning. So if you know that there is a file <code>foo_bar_95.txt</code>, just type
+<code>bar</code> and press <code>TAB</code> and be amazed. Have many files or folders with similar
+names? Just hit <code>TAB</code> multiple times and jump between the items, press
+<code>SHIFT+TAB</code> to jump back.</p>
+<p><strong>Command history</strong> can be called pressing the arrow up key. We all know that.
+And we all have been in that situation where we have to hit arrow-up 30 times
+in order to get back to that old long command we typed 20 minutes ago. Ugh.
+With zsh you can type the beginning of the command (let's say the first letter)
+and press arrow-up and you will only get the part of the history of commands
+that started with that letter. VERY useful.</p>
+<p>The <strong>Command prompt</strong> is also supercharged with plugins. For example, if you
+cd into a git repository, the command prompt will change and show you the
+branch you are on and if you are behind of any upstream changes.</p>
+<p>What am I rambling so much? Go and install it already, for gods sake!</p>
+<h4>Useful Command Line Tools</h4>
+<p>Since we have an awesome terminal and shell now, we should install some tools.
+First of all</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># Good for sending HTTP requests to APIs</span>
+brew install curl
+
+<span class="c"># Screen multiplexer, extremely useful when working with many tabs</span>
+brew install tmux
+brew install reattach-to-user-namespace
+
+<span class="c"># This fixes a problem with the virtualenvwrapper plugin of oh-my-zsh</span>
+brew install coreutils
+mkdir -p ~/bin <span class="o">&amp;&amp;</span> <span class="nb">cd</span> ~/bin <span class="o">&amp;&amp;</span> ln -s <span class="sb">`</span>which greadlink<span class="sb">`</span> readlink
+
+<span class="c"># This allows for awesome bash completion for all kinds of things, such as</span>
+<span class="c"># fabric files.</span>
+brew install bash-completion
+<span class="nb">cd</span> /usr/local/etc/bash_completion.d
+wget https://github.com/marcelor/fabric-bash-autocompletion/raw/master/fab
+</pre></div>
+</td></tr></table>
+
+<h4>One word about tmux</h4>
+<p>Use it! Really, don't be scared. There are many good
+tutorials out there. When you are doing web development, you will always have
+at least 3 terminal windows open: One to start your Django development server,
+one to cd around in your folders and create files and one to actually write 
+code. Maybe you will have another one for compiling your LESS or SASS files 
+into CSS and another one to automatically execute your test suite on each file
+save. Now imagine you are working on three different projects simultaneously.
+That would be up to 18 tabs in your terminal. What if your terminal crashes?
+You would lose all tabs and be a very sad developer. As long as you don't 
+reboot your machine, tmux will keep running, even when you close your terminal.</p>
+<p>There is another very similar tool called screen. I like tmux more because of
+it's awesome possibility to do <a href="http://martinbrochhaus.com/pair.html">pair programming</a>, but I 
+still often use screen when I ssh into my servers. To make life easier, I have
+created a <a href="https://github.com/mbrochh/mbrochh-dotfiles/blob/master/.tmux.conf">.tmux.conf</a>
+where I re-mapped all keys to match the key bindings in screen so that I can
+switch between both tools without needing to think.</p>
+<p>Here are a few commands that will get you up and running quickly:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># Start the tmux server and attach to your first session</span>
+tmux
+
+<span class="c"># Create a new window</span>
+CTRL+a c
+
+<span class="c"># List all windows that you have so far. Navigate between them with j and k</span>
+CTRL+a w
+
+<span class="c"># Quickly switch between the last two windows</span>
+CTRL+a a
+
+<span class="c"># Close a window. When you close the last one, the session ends</span>
+<span class="nb">exit</span> <span class="o">(</span>or CTRL+d<span class="o">)</span>
+
+<span class="c"># You should  still have one window open, close your terminal, open a new</span>
+<span class="c"># one and see if the session is still there</span>
+tmux ls
+
+<span class="c"># Re-attach to your old session</span>
+tmux a -t &lt;session id&gt;
+</pre></div>
+</td></tr></table>
+
+<p>That's pretty much all I know and ever need. There are some advanced use cases
+when you need to scroll up in a tmux window and copy and paste code, but with
+iTerm2 scrolling should work just fine with your touch-pad or mouse wheel.</p>
+<h3>Install node.js</h3>
+<p>Sooner or later you will use Twitter Bootstrap as a CSS framework (or any other
+CSS framework) and you will fall in love with <a href="http://lesscss.org/">LESS</a> or
+<a href="http://sass-lang.com/">SASS</a> and apparently the best way to compile less files
+into css files is to use the less package of node.js:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre>brew install nodejs
+curl http://npmjs.org/install.sh | sh
+npm install recess uglify-js jshint -g
+npm install less --global
+</pre></div>
+</td></tr></table>
+
+<p>You will have to restart your terminal in order to use the <code>lessc</code> command. The
+usage is simply:</p>
+<div class="highlight"><pre><span class="n">lessc</span> <span class="n">some</span><span class="o">-</span><span class="n">file</span><span class="p">.</span><span class="n">less</span> <span class="n">some</span><span class="o">-</span><span class="n">file</span><span class="p">.</span><span class="n">css</span>
+</pre></div>
+
+
+<p>It will compile the .less file into a .css file.</p>
+<h3>Finally some Python stuff</h3>
+<p>Whenever you do anything with Python, always create a virtual environment for
+it. This will enable you to work on two different projects at the same time. 
+One might use Django 1.4.5 while the other one uses Django 1.5.1. Since you are
+using virtual environments for both projects, you can install both Django 
+versions on your machine without ever running into version conflicts.
+Let's install the necessary tools:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#! sh</span>
+<span class="c"># use easy_install to install pip</span>
+<span class="c"># then never use easy_install again</span>
+<span class="c"># it&#39;s like using Internet Explorer to install Firefox</span>
+<span class="c"># or like using Firefox to install Chrome</span>
+sudo easy_install pip
+
+<span class="c"># install virtualenv</span>
+sudo pip install virtualenv
+sudo pip install virtualenvwrapper
+<span class="nb">export </span><span class="nv">WORKON_HOME</span><span class="o">=</span>~/Envs
+<span class="nb">source</span> /usr/local/bin/virtualenvwrapper.sh
+
+<span class="c"># put the following into your ~/.bash_profile and ~/.zshrc</span>
+<span class="nb">export </span><span class="nv">VIRTUALENVWRAPPER_PYTHON</span><span class="o">=</span>/usr/bin/python
+<span class="nb">export </span><span class="nv">WORKON_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/Envs
+<span class="nb">export </span><span class="nv">PIP_VIRTUALENV_BASE</span><span class="o">=</span><span class="nv">$WORKON_HOME</span>
+<span class="nb">export </span><span class="nv">PIP_RESPECT_VIRTUALENV</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">source</span> /usr/local/bin/virtualenvwrapper.sh
+</pre></div>
+</td></tr></table>
+
+<p>Try to create your first virtualenv:</p>
+<div class="highlight"><pre><span class="n">mkvirtualenv</span> <span class="o">-</span><span class="n">p</span> <span class="n">python2</span><span class="mf">.7</span> <span class="n">test</span>
+</pre></div>
+
+
+<p>It should create the virtual environment at <code>~/Envs/test</code> and you can 
+deactivate it by typing <code>deactivate</code> and activate it by typing <code>workon test</code>.</p>
+<p>Now always remember, when you work on your <code>test</code> project, always activate it's
+virtualenv. When the virtualenv is active, you can use <code>pip install Django</code> and
+it will not be installed into your global package space but into the virtualenv
+(into <code>~/Envs/test/lib/python2.7/site-packages/django</code>).</p>
+<h3>Install VIM</h3>
+<p>The last step before you can start changing the world by creating the next 
+Facebook is to install a good IDE. </p>
+<p>The short version is this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre>sudo easy_install mercurial
+mkdir ~/opt
+mkdir ~/src <span class="o">&amp;&amp;</span> <span class="nb">cd </span>src
+hg clone https://vim.googlecode.com/hg/ vim
+<span class="nb">cd </span>vim/src
+./configure --enable-pythoninterp --with-features<span class="o">=</span>huge --prefix<span class="o">=</span><span class="nv">$HOME</span>/opt/vim
+make <span class="o">&amp;&amp;</span> make install
+mkdir -p <span class="nv">$HOME</span>/bin
+<span class="nb">cd</span> <span class="nv">$HOME</span>/bin
+ln -s <span class="nv">$HOME</span>/opt/vim/bin/vim
+</pre></div>
+</td></tr></table>
+
+<p>This will download and compile vim with the Python interpreter enabled. You 
+will place a symlink to the new vim executable in your <code>~/bin</code> folder to make
+sure that the command <code>vim</code> will actually start your own compiled version 
+instead of the version that comes with the OS.</p>
+<p>Now you have to install a number of plugins and setup your .vimrc file 
+properly. Check out my PyCon talk about <a href="https://www.youtube.com/watch?v=YhqsjUUHj6g">Vim As a Python IDE</a>
+to learn more. Please note that I don't use the python-mode plugin any more,
+instead I am using <a href="https://github.com/davidhalter/jedi-vim">jedi-vim</a>.</p>
+<p>If you are new to vim, start learning by simply typing <code>vimtutor</code>. The tutorial
+should take you about an hour and is well worth your time. In the beginning
+you will want to have a look at the <a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html">vim cheatsheet</a>
+every now and then.</p>
+<p>I should probably write a post about how to setup vim, soon...</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                                            <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                                            <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                                            <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                                            <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                                            <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                                            <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                                            <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                                            <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                                                    </ul>
+                                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</body>
+</html>

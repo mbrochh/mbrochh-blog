@@ -1,5 +1,358 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-05-15T00:00:00+08:00</updated><entry><title>Pelican and Github Pages</title><link href="http://martinbrochhaus.com/pelican2.html" rel="alternate"></link><updated>2013-05-15T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-15:pelican2.html</id><summary type="html">&lt;p&gt;One year ago I blogged about &lt;a href="http://martinbrochhaus.com/pelican.html"&gt;Pelican&lt;/a&gt; and up until
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-05-16T00:00:00+08:00</updated><entry><title>OSX Django Toolbelt</title><link href="http://martinbrochhaus.com/toolbelt.html" rel="alternate"></link><updated>2013-05-16T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-16:toolbelt.html</id><summary type="html">&lt;p&gt;Every time I mentor someone about web development with Django, we spend 
+countless hours setting up his or her development machine. I'm getting sick of
+it, so I thought I might write it all down.&lt;/p&gt;
+&lt;p&gt;This post will help you to setup a fresh MacBook in such a way that enables you
+to start building complex Django sites. It will take a very long time, probably
+between six to ten hours and it will be frustrating because I didn't test
+everything presented here (I don't have a clean machine at hand). &lt;/p&gt;
+&lt;p&gt;Take that as part of the fun. After all, web development (or software 
+development in general) is just that: It is frustrating. Things never work like
+they should but you will be amazed how accurately Google will solve your
+problems when you read all those error messages and search for them.&lt;/p&gt;
+&lt;p&gt;Let's get started...&lt;/p&gt;
+&lt;h3&gt;Get Yourself a Butler&lt;/h3&gt;
+&lt;p&gt;Before you do anything with your Mac, do yourself a favor and install &lt;a href="https://itunes.apple.com/de/app/alfred/id405843582?l=en&amp;amp;mt=12"&gt;Alfred&lt;/a&gt;
+from the AppStore. It allows you to press &lt;code&gt;OPTION+SPACE&lt;/code&gt; and type whatever you
+want to start. It's awesome. I never have icons on my desktop and I never use
+the icon bar at the bottom. What is it even called? Really. Trust me. Nothing
+beats Alfred. &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hint: You can even use Alfred as a quick calculator or start
+Google / Wikipedia / Amazon searches from it.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;Install XCode &amp;amp; Command Line Tools&lt;/h3&gt;
+&lt;p&gt;When you get your new MacBook, it is just an expensive toy. The first thing you 
+need to do is to go to the AppStore and install XCode. This will take a very 
+long time. Afterwards you need to start XCode and agree to the terms and 
+conditions. Finally you need to install the Command Line Tools in order to be
+able to compile the many other tools you will install later.&lt;/p&gt;
+&lt;p&gt;In order to install Command Line Tools, open XCode, go to &lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;Preferences --&amp;gt; Downloads --&amp;gt; Components
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;and click the &lt;em&gt;Install&lt;/em&gt; button next to &lt;em&gt;Command Line Tools&lt;/em&gt;. This will also
+take quite some time and might require a reboot.&lt;/p&gt;
+&lt;p&gt;Congratulations! Now you have taken the first big step to turn your expensive
+toy into a life companion that will allow you to build things and change the
+world. ;)&lt;/p&gt;
+&lt;h3&gt;Install Database Stuff&lt;/h3&gt;
+&lt;h4&gt;Postgres.app&lt;/h4&gt;
+&lt;p&gt;While XCode is downloading, you can use your time and install a few more tools.
+First of all you should install &lt;a href="http://postgresapp.com/"&gt;Postgres.app&lt;/a&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt;: After downloading the app, DO NOT EXECUTE IT! Move it into the
+&lt;em&gt;Applications&lt;/em&gt; first, then execute it for the first time. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;You might want to add the app to your startup applications. If not, remember to 
+restart it after a reboot.&lt;/p&gt;
+&lt;h4&gt;pgadmin3&lt;/h4&gt;
+&lt;p&gt;Now that you have postgres installed, you should install &lt;a href="http://pgadmin.org/download/macosx.php"&gt;pgadmin3&lt;/a&gt;.
+Once installed, start it and click at&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;File --&amp;gt; Add Server
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Fill it out like so:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;Name: Any name &lt;span class="o"&gt;(&lt;/span&gt;i.e. localhost&lt;span class="o"&gt;)&lt;/span&gt;
+Host: localhost
+Port: 5432
+Username: username
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Username is the important thing here. &lt;em&gt;Postgres.app&lt;/em&gt; does not install a
+postgres user, like the usual installation would do. Instead it uses your admin
+user account to manage the database. So you should fill in your OSX username
+here. Press OK and double click your newly created server. If all went well,
+you should see &lt;em&gt;Databases&lt;/em&gt;, &lt;em&gt;Tablespaces&lt;/em&gt;, &lt;em&gt;Group Roles&lt;/em&gt; and &lt;em&gt;Login
+Roles&lt;/em&gt;.&lt;/p&gt;
+&lt;h3&gt;Pimp Your Terminal&lt;/h3&gt;
+&lt;h4&gt;iTerm2&lt;/h4&gt;
+&lt;p&gt;First of all, install &lt;a href="http://www.iterm2.com/"&gt;iTerm2&lt;/a&gt;. This will save you some
+trouble with copy and paste issues and color schemes and it has proper 
+implementation of the fullscreen mode (which I use all the time) and has other
+neat things like notification and beeps when something has changed in one of
+your many open tabs.&lt;/p&gt;
+&lt;p&gt;By the way: I like to use the &lt;a href="https://code.google.com/p/iterm2/wiki/ColorGallery"&gt;Solarized Dark Theme&lt;/a&gt;
+for my terminal.&lt;/p&gt;
+&lt;h4&gt;Install Homebrew&lt;/h4&gt;
+&lt;p&gt;From here onwards we will need to install a ton of tools via homebrew, so
+simply install it like so: &lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;ruby -e &lt;span class="s2"&gt;&amp;quot;$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Don't forget to run &lt;code&gt;brew doctor&lt;/code&gt; and &lt;code&gt;brew update&lt;/code&gt;, when you are done. It will
+probably find some problems. For example you might have to add some folders to
+your &lt;code&gt;$PATH&lt;/code&gt; environment variable. You might want to put this into your
+&lt;code&gt;~/.bash_profile&lt;/code&gt;&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/bin:/usr/local/bin:/usr/local/sbin:/usr/local/share/python:&lt;span class="nv"&gt;$PATH&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Don't forget to create your own &lt;code&gt;~/bin&lt;/code&gt; folder. Finally install wget already,
+because we will need it in the next step:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;brew install wget
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;h4&gt;zsh&lt;/h4&gt;
+&lt;p&gt;If you are developing software, you will probably use the terminal all the time.
+You should make it an awesome place to be. Thanks to homebrew, installation is
+really simple:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;wget --no-check-certificate https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;It will make zsh your default shell, so after installation, quit the 
+terminal and start a new one and you should see a slightly different command 
+prompt.&lt;/p&gt;
+&lt;p&gt;zsh can do a million things, I don't even know one percent of them but here is
+what you will use all the time:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;autojump&lt;/strong&gt; learns which folders you use often. If you are always cd-ing
+around in a folder called &lt;code&gt;~/Projects/django/myapp&lt;/code&gt;, you can now simply type 
+&lt;code&gt;j my&lt;/code&gt; and autojump will magically cd into that folder.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tab completion&lt;/strong&gt; even works when you type any part of filenames, not just the
+beginning. So if you know that there is a file &lt;code&gt;foo_bar_95.txt&lt;/code&gt;, just type
+&lt;code&gt;bar&lt;/code&gt; and press &lt;code&gt;TAB&lt;/code&gt; and be amazed. Have many files or folders with similar
+names? Just hit &lt;code&gt;TAB&lt;/code&gt; multiple times and jump between the items, press
+&lt;code&gt;SHIFT+TAB&lt;/code&gt; to jump back.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Command history&lt;/strong&gt; can be called pressing the arrow up key. We all know that.
+And we all have been in that situation where we have to hit arrow-up 30 times
+in order to get back to that old long command we typed 20 minutes ago. Ugh.
+With zsh you can type the beginning of the command (let's say the first letter)
+and press arrow-up and you will only get the part of the history of commands
+that started with that letter. VERY useful.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;Command prompt&lt;/strong&gt; is also supercharged with plugins. For example, if you
+cd into a git repository, the command prompt will change and show you the
+branch you are on and if you are behind of any upstream changes.&lt;/p&gt;
+&lt;p&gt;What am I rambling so much? Go and install it already, for gods sake!&lt;/p&gt;
+&lt;h4&gt;Useful Command Line Tools&lt;/h4&gt;
+&lt;p&gt;Since we have an awesome terminal and shell now, we should install some tools.
+First of all&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Good for sending HTTP requests to APIs&lt;/span&gt;
+brew install curl
+
+&lt;span class="c"&gt;# Screen multiplexer, extremely useful when working with many tabs&lt;/span&gt;
+brew install tmux
+brew install reattach-to-user-namespace
+
+&lt;span class="c"&gt;# This fixes a problem with the virtualenvwrapper plugin of oh-my-zsh&lt;/span&gt;
+brew install coreutils
+mkdir -p ~/bin &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; ~/bin &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ln -s &lt;span class="sb"&gt;`&lt;/span&gt;which greadlink&lt;span class="sb"&gt;`&lt;/span&gt; readlink
+
+&lt;span class="c"&gt;# This allows for awesome bash completion for all kinds of things, such as&lt;/span&gt;
+&lt;span class="c"&gt;# fabric files.&lt;/span&gt;
+brew install bash-completion
+&lt;span class="nb"&gt;cd&lt;/span&gt; /usr/local/etc/bash_completion.d
+wget https://github.com/marcelor/fabric-bash-autocompletion/raw/master/fab
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;h4&gt;One word about tmux&lt;/h4&gt;
+&lt;p&gt;Use it! Really, don't be scared. There are many good
+tutorials out there. When you are doing web development, you will always have
+at least 3 terminal windows open: One to start your Django development server,
+one to cd around in your folders and create files and one to actually write 
+code. Maybe you will have another one for compiling your LESS or SASS files 
+into CSS and another one to automatically execute your test suite on each file
+save. Now imagine you are working on three different projects simultaneously.
+That would be up to 18 tabs in your terminal. What if your terminal crashes?
+You would lose all tabs and be a very sad developer. As long as you don't 
+reboot your machine, tmux will keep running, even when you close your terminal.&lt;/p&gt;
+&lt;p&gt;There is another very similar tool called screen. I like tmux more because of
+it's awesome possibility to do &lt;a href="http://martinbrochhaus.com/pair.html"&gt;pair programming&lt;/a&gt;, but I 
+still often use screen when I ssh into my servers. To make life easier, I have
+created a &lt;a href="https://github.com/mbrochh/mbrochh-dotfiles/blob/master/.tmux.conf"&gt;.tmux.conf&lt;/a&gt;
+where I re-mapped all keys to match the key bindings in screen so that I can
+switch between both tools without needing to think.&lt;/p&gt;
+&lt;p&gt;Here are a few commands that will get you up and running quickly:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Start the tmux server and attach to your first session&lt;/span&gt;
+tmux
+
+&lt;span class="c"&gt;# Create a new window&lt;/span&gt;
+CTRL+a c
+
+&lt;span class="c"&gt;# List all windows that you have so far. Navigate between them with j and k&lt;/span&gt;
+CTRL+a w
+
+&lt;span class="c"&gt;# Quickly switch between the last two windows&lt;/span&gt;
+CTRL+a a
+
+&lt;span class="c"&gt;# Close a window. When you close the last one, the session ends&lt;/span&gt;
+&lt;span class="nb"&gt;exit&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;or CTRL+d&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c"&gt;# You should  still have one window open, close your terminal, open a new&lt;/span&gt;
+&lt;span class="c"&gt;# one and see if the session is still there&lt;/span&gt;
+tmux ls
+
+&lt;span class="c"&gt;# Re-attach to your old session&lt;/span&gt;
+tmux a -t &amp;lt;session id&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;That's pretty much all I know and ever need. There are some advanced use cases
+when you need to scroll up in a tmux window and copy and paste code, but with
+iTerm2 scrolling should work just fine with your touch-pad or mouse wheel.&lt;/p&gt;
+&lt;h3&gt;Install node.js&lt;/h3&gt;
+&lt;p&gt;Sooner or later you will use Twitter Bootstrap as a CSS framework (or any other
+CSS framework) and you will fall in love with &lt;a href="http://lesscss.org/"&gt;LESS&lt;/a&gt; or
+&lt;a href="http://sass-lang.com/"&gt;SASS&lt;/a&gt; and apparently the best way to compile less files
+into css files is to use the less package of node.js:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;brew install nodejs
+curl http://npmjs.org/install.sh | sh
+npm install recess uglify-js jshint -g
+npm install less --global
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;You will have to restart your terminal in order to use the &lt;code&gt;lessc&lt;/code&gt; command. The
+usage is simply:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;lessc&lt;/span&gt; &lt;span class="n"&gt;some&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;less&lt;/span&gt; &lt;span class="n"&gt;some&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;css&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It will compile the .less file into a .css file.&lt;/p&gt;
+&lt;h3&gt;Finally some Python stuff&lt;/h3&gt;
+&lt;p&gt;Whenever you do anything with Python, always create a virtual environment for
+it. This will enable you to work on two different projects at the same time. 
+One might use Django 1.4.5 while the other one uses Django 1.5.1. Since you are
+using virtual environments for both projects, you can install both Django 
+versions on your machine without ever running into version conflicts.
+Let's install the necessary tools:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#! sh&lt;/span&gt;
+&lt;span class="c"&gt;# use easy_install to install pip&lt;/span&gt;
+&lt;span class="c"&gt;# then never use easy_install again&lt;/span&gt;
+&lt;span class="c"&gt;# it&amp;#39;s like using Internet Explorer to install Firefox&lt;/span&gt;
+&lt;span class="c"&gt;# or like using Firefox to install Chrome&lt;/span&gt;
+sudo easy_install pip
+
+&lt;span class="c"&gt;# install virtualenv&lt;/span&gt;
+sudo pip install virtualenv
+sudo pip install virtualenvwrapper
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;WORKON_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;~/Envs
+&lt;span class="nb"&gt;source&lt;/span&gt; /usr/local/bin/virtualenvwrapper.sh
+
+&lt;span class="c"&gt;# put the following into your ~/.bash_profile and ~/.zshrc&lt;/span&gt;
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;VIRTUALENVWRAPPER_PYTHON&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/bin/python
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;WORKON_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/Envs
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;PIP_VIRTUALENV_BASE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$WORKON_HOME&lt;/span&gt;
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;PIP_RESPECT_VIRTUALENV&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;span class="nb"&gt;source&lt;/span&gt; /usr/local/bin/virtualenvwrapper.sh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Try to create your first virtualenv:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;mkvirtualenv&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="n"&gt;python2&lt;/span&gt;&lt;span class="mf"&gt;.7&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It should create the virtual environment at &lt;code&gt;~/Envs/test&lt;/code&gt; and you can 
+deactivate it by typing &lt;code&gt;deactivate&lt;/code&gt; and activate it by typing &lt;code&gt;workon test&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Now always remember, when you work on your &lt;code&gt;test&lt;/code&gt; project, always activate it's
+virtualenv. When the virtualenv is active, you can use &lt;code&gt;pip install Django&lt;/code&gt; and
+it will not be installed into your global package space but into the virtualenv
+(into &lt;code&gt;~/Envs/test/lib/python2.7/site-packages/django&lt;/code&gt;).&lt;/p&gt;
+&lt;h3&gt;Install VIM&lt;/h3&gt;
+&lt;p&gt;The last step before you can start changing the world by creating the next 
+Facebook is to install a good IDE. &lt;/p&gt;
+&lt;p&gt;The short version is this:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;sudo easy_install mercurial
+mkdir ~/opt
+mkdir ~/src &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;cd &lt;/span&gt;src
+hg clone https://vim.googlecode.com/hg/ vim
+&lt;span class="nb"&gt;cd &lt;/span&gt;vim/src
+./configure --enable-pythoninterp --with-features&lt;span class="o"&gt;=&lt;/span&gt;huge --prefix&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/opt/vim
+make &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
+mkdir -p &lt;span class="nv"&gt;$HOME&lt;/span&gt;/bin
+&lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/bin
+ln -s &lt;span class="nv"&gt;$HOME&lt;/span&gt;/opt/vim/bin/vim
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This will download and compile vim with the Python interpreter enabled. You 
+will place a symlink to the new vim executable in your &lt;code&gt;~/bin&lt;/code&gt; folder to make
+sure that the command &lt;code&gt;vim&lt;/code&gt; will actually start your own compiled version 
+instead of the version that comes with the OS.&lt;/p&gt;
+&lt;p&gt;Now you have to install a number of plugins and setup your .vimrc file 
+properly. Check out my PyCon talk about &lt;a href="https://www.youtube.com/watch?v=YhqsjUUHj6g"&gt;Vim As a Python IDE&lt;/a&gt;
+to learn more. Please note that I don't use the python-mode plugin any more,
+instead I am using &lt;a href="https://github.com/davidhalter/jedi-vim"&gt;jedi-vim&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you are new to vim, start learning by simply typing &lt;code&gt;vimtutor&lt;/code&gt;. The tutorial
+should take you about an hour and is well worth your time. In the beginning
+you will want to have a look at the &lt;a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html"&gt;vim cheatsheet&lt;/a&gt;
+every now and then.&lt;/p&gt;
+&lt;p&gt;I should probably write a post about how to setup vim, soon...&lt;/p&gt;</summary><category term="osx"></category><category term="django"></category></entry><entry><title>Pelican and Github Pages</title><link href="http://martinbrochhaus.com/pelican2.html" rel="alternate"></link><updated>2013-05-15T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-15:pelican2.html</id><summary type="html">&lt;p&gt;One year ago I blogged about &lt;a href="http://martinbrochhaus.com/pelican.html"&gt;Pelican&lt;/a&gt; and up until
 today this remains the most frequented post in my blog. However, in the
 meantime Pelican got two major version bumps and is much more powerful now (and 
 easier to use). So let's see how to setup your blog with Pelican and host it
