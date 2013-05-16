@@ -112,7 +112,7 @@ simply install it like so:
 Don't forget to run `brew doctor` and `brew update`, when you are done. It will
 probably find some problems. For example you might have to add some folders to
 your `$PATH` environment variable. You might want to put this into your
-`~/.bash_profile`
+`~/.bash_profile` and your `~/.zshrc`
 
     #!sh
     export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:/usr/local/share/python:$PATH
