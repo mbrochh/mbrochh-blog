@@ -42,7 +42,7 @@ Imagine the following code:
 
 
     # file: app.py
-    form .settings import SOME_DICT
+    form .settings import DEFAULT_CHOICES
 
     class MyApp(object):
         def some_method(self):
