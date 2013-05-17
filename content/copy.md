@@ -163,3 +163,5 @@ that kept me sweating for almost a week:
     ...
 
 **D'oh!**
+
+Now go and buy those god damn [PyCon tickets](https://pycon.sg/checkout/) already, la!
