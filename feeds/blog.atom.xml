@@ -1,5 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-05-16T00:00:00+08:00</updated><entry><title>OSX Django Toolbelt</title><link href="http://martinbrochhaus.com/toolbelt.html" rel="alternate"></link><updated>2013-05-16T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-16:toolbelt.html</id><summary type="html">&lt;p&gt;Every time I mentor someone about web development with Django, we spend 
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-05-17T00:00:00+08:00</updated><entry><title>Shallow Copy Incidents</title><link href="http://martinbrochhaus.com/copy.html" rel="alternate"></link><updated>2013-05-17T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-17:copy.html</id><summary type="html">&lt;p&gt;I didn't sleep well recently. I'm one of the organisers of &lt;a href="https://pycon.sg"&gt;PyCon SG 2013&lt;/a&gt;
+and specifically it is my task to maintain the website. Since the conference
+will be held very very soon, we are approaching a hot phase where everyone's
+hard work has to come together nicely. Sponsors need to get verified, banners 
+and T-shirts need to be printed, we need to publish our final logo, we need to 
+get all tutorials and talks scheduled and make sure that our keynote speaker 
+will have a smooth trip. And that's just the tip of the iceberg.&lt;/p&gt;
+&lt;p&gt;So in this exciting phase we need cash and in order to get cash, we need to
+sell tickets and in order to sell tickets we better make sure that the PayPal 
+integration on our website works.&lt;/p&gt;
+&lt;p&gt;You know it already: &lt;em&gt;Of course&lt;/em&gt; the PayPal integration did &lt;em&gt;not&lt;/em&gt; work properly
+and that's what was keeping me awake during the last few nights. Today I 
+cracked that nut and boy do I feel ashamed. This is one of the most epic fails
+I have ever deployed.&lt;/p&gt;
+&lt;p&gt;I guess my constant work with the Django framework with all its tools and 
+utilities has driven me so far away from Python's basics and internals, that I
+finally couldn't see the tree in the forest any more. &lt;/p&gt;
+&lt;p&gt;Here's a tale that is so embarrassing that it's almost funny again. Maybe
+it will help someone else one day...&lt;/p&gt;
+&lt;h3&gt;Imagine...&lt;/h3&gt;
+&lt;p&gt;Imagine the following code:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# file: setting.py&lt;/span&gt;
+&lt;span class="n"&gt;DEFAULT_CHOICES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;key1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;foo&amp;#39;&lt;/span&gt; 
+    &lt;span class="s"&gt;&amp;#39;key2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c"&gt;# file: app.py&lt;/span&gt;
+&lt;span class="n"&gt;form&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;SOME_DICT&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyApp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;some_method&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;choices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;DEFAULT_CHOICES&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;some_condition&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;choices&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;key3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;foobar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;some_other_method&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;choices&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This seems trivial, right? I have a setting with some default choices and in my
+app I import that setting and based on some condition I sometimes want to add
+some more extra choices to the set of default choices. Then I call another 
+method that will do something with whatever choices it got.&lt;/p&gt;
+&lt;p&gt;This is basically what we are doing in our &lt;a href="https://github.com/bitmazk/django-paypal-express-checkout/blob/master/paypal_express_checkout/constants.py#L49"&gt;Django PayPal Express Checkout app&lt;/a&gt;.
+We assemble some default values that should be sent to the PayPal API endpoint.
+However, depending on the items the user choses to buy on the checkout form,
+we add some more values to the dictionary and then send the whole thing to
+PayPal in order to get the TOKEN from PayPal and finalise the payment.&lt;/p&gt;
+&lt;p&gt;This worked great. Our tests all passd, we got 100% code coverage, I even 
+tested it in the browser against the live API when I bought my own conference 
+ticket. &lt;/p&gt;
+&lt;p&gt;Life was good. Until someone else wanted to buy a ticket.&lt;/p&gt;
+&lt;h3&gt;Hello, IT?&lt;/h3&gt;
+&lt;p&gt;After my own purchase, everyone else got errors when trying to checkout for
+payment. Luckily we have nice error logging in our PayPal module, so I could
+see the response we got from the PayPal API:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This Express Checkout session has expired. Token value is no longer valid.
+Error code: 10411&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;What the hell?! Have a look at the &lt;a href="https://github.com/bitmazk/django-paypal-express-checkout/blob/c439b3c2c0698ebc61f1d5fc5c51856e5b12cab7/paypal_express_checkout/forms.py#L262"&gt;line that caused the error&lt;/a&gt;.
+&lt;code&gt;post_data&lt;/code&gt; is supposed to contain some &lt;code&gt;DEFAULT_CHOICES&lt;/code&gt; plus the post data
+from the checkout form. And I'm pretty damn sure that we don't have any kind of
+token in the checkout form, because, well, that form's main purpose is to ask
+PayPal for a token, so we are totally not supposed to send any kind of token
+here.&lt;/p&gt;
+&lt;p&gt;Yet, PayPal tells me that some mysterious token has expired.&lt;/p&gt;
+&lt;p&gt;No problem. We are doing IT here. When you don't know what else to do, you just
+turn it off and on again, so I restarted the webserver and voila, people were
+able to buy tickets again. Until it broke again, of course. So (please don't
+laugh), what did I do? I added a cronjob which restarts the server every 30
+minutes. If that's not the mother of all duct tape solutions, I don't know
+what is. At least I could go back to sleep and we could collect some payments,
+until of course it broke again.&lt;/p&gt;
+&lt;p&gt;Must. Try. Harder.&lt;/p&gt;
+&lt;p&gt;We are working with this PayPal module since a few months, even using it in 
+production for four different projects. So keep that in mind when I'm telling
+you that today I did something that I had never done before: &lt;/p&gt;
+&lt;p&gt;I started my local devserver and bought &lt;em&gt;two tickets right after each other&lt;/em&gt;. 
+BAM! It even happened locally. I had never ever tried to buy two tickets in a 
+row without restarting the devserver. When you think about it, this is quite
+normal: You hack some code, then you start the website and see if the PayPal
+checkout works. It does. Great. Back to writing code, restart the devserver, 
+test again. Repeat. In all our apps, coming back within a short time and buying
+again is simply not an option, so testing this scenario just never occurred to 
+me. Shit.&lt;/p&gt;
+&lt;h3&gt;A Solution Dawns&lt;/h3&gt;
+&lt;p&gt;The fact, that server restarts seemed to help was what kept my brain churning
+during nights because I &lt;em&gt;knew&lt;/em&gt; that it has to have something to do with imports
+only happening at server start. It must be one of those errors that newbies
+always do, when they want to define a default value for DateTime fields of
+their Django models like so:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyModel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;start_date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateTimeField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+         &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;You think whenever a new object is saved, the &lt;code&gt;start_date&lt;/code&gt; will be set to now?
+Forget it. It will be set to the time when the server was started, I hate this
+bug. It's easy to overlook in code-reviews and will never really come to
+surface during tests because you often wipe your database and usually deal with
+fresh objects and most importantly, you restart the devserver all the time. It
+will only bubble up when you do some important calculations on the &lt;code&gt;start_date&lt;/code&gt;
+and somehow all objects end up in all the wrong unexpected situations - only on 
+production, of course.&lt;/p&gt;
+&lt;p&gt;To cut a long story short, what happened to me was exactly the same kind of 
+beginner mistake. Remember:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;.settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DEFAULT_CHOICES&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;choices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;DEFAULT_CHOICES&lt;/span&gt;
+&lt;span class="n"&gt;choices&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;key3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;foobar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;It turns out, the import happens only once at server start. And by assigning
+&lt;code&gt;DEFAULT_CHOICES&lt;/code&gt; to a variable I did not create a copy. I just created a 
+pointer to the original variable. Therefore, when I call &lt;code&gt;update&lt;/code&gt; on the
+dictionary, I'm not only changing &lt;code&gt;choices&lt;/code&gt; but also &lt;code&gt;DEFAULT_CHOICES&lt;/code&gt; - my
+evil persistent setting that got loaded on server restart and will remember
+all changes made to it, even between different HTTP requests.&lt;/p&gt;
+&lt;p&gt;After more than 10.000 hours of Python programming I need to go back to the
+basics and learn about &lt;a href="http://docs.python.org/2/library/copy.html"&gt;Shallow and deep copy operations&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the end, the fix was &lt;a href="https://github.com/bitmazk/django-paypal-express-checkout/commit/67e9be786b29b1c2426416057fff595fd97110bb#L1R118"&gt;two lines of code&lt;/a&gt;
+that kept me sweating for almost a week:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;.settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DEFAULT_CHOICES&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="n"&gt;choices&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;DEFAULT_CHOICES&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;copy&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; 
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;D'oh!&lt;/strong&gt;&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>OSX Django Toolbelt</title><link href="http://martinbrochhaus.com/toolbelt.html" rel="alternate"></link><updated>2013-05-16T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-16:toolbelt.html</id><summary type="html">&lt;p&gt;Every time I mentor someone about web development with Django, we spend 
 countless hours setting up his or her development machine. I'm getting sick of
 it, so I thought I might write it all down.&lt;/p&gt;
 &lt;p&gt;This post will help you to setup a fresh MacBook in such a way that enables you

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+            <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+                <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="./index.html" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Shallow Copy Incidents</h1>
+            <h2>How a Simple Bug Cost Me One Week of Sleep</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+            <p><i class="icon-calendar"></i>&nbsp;Fri 17 May 2013</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+                    <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+            </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>I didn't sleep well recently. I'm one of the organisers of <a href="https://pycon.sg">PyCon SG 2013</a>
+and specifically it is my task to maintain the website. Since the conference
+will be held very very soon, we are approaching a hot phase where everyone's
+hard work has to come together nicely. Sponsors need to get verified, banners 
+and T-shirts need to be printed, we need to publish our final logo, we need to 
+get all tutorials and talks scheduled and make sure that our keynote speaker 
+will have a smooth trip. And that's just the tip of the iceberg.</p>
+<p>So in this exciting phase we need cash and in order to get cash, we need to
+sell tickets and in order to sell tickets we better make sure that the PayPal 
+integration on our website works.</p>
+<p>You know it already: <em>Of course</em> the PayPal integration did <em>not</em> work properly
+and that's what was keeping me awake during the last few nights. Today I 
+cracked that nut and boy do I feel ashamed. This is one of the most epic fails
+I have ever deployed.</p>
+<p>I guess my constant work with the Django framework with all its tools and 
+utilities has driven me so far away from Python's basics and internals, that I
+finally couldn't see the tree in the forest any more. </p>
+<p>Here's a tale that is so embarrassing that it's almost funny again. Maybe
+it will help someone else one day...</p>
+<h3>Imagine...</h3>
+<p>Imagine the following code:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># file: setting.py</span>
+<span class="n">DEFAULT_CHOICES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;key1&#39;</span><span class="p">:</span> <span class="s">&#39;foo&#39;</span> 
+    <span class="s">&#39;key2&#39;</span><span class="p">:</span> <span class="s">&#39;bar&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c"># file: app.py</span>
+<span class="n">form</span> <span class="o">.</span><span class="n">settings</span> <span class="kn">import</span> <span class="nn">SOME_DICT</span>
+
+<span class="k">class</span> <span class="nc">MyApp</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">some_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="n">DEFAULT_CHOICES</span>
+        <span class="k">if</span> <span class="n">some_condition</span><span class="p">:</span>
+            <span class="n">choices</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;key3&#39;</span><span class="p">:</span> <span class="s">&#39;foobar&#39;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">some_other_method</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>This seems trivial, right? I have a setting with some default choices and in my
+app I import that setting and based on some condition I sometimes want to add
+some more extra choices to the set of default choices. Then I call another 
+method that will do something with whatever choices it got.</p>
+<p>This is basically what we are doing in our <a href="https://github.com/bitmazk/django-paypal-express-checkout/blob/master/paypal_express_checkout/constants.py#L49">Django PayPal Express Checkout app</a>.
+We assemble some default values that should be sent to the PayPal API endpoint.
+However, depending on the items the user choses to buy on the checkout form,
+we add some more values to the dictionary and then send the whole thing to
+PayPal in order to get the TOKEN from PayPal and finalise the payment.</p>
+<p>This worked great. Our tests all passd, we got 100% code coverage, I even 
+tested it in the browser against the live API when I bought my own conference 
+ticket. </p>
+<p>Life was good. Until someone else wanted to buy a ticket.</p>
+<h3>Hello, IT?</h3>
+<p>After my own purchase, everyone else got errors when trying to checkout for
+payment. Luckily we have nice error logging in our PayPal module, so I could
+see the response we got from the PayPal API:</p>
+<blockquote>
+<p>This Express Checkout session has expired. Token value is no longer valid.
+Error code: 10411</p>
+</blockquote>
+<p>What the hell?! Have a look at the <a href="https://github.com/bitmazk/django-paypal-express-checkout/blob/c439b3c2c0698ebc61f1d5fc5c51856e5b12cab7/paypal_express_checkout/forms.py#L262">line that caused the error</a>.
+<code>post_data</code> is supposed to contain some <code>DEFAULT_CHOICES</code> plus the post data
+from the checkout form. And I'm pretty damn sure that we don't have any kind of
+token in the checkout form, because, well, that form's main purpose is to ask
+PayPal for a token, so we are totally not supposed to send any kind of token
+here.</p>
+<p>Yet, PayPal tells me that some mysterious token has expired.</p>
+<p>No problem. We are doing IT here. When you don't know what else to do, you just
+turn it off and on again, so I restarted the webserver and voila, people were
+able to buy tickets again. Until it broke again, of course. So (please don't
+laugh), what did I do? I added a cronjob which restarts the server every 30
+minutes. If that's not the mother of all duct tape solutions, I don't know
+what is. At least I could go back to sleep and we could collect some payments,
+until of course it broke again.</p>
+<p>Must. Try. Harder.</p>
+<p>We are working with this PayPal module since a few months, even using it in 
+production for four different projects. So keep that in mind when I'm telling
+you that today I did something that I had never done before: </p>
+<p>I started my local devserver and bought <em>two tickets right after each other</em>. 
+BAM! It even happened locally. I had never ever tried to buy two tickets in a 
+row without restarting the devserver. When you think about it, this is quite
+normal: You hack some code, then you start the website and see if the PayPal
+checkout works. It does. Great. Back to writing code, restart the devserver, 
+test again. Repeat. In all our apps, coming back within a short time and buying
+again is simply not an option, so testing this scenario just never occurred to 
+me. Shit.</p>
+<h3>A Solution Dawns</h3>
+<p>The fact, that server restarts seemed to help was what kept my brain churning
+during nights because I <em>knew</em> that it has to have something to do with imports
+only happening at server start. It must be one of those errors that newbies
+always do, when they want to define a default value for DateTime fields of
+their Django models like so:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">start_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span>
+         <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+    <span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>You think whenever a new object is saved, the <code>start_date</code> will be set to now?
+Forget it. It will be set to the time when the server was started, I hate this
+bug. It's easy to overlook in code-reviews and will never really come to
+surface during tests because you often wipe your database and usually deal with
+fresh objects and most importantly, you restart the devserver all the time. It
+will only bubble up when you do some important calculations on the <code>start_date</code>
+and somehow all objects end up in all the wrong unexpected situations - only on 
+production, of course.</p>
+<p>To cut a long story short, what happened to me was exactly the same kind of 
+beginner mistake. Remember:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">.settings</span> <span class="kn">import</span> <span class="n">DEFAULT_CHOICES</span>
+<span class="o">...</span>
+<span class="n">choices</span> <span class="o">=</span> <span class="n">DEFAULT_CHOICES</span>
+<span class="n">choices</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;key3&#39;</span><span class="p">:</span> <span class="s">&#39;foobar&#39;</span><span class="p">})</span>
+</pre></div>
+</td></tr></table>
+
+<p>It turns out, the import happens only once at server start. And by assigning
+<code>DEFAULT_CHOICES</code> to a variable I did not create a copy. I just created a 
+pointer to the original variable. Therefore, when I call <code>update</code> on the
+dictionary, I'm not only changing <code>choices</code> but also <code>DEFAULT_CHOICES</code> - my
+evil persistent setting that got loaded on server restart and will remember
+all changes made to it, even between different HTTP requests.</p>
+<p>After more than 10.000 hours of Python programming I need to go back to the
+basics and learn about <a href="http://docs.python.org/2/library/copy.html">Shallow and deep copy operations</a>.</p>
+<p>In the end, the fix was <a href="https://github.com/bitmazk/django-paypal-express-checkout/commit/67e9be786b29b1c2426416057fff595fd97110bb#L1R118">two lines of code</a>
+that kept me sweating for almost a week:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">.settings</span> <span class="kn">import</span> <span class="n">DEFAULT_CHOICES</span>
+<span class="o">...</span>
+<span class="n">choices</span> <span class="o">=</span> <span class="n">DEFAULT_CHOICES</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> 
+<span class="o">...</span>
+</pre></div>
+</td></tr></table>
+
+<p><strong>D'oh!</strong></p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                                            <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                                            <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                                            <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                                            <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                                            <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                                            <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                                            <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                                            <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                                                    </ul>
+                                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>
