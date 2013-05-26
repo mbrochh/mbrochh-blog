@@ -75,7 +75,7 @@ As a consequence I will repeat my experiment from last year.
 As a start I have now installed this [Chrome plugin to hide G+ notifications](https://chrome.google.com/webstore/detail/hide-g%2B-notifications/eikmhmdnbmpkkhfkcnkmikdcdjkjflio?hl=en).
 
 I have also created GMail filters that label and archive *all* notification 
-emails of all social networks. Whatever it is, it can wait. If someone really
+emails from all social networks. Whatever it is, it can wait. If someone really
 wants something important from me, he will send an email or call me.
 
 And most importantly: I have un-installed all social apps from my phone. I had
