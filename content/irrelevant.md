@@ -21,7 +21,7 @@ Fast forward to present time. Those apps are still hidden from my phone's home
 screen but I know their positions on the Android app launcher by heart and open
 them all the time. I can't remember when my old habits came back but today I am
 pretty much in the same situation like one year ago: I'm trying to fill every 
-single free second of my waking live with small bits and pieces of information
+single free second of my waking life with small bits and pieces of information
 from all those social media sources.
 
 And guess what:
