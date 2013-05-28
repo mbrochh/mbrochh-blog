@@ -37,8 +37,8 @@
         <div class="container">
     <div class="row">
         <div class="span12 articleDetailHeadline">
-            <h1>Irrelevant News</h1>
-            <h2>Note to Self: Must Stop Consuming News</h2>
+            <h1>Observr</h1>
+            <h2>Run Tasks Automatically on File System Changes</h2>
         </div>
     </div>
 </div>
@@ -46,81 +46,52 @@
 <div class="container">
     <div class="row articleDetail">
         <div class="span3 articleInfo light">
-            <p><i class="icon-calendar"></i>&nbsp;Sun 26 May 2013</p>
+            <p><i class="icon-calendar"></i>&nbsp;Tue 28 May 2013</p>
     <p class="articleTags">
         <i class="icon-tag"></i>&nbsp;tags:
-                    <a href="http://martinbrochhaus.com/tag/self-growth.html">self-growth</a>
+                    <a href="http://martinbrochhaus.com/tag/ruby.html">ruby</a>
+                    <a href="http://martinbrochhaus.com/tag/django.html">django</a>
+                    <a href="http://martinbrochhaus.com/tag/development.html">development</a>
             </p>
         </div>
         <div class="span6 articleDetailContent">
-            <p>About one year ago I conducted a little self experiment: I removed the
-Facebook, G+, Twitter and Reddit apps from their prominent positions on my 
-phone's homescreen and declared that I may only start those apps on weekends.</p>
-<p>During weekdays I would be allowed to use social media in the browser but it
-would only be for answering private messages, if any should arrive.</p>
-<p>The first few days were difficult but I did not cheat and before the first 
-weekend arrived I had lost all interest in social media. That month turned out
-to be one of the most productive months of my life and on top of that I felt
-happier, more awake, more motivated and more energetic than usual.</p>
-<p>Fast forward to present time. Those apps are still hidden from my phone's home
-screen but I know their positions on the Android app launcher by heart and open
-them all the time. I can't remember when my old habits came back but today I am
-pretty much in the same situation like one year ago: I'm trying to fill every 
-single free second of my waking life with small bits and pieces of information
-from all those social media sources.</p>
-<p>And guess what:</p>
-<h2>None of it matters!</h2>
-<p>Reading social media is procrastination. None of it matters. I have highly 
-curated lists of people that I follow on all those networks. I make sure to
-unfollow anyone that has no connection to my life. I make sure to unfollow 
-people who just spam jokes or stupid chain letters. I never follow back anyone
-if I don't know them in person. Yet, despite all those efforts, only 1% of my
-social streams matter.</p>
-<p>The rest of it is cat pictures, family pictures, geek pictures, jokes, 
-and most of all: circlejerks (Ubuntu vs. OSX? Vim vs. Sublime? Republicans vs. 
-Democrats? Evolution vs. Creationism). Then, of course,  you have the regular
-news coming from mainstream media, being re-tweeted into social networks:</p>
-<p>People get killed. All the time, every day, in all kinds of creative ways. 
-Politicians steal money. Corporations steal tax. Governments steal our privacy. 
-Hackers steal the truth, and then release it. It all boils down to: <strong>News 
-steal my time.</strong> None of this nonsense is in my circle of influence. It does
-not influence my day to day life and I have no chance to change it.</p>
-<h2>Why is it so addictive?</h2>
-<p>The problem is: We all know that. This is common sense. Yet, we all can't
-resist. We turn into mindless zombies watching Korean soaps on TV after work. We
-read tabloid news papers like the Straights Times, knowing that it's just full 
-of murder, scandals and tits. We stare at our smartphones while having dinner 
-with friends. </p>
-<p>The WHO is already counting the years of lost life due to all major diseases.
-Maybe they should also count the aeons of lost human potential due to reduced
-brain usage when consuming mainstream media and social media.</p>
-<p>From my own experience I can tell that it makes me happy when the red 
-notification counter in that ubiquitous Google toolbar on top of all Google 
-services shows me a number. It is almost impossible to ignore this thing for
-more than 5 seconds. You just <em>have</em> to click at it and find out what has
-happened. It's like mental masturbation. An instant kick. A small reward. You 
-got your 5 nanoseconds of fame. Some stranger +1ed your post.</p>
-<p>But: From my own experience last year, I also know that it makes me even more
-happy, when this mental masturbation is no longer part of my life.</p>
-<h2>Trying to solve this. Again.</h2>
-<p>As a consequence I will repeat my experiment from last year. </p>
-<p>As a start I have now installed this <a href="https://chrome.google.com/webstore/detail/hide-g%2B-notifications/eikmhmdnbmpkkhfkcnkmikdcdjkjflio?hl=en">Chrome plugin to hide G+ notifications</a>.</p>
-<p>I have also created GMail filters that label and archive <em>all</em> notification 
-emails from all social networks. Whatever it is, it can wait. If someone really
-wants something important from me, he will send an email or call me.</p>
-<p>And most importantly: I have un-installed all social apps from my phone. I had
-to fight with myself over this decision for a few minutes. How sick is that?
-That simple fact is evidence enough that this is going to be the right 
-decision. Note that I always carry a Nexus 7 with me which I use to read my
-Kindle books, so I will still be able to distract myself with information 
-consumption. It's just that reading a book requires more concentration than 
-reading a Tweet so I would not even start reading when I know that I only have
-five minutes to spare.</p>
-<h2>Being part of the problem</h2>
-<p>Ironically I'm now going to share this post on social media. But I'm doing this 
-because I believe it is relevant to pretty much everyone. And it is in your
-circle of influence. You can act on it right now, if you really want to.</p>
-<p>You should!</p>
+            <p>I have tried many file system watchers so far but none of them worked nicely
+under Ubuntu and OSX with the same settings.</p>
+<p>Recently I stumbled upon <a href="https://github.com/kevinburke/observr/">observr</a>
+which is a fork of the maybe better known but abandoned <a href="https://github.com/mynyml/watchr">watchr</a>.</p>
+<p>Installation is super simple, just make sure that you have Ruby installed
+and then run:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>gem install observr
+</pre></div>
+</td></tr></table>
+
+<p>If you are on OSX you should add:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre>gem install ruby-fsevent
+</pre></div>
+</td></tr></table>
+
+<p>Now in my Django projects I usually have a super awesome <a href="https://github.com/bitmazk/django-development-fabfile">fabfile</a>
+which allows us to run two important tasks:</p>
+<p><strong>fab check</strong> will check the code for PEP8 compliance, then run the tests and
+then check for 100% code coverage. If any of those fail, we can't commit our
+changes, so its usually a good idea to run this all the time.</p>
+<p><strong>fab lessc</strong> re-compiles our style sheets from <a href="http://lesscss.org/">less</a>
+into <code>css</code>. Since we don't want to call this all the time in order to see our
+changes in the browser, it is also a good idea to automate this. </p>
+<h3>Enter Observr</h3>
+<p>Observr simply watches the file system for changes and then executes a
+command. Since our command is as simple as <code>fab check</code> or <code>fab lessc</code>, we can
+build a very easy to read script. Just create a <code>compile-less.sh</code> file, and 
+give it <code>chmod +x</code>, for example:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="c1">#!/usr/bin/env observr</span>
+<span class="n">watch</span><span class="p">(</span><span class="s1">&#39;.*less&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="nb">system</span><span class="p">(</span><span class="s1">&#39;fab lessc&#39;</span><span class="p">)</span> <span class="p">}</span>
+</pre></div>
+</td></tr></table>
+
+<p>This would watch the filesystem for any changes in <code>*.less</code> files and then
+execute the <code>fab lessc</code> fabric task. Make sure to activate your virtual
+environment before running this script!</p>
         </div>
     </div>
 </div>

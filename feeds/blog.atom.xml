@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-05-26T00:00:00+08:00</updated><entry><title>Irrelevant News</title><link href="http://martinbrochhaus.com/irrelevant.html" rel="alternate"></link><updated>2013-05-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-26:irrelevant.html</id><summary type="html">&lt;p&gt;About one year ago I conducted a little self experiment: I removed the
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-05-28T00:00:00+08:00</updated><entry><title>Observr</title><link href="http://martinbrochhaus.com/observr.html" rel="alternate"></link><updated>2013-05-28T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-28:observr.html</id><summary type="html">&lt;p&gt;I have tried many file system watchers so far but none of them worked nicely
+under Ubuntu and OSX with the same settings.&lt;/p&gt;
+&lt;p&gt;Recently I stumbled upon &lt;a href="https://github.com/kevinburke/observr/"&gt;observr&lt;/a&gt;
+which is a fork of the maybe better known but abandoned &lt;a href="https://github.com/mynyml/watchr"&gt;watchr&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Installation is super simple, just make sure that you have Ruby installed
+and then run:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;gem install observr
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;If you are on OSX you should add:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;gem install ruby-fsevent
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Now in my Django projects I usually have a super awesome &lt;a href="https://github.com/bitmazk/django-development-fabfile"&gt;fabfile&lt;/a&gt;
+which allows us to run two important tasks:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;fab check&lt;/strong&gt; will check the code for PEP8 compliance, then run the tests and
+then check for 100% code coverage. If any of those fail, we can't commit our
+changes, so its usually a good idea to run this all the time.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;fab lessc&lt;/strong&gt; re-compiles our style sheets from &lt;a href="http://lesscss.org/"&gt;less&lt;/a&gt;
+into &lt;code&gt;css&lt;/code&gt;. Since we don't want to call this all the time in order to see our
+changes in the browser, it is also a good idea to automate this. &lt;/p&gt;
+&lt;h3&gt;Enter Observr&lt;/h3&gt;
+&lt;p&gt;Observr simply watches the file system for changes and then executes a
+command. Since our command is as simple as &lt;code&gt;fab check&lt;/code&gt; or &lt;code&gt;fab lessc&lt;/code&gt;, we can
+build a very easy to read script. Just create a &lt;code&gt;compile-less.sh&lt;/code&gt; file, and 
+give it &lt;code&gt;chmod +x&lt;/code&gt;, for example:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;#!/usr/bin/env observr&lt;/span&gt;
+&lt;span class="n"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;.*less&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nb"&gt;system&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fab lessc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This would watch the filesystem for any changes in &lt;code&gt;*.less&lt;/code&gt; files and then
+execute the &lt;code&gt;fab lessc&lt;/code&gt; fabric task. Make sure to activate your virtual
+environment before running this script!&lt;/p&gt;</summary><category term="ruby"></category><category term="django"></category><category term="development"></category></entry><entry><title>Irrelevant News</title><link href="http://martinbrochhaus.com/irrelevant.html" rel="alternate"></link><updated>2013-05-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-26:irrelevant.html</id><summary type="html">&lt;p&gt;About one year ago I conducted a little self experiment: I removed the
 Facebook, G+, Twitter and Reddit apps from their prominent positions on my 
 phone's homescreen and declared that I may only start those apps on weekends.&lt;/p&gt;
 &lt;p&gt;During weekdays I would be allowed to use social media in the browser but it
@@ -12,7 +48,7 @@ happier, more awake, more motivated and more energetic than usual.&lt;/p&gt;
 screen but I know their positions on the Android app launcher by heart and open
 them all the time. I can't remember when my old habits came back but today I am
 pretty much in the same situation like one year ago: I'm trying to fill every 
-single free second of my waking live with small bits and pieces of information
+single free second of my waking life with small bits and pieces of information
 from all those social media sources.&lt;/p&gt;
 &lt;p&gt;And guess what:&lt;/p&gt;
 &lt;h2&gt;None of it matters!&lt;/h2&gt;
