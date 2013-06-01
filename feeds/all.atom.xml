@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-05-28T00:00:00+08:00</updated><entry><title>Observr</title><link href="http://martinbrochhaus.com/observr.html" rel="alternate"></link><updated>2013-05-28T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-28:observr.html</id><summary type="html">&lt;p&gt;I have tried many file system watchers so far but none of them worked nicely
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-06-01T00:00:00+08:00</updated><entry><title>Information Diet</title><link href="http://martinbrochhaus.com/information-diet.html" rel="alternate"></link><updated>2013-06-01T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-06-01:information-diet.html</id><summary type="html">&lt;p&gt;One week has passed since I started my &lt;a href="http://martinbrochhaus.com/irrelevant.html"&gt;information diet&lt;/a&gt;
+and I'm happy to report that I was able to stick to my plan and did not cheat.
+I have not consumed social media throughout the whole week. Here is how it
+went:&lt;/p&gt;
+&lt;h2&gt;Saving a lot of time&lt;/h2&gt;
+&lt;p&gt;First of all, my morning routine has changed. Usually I wake up and grab my
+phone and stare at the screen, reading social media. So I woke up on Monday,
+grabbed my phone and tried to open the Facebook app only to find out that it
+was no longer installed. I read some emails instead (which I also always do)
+and went to the bathroom. This saved me easily 15 minutes of time.&lt;/p&gt;
+&lt;p&gt;After wakeup I always walk to the local Starbucks, eat my breakfast and stay
+there for a few hours, doing the first half of my workday.&lt;/p&gt;
+&lt;p&gt;Usually I would read even more social media while having breakfast which
+prolongs the whole breakfast ceremony quite a bit. Without social media I just
+mindfully eat my meal (it really tastes better when you concentrate on it) and
+start working right away. Another 30 minutes saved.&lt;/p&gt;
+&lt;p&gt;In the same manner I also saved 15 minutes during lunch and 30 minutes before
+falling asleep, so all in all that's about 1.5 hours saved every single day.
+Just the time I need for reading books, playing basketball and doing
+meditation.&lt;/p&gt;
+&lt;p&gt;There is another thing: Sometimes I read so much social media, follow links,
+bookmark posts, soak in "more knowledge" that it almost feels like real work
+and makes me feel tired and exhausted. I would lie to myself and pretend that I
+have already done some work and deserve some rest with the result that the real
+work that needs to be done gets procrastinated even more.&lt;/p&gt;
+&lt;h2&gt;What did I miss?&lt;/h2&gt;
+&lt;p&gt;The answer is: Nothing at all!&lt;/p&gt;
+&lt;p&gt;When I finally logged in to Facebook and Google+ on Friday, I had 52 unread
+notifications on Facebook and 14 on Google+.&lt;/p&gt;
+&lt;p&gt;On Facebook only two of them were relevant in that they notified me that
+someone mentioned me in a post, but as usual those mentions were rather lame
+and there was no need to answer at all.&lt;/p&gt;
+&lt;p&gt;Same situation on Google+: All but one notifications were irrelevant. In that
+one case it would have been nice if I had answered faster but it is not the
+world's end.&lt;/p&gt;
+&lt;p&gt;Now think about it: That is a total of 66 notifications during five days.
+That's roughly one notification every hour of my waking time during a day.&lt;/p&gt;
+&lt;p&gt;A small distraction &lt;strong&gt;every single hour&lt;/strong&gt;!!!&lt;/p&gt;
+&lt;p&gt;Remember: During those five days I did not interact with those networks at all
+(well, almost: I posted two links) so that number of 66 notifications would
+acutally skyrocket if I took part in the social media game - in that case it
+would be more like one small distraction every five minutes.&lt;/p&gt;
+&lt;p&gt;I think that's actually quite scary...&lt;/p&gt;</summary><category term="self-growth"></category></entry><entry><title>Observr</title><link href="http://martinbrochhaus.com/observr.html" rel="alternate"></link><updated>2013-05-28T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-28:observr.html</id><summary type="html">&lt;p&gt;I have tried many file system watchers so far but none of them worked nicely
 under Ubuntu and OSX with the same settings.&lt;/p&gt;
 &lt;p&gt;Recently I stumbled upon &lt;a href="https://github.com/kevinburke/observr/"&gt;observr&lt;/a&gt;
 which is a fork of the maybe better known but abandoned &lt;a href="https://github.com/mynyml/watchr"&gt;watchr&lt;/a&gt;.&lt;/p&gt;
