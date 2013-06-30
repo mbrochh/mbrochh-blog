@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+            <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+                <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Rethinking Presentations</h1>
+            <h2>Why My Current Presentation Stack Needs an Overhaul</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+            <p><i class="icon-calendar"></i>&nbsp;Mon 01 July 2013</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+                    <a href="http://martinbrochhaus.com/tag/presentations.html">presentations</a>
+                    <a href="http://martinbrochhaus.com/tag/thoughts.html">thoughts</a>
+            </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>I'm currently preparing a long tutorial about <a href="https://docs.google.com/document/d/11VN5YN98WG53VHFAbzLuGNLyFw-iaNC78igHOJpjN5o/edit?usp=sharing">Linux essentials</a>.
+While I really love Apple's Keynote and Github's <a href="https://speakerdeck.com/mbrochh">Speaker Deck</a>, 
+I'm afraid  that for this undertaking my usual "presentation stack" is not 
+going to cut it. Here is why:</p>
+<h3>1. Collaboration</h3>
+<p>I will team up with <a href="https://twitter.com/elfgoh">Luther Goh Lu Feng</a>. He is a 
+well known Python developer at Hackerspace.SG and always looking for 
+opportunities to spread the knowledge about all things digital.</p>
+<p>We will be working on the slides remotely as a team, therefore 
+Keynote is out of question. OK you could argue that we could just share the
+working file on Dropbox but that is bound to cause tons of file conflicts.</p>
+<p>Google Docs would be an option, but it is not the best one because Google's 
+change history is not really helpful. First of all, it saves a million 
+changes, secondly I would have to click at a change and then scroll through the
+whole file in order to see what has been changed.</p>
+<p>A solution based on Git would be better, because, you know, it is just the 
+right tool for remotely collaborating on text-files.</p>
+<h3>2. Text Files</h3>
+<p>Text files? Oh yea! I really enjoy blogging with <a href="http://martinbrochhaus.com/pelican2.html">Pelican</a>.
+Why? Because I don't need to be online (unlike Wordpress) in order to write my
+posts. I can just open up Vim and start writing. No distractions, just me and
+the words unfolding.</p>
+<p>I want a presentation software that does not obfuscate my content in some
+proprietary format. If you think about it: Once that goal is reached we would
+probably just end up with human readable text files again, which means we could 
+edit them using our favourite text editor.</p>
+<p>And of course, when we are just dealing with text files, versioning them with
+Git would be a natural thing to do. </p>
+<h3>2. Colors</h3>
+<p>The tutorial will be very long and cover a huge amount of knowledge. I'm afraid
+that some attendants might give up halfway thinking that they have learnt 
+enough or wondering when this torture is going to end.</p>
+<p>Therefore I want to give a brief overview of all topics at the
+beginning and show why and how they relate to each other. I believe that giving 
+color codes to each topic would be a good way to build a mental map inside the
+attendant's heads and keep in mind how far we have gotten in the presentation
+and what we are currently talking about.</p>
+<p>Now check out <a href="http://lab.hakim.se/reveal-js/#/12">this slide</a> and press 
+<code>right arrow</code>. See how nicely the background color changes? Keynote or Google 
+Docs are not built for this usecase. They force a theme upon me and want me to 
+keep it for the whole talk. Boring!</p>
+<h3>3. Syntax highlighting</h3>
+<p>I recently gave a talk at PyCon Singapore about <a href="https://speakerdeck.com/mbrochh/writing-publishing-and-maintaining-reusable-django-apps?slide=18">writing reusable Django apps</a>
+and naturally the slides of my talk contained a lot of code snippets. I'm
+probably doing it wrong but I painstakingly copied all those snippets into
+text boxes, changed font, color, background, border and arranged them on the 
+slide. And I don't even have syntax highlighting for them.</p>
+<p>This sucks! I want a presentation software that is built for showing code.
+Guess what: <a href="http://lab.hakim.se/reveal-js/#/12">Reveal.js highlights code</a>
+beautifully.</p>
+<h3>4. Cross device publishing</h3>
+<p>Speaker Deck looks quite decent on a mobile device but it's really not very 
+responsive because it takes quite some time to load the whole presentation. 
+Another problem is: You can't select the code snippets and copy and paste them. 
+You would have to download the presentation as a PDF, which no one ever does.</p>
+<p>Let's face it, most developers find content via social networks using their
+smartphones, for example while they are commuting. If someone followed a link 
+to one of my presentations using his smartphone I want him to be able to read 
+my presentation regardless of his device.</p>
+<p>I'm also not sure how well Google would index presentations hosted on Speaker 
+Deck. With slides made of pure HTML this should be no issue.</p>
+<h3>5. Virtual classroom</h3>
+<p>At PyCon Singapore I also gave a tutorial about <a href="https://speakerdeck.com/mbrochh/hosting-complex-web-applications-on-webfaction-servers">hosting Django sites on Webfaction</a>.
+It was supposed to be a hands on tutorial and I took countless hours to make 
+sure that all code snippets work. However, after two hours we were still at
+the most basic slides and I had to stop the hands-on session and rush through
+the rest of the tutorial myself without waiting for the audience to catch up.</p>
+<p>The problem was that the audience had to copy the commands via reading them 
+from the projection screen and typing them in manually. I thought that this
+would be no big deal but you would be amazed about all those subtle little 
+typos people can come up with.</p>
+<p>Therefore I want a presentation software which allows me to show the 
+presentation on every attendant's screen. That way they could read everything 
+clearly right in front of their eyes and they could even copy and paste the
+commands during the hands-on exercises.</p>
+<h3>Enter Reveal.js</h3>
+<p>Astoundingly, it took me just about 5 minutes of research to find a solution 
+that solves all my problems single-handedly: Enter <a href="http://lab.hakim.se/reveal-js/">Reveal.js</a>.</p>
+<ul>
+<li>The presentation is just a HTML file. That's a text file.</li>
+<li>Therefore I can easily collaborate on it using Git</li>
+<li>I can use Markdown and syntax highlighting in my slides</li>
+<li>And I can work on it using my favorite text editor</li>
+<li>I can host it on Github and nicely display it on any device</li>
+<li>It allows me to easily change the background color of my slides</li>
+<li>I can use <a href="https://github.com/hakimel/reveal.js#multiplexing">multiplexing</a>
+  to allow my audience to follow the presentation on their own screens</li>
+</ul>
+<p>I only found one drawback so far: Reveal.js needs to have the whole 
+presentation in one big <code>index.html</code> file. This contradicts my need for
+collaboration because once again, merge conflicts would become a major issue.</p>
+<p>Luckily I quickly found a pretty cool solution around this and I also figured
+out a nice way to host my presentation on Github.</p>
+<p>How I did that? I will post a little how-to tomorrow. Stay tuned!</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                                            <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                                            <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                                            <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                                            <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                                            <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                                            <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                                            <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                                            <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                                                    </ul>
+                                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>

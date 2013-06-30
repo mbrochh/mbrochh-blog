@@ -1,5 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-06-01T00:00:00+08:00</updated><entry><title>Information Diet</title><link href="http://martinbrochhaus.com/information-diet.html" rel="alternate"></link><updated>2013-06-01T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-06-01:information-diet.html</id><summary type="html">&lt;p&gt;One week has passed since I started my &lt;a href="http://martinbrochhaus.com/irrelevant.html"&gt;information diet&lt;/a&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-07-01T00:00:00+08:00</updated><entry><title>Rethinking Presentations</title><link href="http://martinbrochhaus.com/presentations.html" rel="alternate"></link><updated>2013-07-01T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-07-01:presentations.html</id><summary type="html">&lt;p&gt;I'm currently preparing a long tutorial about &lt;a href="https://docs.google.com/document/d/11VN5YN98WG53VHFAbzLuGNLyFw-iaNC78igHOJpjN5o/edit?usp=sharing"&gt;Linux essentials&lt;/a&gt;.
+While I really love Apple's Keynote and Github's &lt;a href="https://speakerdeck.com/mbrochh"&gt;Speaker Deck&lt;/a&gt;, 
+I'm afraid  that for this undertaking my usual "presentation stack" is not 
+going to cut it. Here is why:&lt;/p&gt;
+&lt;h3&gt;1. Collaboration&lt;/h3&gt;
+&lt;p&gt;I will team up with &lt;a href="https://twitter.com/elfgoh"&gt;Luther Goh Lu Feng&lt;/a&gt;. He is a 
+well known Python developer at Hackerspace.SG and always looking for 
+opportunities to spread the knowledge about all things digital.&lt;/p&gt;
+&lt;p&gt;We will be working on the slides remotely as a team, therefore 
+Keynote is out of question. OK you could argue that we could just share the
+working file on Dropbox but that is bound to cause tons of file conflicts.&lt;/p&gt;
+&lt;p&gt;Google Docs would be an option, but it is not the best one because Google's 
+change history is not really helpful. First of all, it saves a million 
+changes, secondly I would have to click at a change and then scroll through the
+whole file in order to see what has been changed.&lt;/p&gt;
+&lt;p&gt;A solution based on Git would be better, because, you know, it is just the 
+right tool for remotely collaborating on text-files.&lt;/p&gt;
+&lt;h3&gt;2. Text Files&lt;/h3&gt;
+&lt;p&gt;Text files? Oh yea! I really enjoy blogging with &lt;a href="http://martinbrochhaus.com/pelican2.html"&gt;Pelican&lt;/a&gt;.
+Why? Because I don't need to be online (unlike Wordpress) in order to write my
+posts. I can just open up Vim and start writing. No distractions, just me and
+the words unfolding.&lt;/p&gt;
+&lt;p&gt;I want a presentation software that does not obfuscate my content in some
+proprietary format. If you think about it: Once that goal is reached we would
+probably just end up with human readable text files again, which means we could 
+edit them using our favourite text editor.&lt;/p&gt;
+&lt;p&gt;And of course, when we are just dealing with text files, versioning them with
+Git would be a natural thing to do. &lt;/p&gt;
+&lt;h3&gt;2. Colors&lt;/h3&gt;
+&lt;p&gt;The tutorial will be very long and cover a huge amount of knowledge. I'm afraid
+that some attendants might give up halfway thinking that they have learnt 
+enough or wondering when this torture is going to end.&lt;/p&gt;
+&lt;p&gt;Therefore I want to give a brief overview of all topics at the
+beginning and show why and how they relate to each other. I believe that giving 
+color codes to each topic would be a good way to build a mental map inside the
+attendant's heads and keep in mind how far we have gotten in the presentation
+and what we are currently talking about.&lt;/p&gt;
+&lt;p&gt;Now check out &lt;a href="http://lab.hakim.se/reveal-js/#/12"&gt;this slide&lt;/a&gt; and press 
+&lt;code&gt;right arrow&lt;/code&gt;. See how nicely the background color changes? Keynote or Google 
+Docs are not built for this usecase. They force a theme upon me and want me to 
+keep it for the whole talk. Boring!&lt;/p&gt;
+&lt;h3&gt;3. Syntax highlighting&lt;/h3&gt;
+&lt;p&gt;I recently gave a talk at PyCon Singapore about &lt;a href="https://speakerdeck.com/mbrochh/writing-publishing-and-maintaining-reusable-django-apps?slide=18"&gt;writing reusable Django apps&lt;/a&gt;
+and naturally the slides of my talk contained a lot of code snippets. I'm
+probably doing it wrong but I painstakingly copied all those snippets into
+text boxes, changed font, color, background, border and arranged them on the 
+slide. And I don't even have syntax highlighting for them.&lt;/p&gt;
+&lt;p&gt;This sucks! I want a presentation software that is built for showing code.
+Guess what: &lt;a href="http://lab.hakim.se/reveal-js/#/12"&gt;Reveal.js highlights code&lt;/a&gt;
+beautifully.&lt;/p&gt;
+&lt;h3&gt;4. Cross device publishing&lt;/h3&gt;
+&lt;p&gt;Speaker Deck looks quite decent on a mobile device but it's really not very 
+responsive because it takes quite some time to load the whole presentation. 
+Another problem is: You can't select the code snippets and copy and paste them. 
+You would have to download the presentation as a PDF, which no one ever does.&lt;/p&gt;
+&lt;p&gt;Let's face it, most developers find content via social networks using their
+smartphones, for example while they are commuting. If someone followed a link 
+to one of my presentations using his smartphone I want him to be able to read 
+my presentation regardless of his device.&lt;/p&gt;
+&lt;p&gt;I'm also not sure how well Google would index presentations hosted on Speaker 
+Deck. With slides made of pure HTML this should be no issue.&lt;/p&gt;
+&lt;h3&gt;5. Virtual classroom&lt;/h3&gt;
+&lt;p&gt;At PyCon Singapore I also gave a tutorial about &lt;a href="https://speakerdeck.com/mbrochh/hosting-complex-web-applications-on-webfaction-servers"&gt;hosting Django sites on Webfaction&lt;/a&gt;.
+It was supposed to be a hands on tutorial and I took countless hours to make 
+sure that all code snippets work. However, after two hours we were still at
+the most basic slides and I had to stop the hands-on session and rush through
+the rest of the tutorial myself without waiting for the audience to catch up.&lt;/p&gt;
+&lt;p&gt;The problem was that the audience had to copy the commands via reading them 
+from the projection screen and typing them in manually. I thought that this
+would be no big deal but you would be amazed about all those subtle little 
+typos people can come up with.&lt;/p&gt;
+&lt;p&gt;Therefore I want a presentation software which allows me to show the 
+presentation on every attendant's screen. That way they could read everything 
+clearly right in front of their eyes and they could even copy and paste the
+commands during the hands-on exercises.&lt;/p&gt;
+&lt;h3&gt;Enter Reveal.js&lt;/h3&gt;
+&lt;p&gt;Astoundingly, it took me just about 5 minutes of research to find a solution 
+that solves all my problems single-handedly: Enter &lt;a href="http://lab.hakim.se/reveal-js/"&gt;Reveal.js&lt;/a&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The presentation is just a HTML file. That's a text file.&lt;/li&gt;
+&lt;li&gt;Therefore I can easily collaborate on it using Git&lt;/li&gt;
+&lt;li&gt;I can use Markdown and syntax highlighting in my slides&lt;/li&gt;
+&lt;li&gt;And I can work on it using my favorite text editor&lt;/li&gt;
+&lt;li&gt;I can host it on Github and nicely display it on any device&lt;/li&gt;
+&lt;li&gt;It allows me to easily change the background color of my slides&lt;/li&gt;
+&lt;li&gt;I can use &lt;a href="https://github.com/hakimel/reveal.js#multiplexing"&gt;multiplexing&lt;/a&gt;
+  to allow my audience to follow the presentation on their own screens&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I only found one drawback so far: Reveal.js needs to have the whole 
+presentation in one big &lt;code&gt;index.html&lt;/code&gt; file. This contradicts my need for
+collaboration because once again, merge conflicts would become a major issue.&lt;/p&gt;
+&lt;p&gt;Luckily I quickly found a pretty cool solution around this and I also figured
+out a nice way to host my presentation on Github.&lt;/p&gt;
+&lt;p&gt;How I did that? I will post a little how-to tomorrow. Stay tuned!&lt;/p&gt;</summary><category term="presentations"></category><category term="thoughts"></category></entry><entry><title>Information Diet</title><link href="http://martinbrochhaus.com/information-diet.html" rel="alternate"></link><updated>2013-06-01T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-06-01:information-diet.html</id><summary type="html">&lt;p&gt;One week has passed since I started my &lt;a href="http://martinbrochhaus.com/irrelevant.html"&gt;information diet&lt;/a&gt;
 and I'm happy to report that I was able to stick to my plan and did not cheat.
 I have not consumed social media throughout the whole week. Here is how it
 went:&lt;/p&gt;
