@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+            <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+                <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Reveal.js and Github Pages</h1>
+            <h2>How to Host Your Slides on Github With Reveal.js, Jinja & Fabric</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+            <p><i class="icon-calendar"></i>&nbsp;Tue 02 July 2013</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+                    <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+                    <a href="http://martinbrochhaus.com/tag/presentations.html">presentations</a>
+                    <a href="http://martinbrochhaus.com/tag/howto.html">howto</a>
+            </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>Yesterday, I described why <a href="http://martinbrochhaus.com/presentations.html">my current presentation stack needs an overhaul</a>.
+Today I'm going to show you my new stack. This how-to will introduce a little
+helper project that will allow you to easily kickstart a new Reveal.js
+presentation, split it up into subfiles and host it on Github Pages.</p>
+<h3>Motivation</h3>
+<p>When I played around with <a href="http://lab.hakim.se/reveal-js">Reveal.js</a> I
+immediately fell in love with it.  There is just one thing that bothers me: You
+are supposed to put your whole presentation into one big <code>index.html</code> file. I
+don't want to do this because I'm going to collaborate on the slides with
+others and I want to avoid merge conflicts. Therefore I would like to split
+that one big file into many small ones (i.e. one file per slide).</p>
+<p>I also want to host the slides on Github Pages (just like this blog).
+Unfortunately Github Pages is really just pure static HTML, therefore I can't
+do server side includes or use PHP to include other .html files. I wasted an
+hour trying to include .html files with JavaScript but I ran into cross-origin
+resource issues and when I finally got it working, the styles of the slides
+were all messed up.</p>
+<p>So clearly, we need a templating engine which is able to include other sub
+templates in it's main template file. <a href="http://jinja.pocoo.org/">Jinja</a> can do
+that and if you are familiar with Django's templating engine you will feel at
+home with Jinja immediately.</p>
+<p>Ultimately, this little "hack" is another great example why Python and it's
+ecosystem is awesome and why everyone should know a little bit of Python.
+Remember: We are not trying to do any coding here. We just want to produce
+some beautiful (and powerful) presentation slides.</p>
+<p>So let's start cooking:</p>
+<h3>Bootstrap Reveal.js</h3>
+<p>For your convenience I have prepared a little template-project on Github to
+<a href="https://github.com/mbrochh/reveal-template">kickstart your Reveal.js presentation</a>.
+All you need to do is clone the project and initiate a new repository:</p>
+<div class="highlight"><pre><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="o">:</span><span class="c1">//github.com/mbrochh/reveal-template your_presentation_name</span>
+<span class="n">cd</span> <span class="n">your_presentation_name</span>
+<span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="p">.</span><span class="n">git</span>
+<span class="n">git</span> <span class="n">init</span>
+<span class="n">git</span> <span class="n">add</span> <span class="p">.</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">am</span> <span class="s">&quot;Initial commit&quot;</span>
+</pre></div>
+
+
+<p>You should be able to execute <code>open presentation/index.html</code> and see a basic
+presentation with a few test slides.</p>
+<h3>Install requirements</h3>
+<p>In order to use Jinja and Fabric you need to install a few Python packages.
+As always, you should first create a virtual environment and then install the
+packages into that environment:</p>
+<div class="highlight"><pre><span class="n">mkvirtualenv</span> <span class="o">-</span><span class="n">p</span> <span class="n">python2</span><span class="mf">.7</span> <span class="n">your_presentation_name</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+</pre></div>
+
+
+<p>This will take a while. When it's done you should be able to run <code>fab build</code>.</p>
+<p>You might also want to install <a href="https://github.com/kevinburke/observr">observr</a>
+in order to build your presentation whenever you save one of the template
+files.</p>
+<h3>Structure with Jinja</h3>
+<p>As always, when you want to publish stuff on Github pages, you need to have
+one source folder with your raw content, which will be part of your Git
+repository and one destination folder with your compiled content which will
+usually not be part of the Git repository.</p>
+<p>In our case the source folder is called <code>source</code> and the destination folder
+is called <code>presentation</code>. I cheated a little bit. Not everything in the
+destination folder is under <code>.gitignore</code>. I put the Reveal.js sources in there.
+A cleaner solution would have been to add those sources as a git submodule
+and copy them into the presentation folder every time you run <code>fab build</code>.
+Maybe I will do that later. However, the index.html file in the
+presentation folder is in .gitignore and will be compiled every time you run
+<code>fab build</code>.</p>
+<p>Now have a look at the <code>source</code> folder. You will find six files:</p>
+<div class="highlight"><pre><span class="o">-</span> <span class="n">source</span><span class="o">/</span>
+  <span class="o">-</span> <span class="n">base</span><span class="p">.</span><span class="n">html</span>
+  <span class="o">-</span> <span class="n">index</span><span class="p">.</span><span class="n">html</span>
+  <span class="o">-</span> <span class="n">title</span><span class="p">.</span><span class="n">html</span>
+  <span class="o">-</span> <span class="n">test_markdown</span><span class="p">.</span><span class="n">html</span>
+  <span class="o">-</span> <span class="n">test_code</span><span class="p">.</span><span class="n">html</span>
+  <span class="o">-</span> <span class="n">test_backgrounds</span><span class="p">.</span><span class="n">html</span>
+</pre></div>
+
+
+<p><code>base.html</code> contains all the HTML boilerplate stuff that is needed to display a
+proper Reveal.js presentation. Once you have set this up (i.e. included all CSS
+styles and plugins, changed the title etc.) this will rarely ever change again.</p>
+<p><code>index.html</code> is our Jinja template. It <em>extends</em> <code>base.html</code> and <em>includes</em>
+all the remaining files, which are our individual slides.</p>
+<h3>Build with Fabric</h3>
+<p>In order to create the final <code>presentation/index.html</code> we need to tell Jinja to 
+take the <code>source/index.html</code> template and render it into the destination
+folder. I have created a tiny Fabric task for this, so all you need to do is
+to run:</p>
+<div class="highlight"><pre><span class="n">fab</span> <span class="n">build</span>
+</pre></div>
+
+
+<h3>Continuous building with Observr</h3>
+<p>Now when you are working on your slides you probably want to review them in
+the browser all the time, so you would have to run <code>fab build</code> all the time,
+which sucks. A proper solution would be to setup a tiny webserver which listens
+to requests and returns the rendered template (might do that later) but for
+once I suggest that you simply install <a href="https://github.com/kevinburke/observr">observr</a> and keep it running in a
+separate terminal widow. In order to watch for changes, I have created a small
+shell script which you can execute via</p>
+<div class="highlight"><pre><span class="p">.</span><span class="o">/</span><span class="n">source</span><span class="o">-</span><span class="n">watcher</span><span class="p">.</span><span class="n">sh</span>
+</pre></div>
+
+
+<p><strong>Hint</strong>: Don't forget to stop observr when you don't need it any more. It eats
+20% CPU all the time, which will eat your battery in no time when you are on
+the go ;)</p>
+<h3>Publish on Github Pages</h3>
+<p>In the <code>requirements.txt</code> file I have added the awesome <a href="https://github.com/davisp/ghp-import">ghp-import</a>
+tool which really opened up the glorious world of Github Pages for me. Again I
+provided a small Fabric task, so in order to publish your presentation simply
+run</p>
+<div class="highlight"><pre><span class="n">fab</span> <span class="n">publish</span>
+</pre></div>
+
+
+<p>It will create the <code>gh-pages</code> branch and push it. A few seconds later you
+should be able to see your presentation at
+<code>http://username.github.io/your_repo_name</code>.</p>
+<h3>Control via Socket.IO</h3>
+<p>I haven't had the time to try this myself, yet, but the instructions for
+<a href="https://github.com/hakimel/reveal.js#multiplexing">multiplexing</a> in the
+Reveal.js README seem to be straightforward. The idea is that you start a local
+webserver and your audience will browse to your IP. Now your audience will be
+connected to you in real-time, so when you change a slide, it will change on all
+screens.</p>
+<p>That's it! I hope my little <a href="https://github.com/mbrochh/reveal-template">reveal-template</a>
+will be useful to someone and allow you to publish awesome presentations in no
+time - have fun!</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                                            <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                                            <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                                            <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                                            <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                                            <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                                            <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                                            <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                                            <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                                                    </ul>
+                                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>

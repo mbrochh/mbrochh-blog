@@ -1,5 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-07-01T00:00:00+08:00</updated><entry><title>Rethinking Presentations</title><link href="http://martinbrochhaus.com/presentations.html" rel="alternate"></link><updated>2013-07-01T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-07-01:presentations.html</id><summary type="html">&lt;p&gt;I'm currently preparing a long tutorial about &lt;a href="https://docs.google.com/document/d/11VN5YN98WG53VHFAbzLuGNLyFw-iaNC78igHOJpjN5o/edit?usp=sharing"&gt;Linux essentials&lt;/a&gt;.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-07-02T00:00:00+08:00</updated><entry><title>Reveal.js and Github Pages</title><link href="http://martinbrochhaus.com/revealjs.html" rel="alternate"></link><updated>2013-07-02T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-07-02:revealjs.html</id><summary type="html">&lt;p&gt;Yesterday, I described why &lt;a href="http://martinbrochhaus.com/presentations.html"&gt;my current presentation stack needs an overhaul&lt;/a&gt;.
+Today I'm going to show you my new stack. This how-to will introduce a little
+helper project that will allow you to easily kickstart a new Reveal.js
+presentation, split it up into subfiles and host it on Github Pages.&lt;/p&gt;
+&lt;h3&gt;Motivation&lt;/h3&gt;
+&lt;p&gt;When I played around with &lt;a href="http://lab.hakim.se/reveal-js"&gt;Reveal.js&lt;/a&gt; I
+immediately fell in love with it.  There is just one thing that bothers me: You
+are supposed to put your whole presentation into one big &lt;code&gt;index.html&lt;/code&gt; file. I
+don't want to do this because I'm going to collaborate on the slides with
+others and I want to avoid merge conflicts. Therefore I would like to split
+that one big file into many small ones (i.e. one file per slide).&lt;/p&gt;
+&lt;p&gt;I also want to host the slides on Github Pages (just like this blog).
+Unfortunately Github Pages is really just pure static HTML, therefore I can't
+do server side includes or use PHP to include other .html files. I wasted an
+hour trying to include .html files with JavaScript but I ran into cross-origin
+resource issues and when I finally got it working, the styles of the slides
+were all messed up.&lt;/p&gt;
+&lt;p&gt;So clearly, we need a templating engine which is able to include other sub
+templates in it's main template file. &lt;a href="http://jinja.pocoo.org/"&gt;Jinja&lt;/a&gt; can do
+that and if you are familiar with Django's templating engine you will feel at
+home with Jinja immediately.&lt;/p&gt;
+&lt;p&gt;Ultimately, this little "hack" is another great example why Python and it's
+ecosystem is awesome and why everyone should know a little bit of Python.
+Remember: We are not trying to do any coding here. We just want to produce
+some beautiful (and powerful) presentation slides.&lt;/p&gt;
+&lt;p&gt;So let's start cooking:&lt;/p&gt;
+&lt;h3&gt;Bootstrap Reveal.js&lt;/h3&gt;
+&lt;p&gt;For your convenience I have prepared a little template-project on Github to
+&lt;a href="https://github.com/mbrochh/reveal-template"&gt;kickstart your Reveal.js presentation&lt;/a&gt;.
+All you need to do is clone the project and initiate a new repository:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;clone&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//github.com/mbrochh/reveal-template your_presentation_name&lt;/span&gt;
+&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;your_presentation_name&lt;/span&gt;
+&lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rf&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;git&lt;/span&gt;
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;init&lt;/span&gt;
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;commit&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;am&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Initial commit&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You should be able to execute &lt;code&gt;open presentation/index.html&lt;/code&gt; and see a basic
+presentation with a few test slides.&lt;/p&gt;
+&lt;h3&gt;Install requirements&lt;/h3&gt;
+&lt;p&gt;In order to use Jinja and Fabric you need to install a few Python packages.
+As always, you should first create a virtual environment and then install the
+packages into that environment:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;mkvirtualenv&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="n"&gt;python2&lt;/span&gt;&lt;span class="mf"&gt;.7&lt;/span&gt; &lt;span class="n"&gt;your_presentation_name&lt;/span&gt;
+&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="n"&gt;requirements&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;txt&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will take a while. When it's done you should be able to run &lt;code&gt;fab build&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You might also want to install &lt;a href="https://github.com/kevinburke/observr"&gt;observr&lt;/a&gt;
+in order to build your presentation whenever you save one of the template
+files.&lt;/p&gt;
+&lt;h3&gt;Structure with Jinja&lt;/h3&gt;
+&lt;p&gt;As always, when you want to publish stuff on Github pages, you need to have
+one source folder with your raw content, which will be part of your Git
+repository and one destination folder with your compiled content which will
+usually not be part of the Git repository.&lt;/p&gt;
+&lt;p&gt;In our case the source folder is called &lt;code&gt;source&lt;/code&gt; and the destination folder
+is called &lt;code&gt;presentation&lt;/code&gt;. I cheated a little bit. Not everything in the
+destination folder is under &lt;code&gt;.gitignore&lt;/code&gt;. I put the Reveal.js sources in there.
+A cleaner solution would have been to add those sources as a git submodule
+and copy them into the presentation folder every time you run &lt;code&gt;fab build&lt;/code&gt;.
+Maybe I will do that later. However, the index.html file in the
+presentation folder is in .gitignore and will be compiled every time you run
+&lt;code&gt;fab build&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Now have a look at the &lt;code&gt;source&lt;/code&gt; folder. You will find six files:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+  &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;base&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+  &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+  &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+  &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;test_markdown&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+  &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;test_code&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+  &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;test_backgrounds&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;base.html&lt;/code&gt; contains all the HTML boilerplate stuff that is needed to display a
+proper Reveal.js presentation. Once you have set this up (i.e. included all CSS
+styles and plugins, changed the title etc.) this will rarely ever change again.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;index.html&lt;/code&gt; is our Jinja template. It &lt;em&gt;extends&lt;/em&gt; &lt;code&gt;base.html&lt;/code&gt; and &lt;em&gt;includes&lt;/em&gt;
+all the remaining files, which are our individual slides.&lt;/p&gt;
+&lt;h3&gt;Build with Fabric&lt;/h3&gt;
+&lt;p&gt;In order to create the final &lt;code&gt;presentation/index.html&lt;/code&gt; we need to tell Jinja to 
+take the &lt;code&gt;source/index.html&lt;/code&gt; template and render it into the destination
+folder. I have created a tiny Fabric task for this, so all you need to do is
+to run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;fab&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Continuous building with Observr&lt;/h3&gt;
+&lt;p&gt;Now when you are working on your slides you probably want to review them in
+the browser all the time, so you would have to run &lt;code&gt;fab build&lt;/code&gt; all the time,
+which sucks. A proper solution would be to setup a tiny webserver which listens
+to requests and returns the rendered template (might do that later) but for
+once I suggest that you simply install &lt;a href="https://github.com/kevinburke/observr"&gt;observr&lt;/a&gt; and keep it running in a
+separate terminal widow. In order to watch for changes, I have created a small
+shell script which you can execute via&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;watcher&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Hint&lt;/strong&gt;: Don't forget to stop observr when you don't need it any more. It eats
+20% CPU all the time, which will eat your battery in no time when you are on
+the go ;)&lt;/p&gt;
+&lt;h3&gt;Publish on Github Pages&lt;/h3&gt;
+&lt;p&gt;In the &lt;code&gt;requirements.txt&lt;/code&gt; file I have added the awesome &lt;a href="https://github.com/davisp/ghp-import"&gt;ghp-import&lt;/a&gt;
+tool which really opened up the glorious world of Github Pages for me. Again I
+provided a small Fabric task, so in order to publish your presentation simply
+run&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;fab&lt;/span&gt; &lt;span class="n"&gt;publish&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It will create the &lt;code&gt;gh-pages&lt;/code&gt; branch and push it. A few seconds later you
+should be able to see your presentation at
+&lt;code&gt;http://username.github.io/your_repo_name&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Control via Socket.IO&lt;/h3&gt;
+&lt;p&gt;I haven't had the time to try this myself, yet, but the instructions for
+&lt;a href="https://github.com/hakimel/reveal.js#multiplexing"&gt;multiplexing&lt;/a&gt; in the
+Reveal.js README seem to be straightforward. The idea is that you start a local
+webserver and your audience will browse to your IP. Now your audience will be
+connected to you in real-time, so when you change a slide, it will change on all
+screens.&lt;/p&gt;
+&lt;p&gt;That's it! I hope my little &lt;a href="https://github.com/mbrochh/reveal-template"&gt;reveal-template&lt;/a&gt;
+will be useful to someone and allow you to publish awesome presentations in no
+time - have fun!&lt;/p&gt;</summary><category term="python"></category><category term="presentations"></category><category term="howto"></category></entry><entry><title>Rethinking Presentations</title><link href="http://martinbrochhaus.com/presentations.html" rel="alternate"></link><updated>2013-07-01T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-07-01:presentations.html</id><summary type="html">&lt;p&gt;I'm currently preparing a long tutorial about &lt;a href="https://docs.google.com/document/d/11VN5YN98WG53VHFAbzLuGNLyFw-iaNC78igHOJpjN5o/edit?usp=sharing"&gt;Linux essentials&lt;/a&gt;.
 While I really love Apple's Keynote and Github's &lt;a href="https://speakerdeck.com/mbrochh"&gt;Speaker Deck&lt;/a&gt;, 
 I'm afraid  that for this undertaking my usual "presentation stack" is not 
 going to cut it. Here is why:&lt;/p&gt;
