@@ -968,7 +968,7 @@ for you. Simply install that script into your virtualenv:&lt;/p&gt;
 2
 3
 4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;workon blogging
-pip install -e git+git://github.com/davisp/ghp-import.git
+pip install -e git+git://github.com/davisp/ghp-import.git#egg&lt;span class="o"&gt;=&lt;/span&gt;ghp-import
 deactivate
 workon blogging
 &lt;/pre&gt;&lt;/div&gt;
