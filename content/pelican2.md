@@ -89,7 +89,7 @@ for you. Simply install that script into your virtualenv:
 
     #!sh
     workon blogging
-    pip install -e git+git://github.com/davisp/ghp-import.git
+    pip install -e git+git://github.com/davisp/ghp-import.git#egg=ghp-import
     deactivate
     workon blogging
 
