@@ -28,12 +28,12 @@ resource issues and when I finally got it working, the styles of the slides
 were all messed up.
 
 So clearly, we need a templating engine which is able to include other sub
-templates in it's main template file. [Jinja](http://jinja.pocoo.org/) can do
+templates in its main template file. [Jinja](http://jinja.pocoo.org/) can do
 that and if you are familiar with Django's templating engine you will feel at
 home with Jinja immediately.
 
-Ultimately, this little "hack" is another great example why Python and it's
-ecosystem is awesome and why everyone should know a little bit of Python.
+Ultimately, this little "hack" is another great example why Python and its
+ecosystem are awesome and why everyone should know a little bit of Python.
 Remember: We are not trying to do any coding here. We just want to produce
 some beautiful (and powerful) presentation slides.
 
