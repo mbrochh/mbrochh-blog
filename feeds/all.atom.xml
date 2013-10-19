@@ -400,11 +400,13 @@ it will help someone else one day...&lt;/p&gt;
 12
 13
 14
-15&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# file: setting.py&lt;/span&gt;
+15
+16&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# file: setting.py&lt;/span&gt;
 &lt;span class="n"&gt;DEFAULT_CHOICES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="s"&gt;&amp;#39;key1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;foo&amp;#39;&lt;/span&gt; 
     &lt;span class="s"&gt;&amp;#39;key2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
+
 
 &lt;span class="c"&gt;# file: app.py&lt;/span&gt;
 &lt;span class="n"&gt;form&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;DEFAULT_CHOICES&lt;/span&gt;
@@ -1945,7 +1947,7 @@ is another huge plus.&lt;/p&gt;
 them all as read. Another good thing about this is that you will be able to
 perform searches in GMail to find old discussions.&lt;/p&gt;
 &lt;p&gt;Your new inbox should look like this:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Gmail with multiple inboxes" src="http://martinbrochhaus.com/static/images/mailinglists.png" /&gt;&lt;/p&gt;</summary><category term="google"></category><category term="gmail"></category><category term="lifehacking"></category><category term="productivity"></category></entry><entry><title>Why We Should All Write a Video Game</title><link href="http://martinbrochhaus.com/videogame.html" rel="alternate"></link><updated>2012-06-09T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-09:videogame.html</id><summary type="html">&lt;p&gt;Here are my notes about &lt;a href="https://plus.google.com/100267502615190755251/about"&gt;Richard Jones'&lt;/a&gt;
+&lt;p&gt;&lt;img alt="Gmail with multiple inboxes" src="http://martinbrochhaus.com/images/mailinglists.png" /&gt;&lt;/p&gt;</summary><category term="google"></category><category term="gmail"></category><category term="lifehacking"></category><category term="productivity"></category></entry><entry><title>Why We Should All Write a Video Game</title><link href="http://martinbrochhaus.com/videogame.html" rel="alternate"></link><updated>2012-06-09T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-09:videogame.html</id><summary type="html">&lt;p&gt;Here are my notes about &lt;a href="https://plus.google.com/100267502615190755251/about"&gt;Richard Jones'&lt;/a&gt;
 keynote with the title "Why we should all write a video game".&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=jpaSS82Jgbg&lt;/p&gt;
 &lt;p&gt;He starts with a awesomely geeky overview over the history of game computing.
@@ -2685,7 +2687,7 @@ settings in my &lt;a href="https://github.com/mbrochh/mbrochh-dotfiles/blob/mast
 very useful.&lt;/p&gt;
 &lt;p&gt;I hope I didn't forget anything. If so, please let me know in the comments!&lt;/p&gt;
 &lt;p&gt;Oh and: This is how it is going to look like:
-&lt;img alt="wemux server" src="http://martinbrochhaus.com/static/images/wemux.png" /&gt;&lt;/p&gt;
+&lt;img alt="wemux server" src="http://martinbrochhaus.com/images/wemux.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Note how wemux determines that my Ubuntu machine has lesser screen resolution
 and automatically scales down the working area on my MacBook. If this is not
 awesome...&lt;/p&gt;</summary><category term="screen"></category><category term="tmux"></category><category term="wemux"></category><category term="vim"></category><category term="ssh"></category><category term="programming"></category></entry><entry><title>Snippets of April 2012</title><link href="http://martinbrochhaus.com/snippets-201204.html" rel="alternate"></link><updated>2012-04-21T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-04-21:snippets-201204.html</id><summary type="html">&lt;p&gt;This is my second post in a series of (almost) monthly posts about small bits
