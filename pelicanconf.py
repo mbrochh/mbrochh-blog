@@ -38,10 +38,12 @@ DEFAULT_PAGINATION = 10
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = True
 
-FILES_TO_COPY = (
-    ('extra/CNAME', 'CNAME'),
-    ('extra/avatar.jpg', 'theme/img/avatar.jpg'),
-)
+PATH = '/Users/martin/Projects/mbrochh-blog/src/content'
+STATIC_PATHS = [
+    'CNAME',
+    'images',
+    'theme/img/avatar.jpg',
+]
 
 GOOGLE_ANALYTICS = 'UA-XXXXXXX-XX'
 DISQUS_SITENAME = ''
