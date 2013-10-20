@@ -1,5 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-07-02T00:00:00+08:00</updated><entry><title>Reveal.js and Github Pages</title><link href="http://martinbrochhaus.com/revealjs.html" rel="alternate"></link><updated>2013-07-02T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-07-02:revealjs.html</id><summary type="html">&lt;p&gt;Yesterday, I described why &lt;a href="http://martinbrochhaus.com/presentations.html"&gt;my current presentation stack needs an overhaul&lt;/a&gt;.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-10-19T00:00:00+08:00</updated><entry><title>Simple Backup With Rsync</title><link href="http://martinbrochhaus.com/backup.html" rel="alternate"></link><updated>2013-10-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-10-19:backup.html</id><summary type="html">&lt;p&gt;Every day I carry around about 830GB of data:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;80GB of application data and my home folder on a SSD drive in my MacBook&lt;/li&gt;
+&lt;li&gt;440GB on the original MacBook HD which now serves as a secondary drive. It
+   holds important documents, my iTunes and iPhoto libraries and other big
+   files that I might need on a daily basis but don't want to put on my SSD
+   drive.&lt;/li&gt;
+&lt;li&gt;Another 310GB on an external 500GB USB drive. It holds documents, pictures,
+   music, movies, original Photoshop files, my Quake 3 Arena config (very very
+   important!), downloads and all kinds of other files that have accumulated
+   since I started using the internet in 1996. Losing this archive would be a
+   real catastrophe.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;So as you can see, my data is spread over three tiers:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Stuff I need every day. This must be fast. Therefore it sits on my SSD drive.&lt;/li&gt;
+&lt;li&gt;Stuff that I might need every day but that don't need to be very fast, such
+   as music or files for ongoing projects. This is stored on the secondary
+   drive.&lt;/li&gt;
+&lt;li&gt;Stuff that I will need when I am 90 years old and someone wants to write my
+   biography aka my whole digital life. This doesn't need to be fast or
+   convenient. Therefore it resides on the external USB drive.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The files on the SSD drive don't really need to be backed up. If my machine
+explodes, I can buy a new one, clone my
+&lt;a href="https://github.com/mbrochh/mbrochh-dotfiles"&gt;dotfiles from github&lt;/a&gt;, install a
+few tools from the AppStore (XCode, Dropbox, Evernote, Skype, Pixelmator,
+Alfred, Postgres.app) and I'll be up and running again within 3 hours or so.&lt;/p&gt;
+&lt;p&gt;What I do need to backup is the secondary drive in my MacBook and the external
+USB drive. I thought a long time about this and browsed the internet for weeks.
+I was searching for a good, reliable and affordable backup solution, but I
+found none. Here are some options that I considered:&lt;/p&gt;
+&lt;h2&gt;Timemachine&lt;/h2&gt;
+&lt;p&gt;First of all I don't want to lock myself into the Apple ecosystem. My backup
+must be available from any hardware and OS and must not be tied to any kind of
+software sorcery.&lt;/p&gt;
+&lt;p&gt;Secondly the internet is full of horror stories of users reporting how they
+tried to backup from Timemachine and it either took a bazillion hours or failed
+completely. Maybe these users are all idiots but maybe so am I.&lt;/p&gt;
+&lt;p&gt;Thirdly I don't need the go-back-in-time feature at all.  When was the last
+time when you made a change to a file and suddenly though "Oh wait! This
+document was much better last Thursday, let's go back in time!".  Even if I
+wanted to do so: These documents would reside in git repositories and give me a
+much more versatile way of going back in time.&lt;/p&gt;
+&lt;p&gt;Lastly I don't know how Timemachine does it's RAID system. I don't know how it
+would warn me about drive failures. I don't know how I would proceed to replace
+faulty drives. I don't know how to precisely manage which files to backup
+and which not (because I never want a full backup). Just too many unknowns.
+Dismissed!&lt;/p&gt;
+&lt;h2&gt;File Servers&lt;/h2&gt;
+&lt;p&gt;The problem with professional NAS systems is: Their disks are expensive like
+hell and they fail all the time. If you don't have enough money to replace
+them, a second one will fail and your whole data goes to hell. Happened to a
+friend of mine. Not cool. Apart from that, these things are big, noisy and eat
+a lot of electricity. I also don't want to be able to SSH / FTP into my files
+from remote locations, so with this this whole file server thingy I would
+pay for a ton of features that I would never use.&lt;/p&gt;
+&lt;h2&gt;Cloud storage&lt;/h2&gt;
+&lt;p&gt;Yea right. Because 1TB of cloud storage is something that we all can afford.
+Besides, I don't want the NSA to have full access to my whole digital life.
+I do have some files in an encrypted folder in my Dropbox (using
+&lt;a href="https://www.boxcryptor.com/"&gt;Boxcryptor&lt;/a&gt;). This makes sure that I can access
+some important notes from anywhere in the world, but let's be honest, no one
+needs access to all their terrabytes of data all the time from anywhere in the
+world.&lt;/p&gt;
+&lt;h2&gt;Solution: rsync &amp;amp; a few drives&lt;/h2&gt;
+&lt;p&gt;So here is my solution. I'm sure it is damn stupid and really inconvenient but
+it was cheap and it allows me to sleep tight at night:&lt;/p&gt;
+&lt;h3&gt;Hardware&lt;/h3&gt;
+&lt;p&gt;Disclaimer: The links below are Amazon Partner links. I'm not affiliated
+with Western Digital or D-Link in any way and I didn't do a ton of research
+before buying these. You might get to a much cheaper or much faster (USB 3.0?)
+solution if you search a bit more.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="http://amzn.to/1eB0rY2"&gt;WD My Passport external HD 500GB&lt;/a&gt; because I have
+   always had great experiences with WD external drives. My last one lasted
+   9 years and I can't say that I handled it with care.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://amzn.to/1eB0GSE"&gt;WD My Passport Carrying Case&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;2x &lt;a href="http://amzn.to/19ZSFaX"&gt;WD Elements Desktop External HDD 2TB&lt;/a&gt;, it's only
+   USB 2.0 because USB 3.0 is too expensive and my MacBook doesn't support it
+   anyways.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://amzn.to/1c6h68m"&gt;D-Link DUB-H7 7 Port USB Hub&lt;/a&gt;, because that's a
+   whole lot of USB drives I have to connect when running a backup. And it's
+   also pretty cool to have this hub when playing around with the Raspberry Pi
+   ;-)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Total price: 245.12 EUR&lt;/p&gt;
+&lt;h3&gt;Software&lt;/h3&gt;
+&lt;p&gt;I created a little bash script called
+&lt;a href="https://github.com/mbrochh/mbrochh-dotfiles/blob/master/bin/backup.sh"&gt;backup.sh&lt;/a&gt;
+which I saved in my &lt;code&gt;~/bin/&lt;/code&gt; folder. Therefore I can just type &lt;code&gt;backup.sh&lt;/code&gt;
+into the terminal whenever I would like to run a backup. I can continue to use
+the machine while the backup runs.&lt;/p&gt;
+&lt;p&gt;The script uses rsync, which is an awesome command line utility to keep two
+folders in sync. It will take a long time on the first run, after that it will
+only copy those files that have a changed last modified date. Note that I am
+using the &lt;code&gt;--delete&lt;/code&gt; flag. This means that when I delete a file in one of the
+source drives, it will also be deleted on the destination drives.&lt;/p&gt;
+&lt;h3&gt;What does it do?&lt;/h3&gt;
+&lt;p&gt;It's pretty simple: First the script copies all files from the secondary drive
+and from the external USB drive to the first 2TB archive drive. Obviously that
+drive should be larger than the other two drives combined. In my case it is
+twice as large.&lt;/p&gt;
+&lt;p&gt;Now I have ALL MY DATA on one huge drive. This is good. But it would be a real
+pain in the ass if this drive failed. Sure, I'd still have all the files on my
+source drives but I would end up in a temporary state where I don't have any
+backup until a new drive is shipped.&lt;/p&gt;
+&lt;p&gt;For this reason I just bought two of the 2TB drives and in the last step, I
+simply mirror the first drive to the second drive. Here is another thing:
+I store the second 2TB drive at a different location from the first and only
+attach it once every month.&lt;/p&gt;
+&lt;p&gt;If our apartment burns down, 99% of my data will still be save on the second
+drive and since I use it only once every month, I hope that it will not fail
+anytime soon due to massive IO operations.&lt;/p&gt;
+&lt;h3&gt;What it doesn't do&lt;/h3&gt;
+&lt;p&gt;It's not automatic. And it's not trying to be smart. When I delete files, they
+will be gone from my archives as well. When I forget to run the backup on a
+regular basis, I will be at risk to lose some data. When my computer blows up
+and I actually need to retrieve data from the backup, I need to do that
+manually.&lt;/p&gt;
+&lt;h3&gt;Is it future proof?&lt;/h3&gt;
+&lt;p&gt;Currently the archive drives are twice as large as the source drives combined.
+Therefore, if I buy a new MacBook with a bigger drive or a bigger external USB
+drive, the archive drives will most probably still be able to hold all my data.&lt;/p&gt;
+&lt;p&gt;One (hopefully far away) day, after a few updates, the combined source drives
+will be larger than the archive drives. This will be slight a hassle, but not
+really a big problem: I would buy two new archive drives which would be
+significantly larger than the old ones.&lt;/p&gt;
+&lt;p&gt;Then I'd mirror the old archive drive #1 to new archive drive #1. That's it.
+After that I can run the script as usual and sell my old archive drives on
+eBay.&lt;/p&gt;
+&lt;p&gt;The best thing is: The whole setup fits into my luggage, so for a nomad like me
+this is also a solution that I can carry around with me, if I need to.&lt;/p&gt;</summary><category term="howto"></category><category term="shell"></category><category term="rsync"></category><category term="hardware"></category></entry><entry><title>Reveal.js and Github Pages</title><link href="http://martinbrochhaus.com/revealjs.html" rel="alternate"></link><updated>2013-07-02T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-07-02:revealjs.html</id><summary type="html">&lt;p&gt;Yesterday, I described why &lt;a href="http://martinbrochhaus.com/presentations.html"&gt;my current presentation stack needs an overhaul&lt;/a&gt;.
 Today I'm going to show you my new stack. This how-to will introduce a little
 helper project that will allow you to easily kickstart a new Reveal.js
 presentation, split it up into subfiles and host it on Github Pages.&lt;/p&gt;
