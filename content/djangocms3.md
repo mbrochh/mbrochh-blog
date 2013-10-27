@@ -4,23 +4,22 @@ Tagline: The Challenges I Faced When Migrating An App To django-cms 3
 Slug: djangocms3-part1
 Category: Blog
 Tags: python, django, django-cms, howto 
-status: draft
 
 You might have heard it: [django-cms 3](https://www.django-cms.org/en/) is in
 beta now, so a final release might be released soon. For a long time we had
 used [cmsplugin-blog](https://github.com/fivethreeo/cmsplugin-blog) with all
-our django-cms installations, but since it was lacking many features that we
-always needed, didn't have much code coverage and didn use class based views,
-we created
+our django-cms installations. Unfortunately it was lacking many features that
+we always needed, didn't have much code coverage and didn't use class based
+views, so we created
 [django-multilingual-news](https://github.com/bitmazk/django-multilingual-news).
 
-This weekend I tried to add multilingual-news to a new django-cms 3 project and
-of course everything failed miserably. I have since spent many hours, trying to
-figure out how to migrate multilingual-news so that it will remain backwards
-compatible with django-cms>=2.3. I thought it might be a good idea to write
-this down because I have to repeat this process for a ton of apps, it might be
-helpful to others and a bit of peer review probably can't hurt - maybe I'm
-doing things overly complicated, after all. 
+The last few days I tried to add multilingual-news to a new django-cms 3
+project and of course everything failed miserably. I have since spent many
+hours, trying to figure out how to migrate multilingual-news so that it will
+remain backwards compatible with django-cms>=2.3. I thought it might be a good
+idea to write this down because I have to repeat this process for a ton of
+apps. It might be helpful to others and a bit of peer review probably can't
+hurt - maybe I'm doing things overly complicated, after all. 
 
 ## The challenges
 
@@ -69,3 +68,10 @@ introduces.
 Therefore: We have to say goodbye to simple-translation and migrate our models
 and data to hvad. This might be difficult, but it will be worth it, because
 hvad really is much better than simple-translations.
+
+### 3. Who knows?
+
+As I migrate all of our apps, I will probably find more hurdles and will
+gradually add more detailed posts describing the solutions for each problem.
+
+Stay tuned for the next post on how to get rid of the M2MPlaceholderField...
