@@ -1,7 +1,7 @@
 Date: 2013-10-27
-Title: Migrate Apps to django-cms 3
-Tagline: The Challenges I Faced When Migrating An App To django-cms 3 
-Slug: djangocms3-part1
+Title: Migrating to django-cms 3
+Tagline: The Challenges You Might Face When Migrating Apps To django-cms 3 
+Slug: djangocms3
 Category: Blog
 Tags: python, django, django-cms, howto 
 
