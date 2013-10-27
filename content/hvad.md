@@ -6,5 +6,9 @@ Category: Blog
 Tags: python, django, django-cms 
 status: draft
 
-TODO: Describe how to migrate away from M2MPlaceholderField 
-TODO: Figure out how to get away from simple-translation
+TODO: 
+WrongManager at /en/admin/multilingual_news/newsentry/
+To access translated fields like 'title' from an untranslated model, you must use a translation aware manager, you can get one using nani.utils.get_translation_aware_manager.
+
+TypeError at /en/admin/multilingual_news/newsentry/14/
+<lambda>() takes exactly 1 argument (2 given)
