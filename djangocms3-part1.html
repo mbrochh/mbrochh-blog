@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+        <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Migrate Apps to django-cms 3</h1>
+            <h2>The Challenges I Faced When Migrating An App To django-cms 3</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+<p><i class="icon-calendar"></i>&nbsp;Sun 27 October 2013</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+            <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+            <a href="http://martinbrochhaus.com/tag/django.html">django</a>
+            <a href="http://martinbrochhaus.com/tag/django-cms.html">django-cms</a>
+            <a href="http://martinbrochhaus.com/tag/howto.html">howto</a>
+    </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>You might have heard it: <a href="https://www.django-cms.org/en/">django-cms 3</a> is in
+beta now, so a final release might be released soon. For a long time we had
+used <a href="https://github.com/fivethreeo/cmsplugin-blog">cmsplugin-blog</a> with all
+our django-cms installations. Unfortunately it was lacking many features that
+we always needed, didn't have much code coverage and didn't use class based
+views, so we created
+<a href="https://github.com/bitmazk/django-multilingual-news">django-multilingual-news</a>.</p>
+<p>The last few days I tried to add multilingual-news to a new django-cms 3
+project and of course everything failed miserably. I have since spent many
+hours, trying to figure out how to migrate multilingual-news so that it will
+remain backwards compatible with django-cms&gt;=2.3. I thought it might be a good
+idea to write this down because I have to repeat this process for a ton of
+apps. It might be helpful to others and a bit of peer review probably can't
+hurt - maybe I'm doing things overly complicated, after all. </p>
+<h2>The challenges</h2>
+<h3>1. M2MPlaceholderAdmin is no more</h3>
+<p>cmsplugin-blog has this fancy
+<a href="https://github.com/fivethreeo/cmsplugin-blog/blob/develop/cmsplugin_blog/admin.py#L24">M2MPlaceholderAdmin</a>.
+When we created multilingual-news we <a href="https://github.com/bitmazk/django-multilingual-news/blob/master/multilingual_news/admin.py#L19">copied that admin</a>.
+The problem is, that this admin makes use of the
+<a href="https://github.com/bitmazk/django-multilingual-news/blob/master/multilingual_news/admin.py#L37">PlaceholderPluginEditorWiget</a>
+which no longer exists in django-cms 3.</p>
+<p>It gets worse: The very
+<a href="https://github.com/fivethreeo/djangocms-utils/blob/master/djangocms_utils/fields.py#L30">M2MPlaceholderField</a>
+comes from <a href="https://github.com/fivethreeo/djangocms-utils/">djangocms-utils</a>
+which hasn't been updated in two years and thus is not compatible with
+django-cms 3 as well.</p>
+<p>The good thing is: django-cms introduces a paradigm shift: We are no longer
+supposed to edit the placeholder fields in the admin, instead we are supposed
+to create our objects in the admin and then edit the placeholder fields on the
+frontend (and in fact you are now able to edit ALL your objects on the
+frontend, which is totally awesome). Therefore we don't really need a fancy
+M2MPlaceholderAdmin any more.</p>
+<h3>2. Good bye django-simple-translations</h3>
+<p>During the last two years we have built more than <a href="https://github.com/bitmazk/">70 reusable Django
+apps</a>.  Most of them are cms plugins or cms
+apphooks and when we started writing all those apps we took cmsplugin-blog as a
+guideline on how to write proper django-cms apps. cmsplugin-blog was using
+<a href="https://simple-translation.readthedocs.org/en/latest/">django-simple-transltation</a>
+for i18n, so we decided that all our apps will use simple-translation as well.</p>
+<p>Now it turns out that this was a very bad decision because django-cms 3 is
+using <a href="https://github.com/KristianOellegaard/django-hvad">django-hvad</a> and has
+pretty awesome support for language switching on the frontend and in the
+backend.</p>
+<p>The other thing is: When you setup a project that comes with django-cms,
+chances are that django-cms is the biggest and most complex app, so you can
+think of it as the project's "leading" app. It only makes sense that all other
+apps of that project would re-use the same dependencies that django-cms already
+introduces.</p>
+<p>Therefore: We have to say goodbye to simple-translation and migrate our models
+and data to hvad. This might be difficult, but it will be worth it, because
+hvad really is much better than simple-translations.</p>
+<h3>3. Who knows?</h3>
+<p>As I migrate all of our apps, I will probably find more hurdles and will
+gradually add more detailed posts describing the solutions for each problem.</p>
+<p>Stay tuned for the next post on how to get rid of the M2MPlaceholderField...</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                        <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>
