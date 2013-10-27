@@ -4,6 +4,7 @@ Tagline: Lessons learned while getting ready for django-cms 3.0
 Slug: hvad
 Category: Blog
 Tags: python, django, django-cms 
+status: draft
 
 TODO: Describe how to migrate away from M2MPlaceholderField 
 TODO: Figure out how to get away from simple-translation
