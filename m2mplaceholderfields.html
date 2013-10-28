@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+        <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Getting Rid of M2MPlaceholderFields</h1>
+            <h2>Because You Can't Use Them With django-cms 3 Any More</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+<p><i class="icon-calendar"></i>&nbsp;Mon 28 October 2013</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+            <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+            <a href="http://martinbrochhaus.com/tag/django.html">django</a>
+            <a href="http://martinbrochhaus.com/tag/django-cms.html">django-cms</a>
+            <a href="http://martinbrochhaus.com/tag/howto.html">howto</a>
+    </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>In my <a href="http://martinbrochhaus.com/djangocms3.html">last post</a> I gave an overview over some 
+hurdles I had to overcome in order to migrate
+<a href="https://github.com/bitmazk/django-multilingual-news">django-multilingual-news</a>.
+to django-cms 3.</p>
+<p>We can't use the M2MPLaceholderAdmin any more because it uses a widget that
+no longer exists in django-cms 3. We also don't need to use this any more
+because in django-cms 3 we are not supposed to manipulate PlaceholderFields
+in the Django admin - we are supposed to edit them via frontend editing.</p>
+<h2>The Plan</h2>
+<p>In my app, the Usage of the M2MPlaceholderField looks as follows:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">NewsEntry</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="c"># ...</span>
+    <span class="n">placeholders</span> <span class="o">=</span> <span class="n">M2MPlaceholderField</span><span class="p">(</span>
+        <span class="n">actions</span><span class="o">=</span><span class="n">SimpleTranslationPlaceholderActions</span><span class="p">(),</span>
+        <span class="n">placeholders</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;excerpt&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">),</span>
+    <span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>You can see that via the <code>placeholders</code> parameter, we defined the number
+of placeholders that we want and their slotnames.</p>
+<p>The idea for a migration is straightforward:</p>
+<ol>
+<li>On the model that has the M2MPlaceholderField, we add new PlaceholderFields:
+   One for each slotname that we had on the M2MPlaceholderField</li>
+<li>Now we add a datamigration which creates new Placholders for these
+   new fields and moves all the plugins from the old placeholders to the new
+   ones.</li>
+<li>Finally we can remove the old M2MPlaceholder field.</li>
+</ol>
+<p>Therefore, after the migration, the model should look like this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">NewsEntry</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">excerpt</span> <span class="o">=</span> <span class="n">PlaceholderField</span><span class="p">(</span>
+        <span class="n">slotname</span><span class="o">=</span><span class="s">&#39;multilingnual_news_excerpt&#39;</span><span class="p">,</span>
+        <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;multilingual_news_excerpts&#39;</span><span class="p">,</span>
+        <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">content</span> <span class="o">=</span> <span class="n">PlaceholderField</span><span class="p">(</span>
+        <span class="n">slotname</span><span class="o">=</span><span class="s">&#39;multilingnual_news_content&#39;</span><span class="p">,</span>
+        <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;multilingual_news_contents&#39;</span><span class="p">,</span>
+        <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<h2>The Problems</h2>
+<p>This sounds trivial at first, but in fact it took me quite a while to figure
+out because there is a lot of magic involved in the PlaceholderFields that will
+not be reflected inside the South datamigration. You will face two issues:</p>
+<h3>1. You can't call object.placeholders.all()</h3>
+<p>In the datamigration, we would usually iterate over all NewsEntry objects
+and then migrate their placeholders:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">orm</span><span class="o">.</span><span class="n">NewsEntry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">placeholder</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">placeholder</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">slot</span><span class="o">=</span><span class="s">&#39;excerpt&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ObjectDoesNotExist</span>
+        <span class="k">pass</span>
+    <span class="k">if</span> <span class="n">placeholder</span><span class="p">:</span>
+        <span class="c"># create new placeholder here and copy all cmsplugins</span>
+</pre></div>
+</td></tr></table>
+
+<p>The pitfall here is: At first this works. But when you add the final migration
+where you delete the M2MPlaceholderField, this stops working.</p>
+<p>When trying to get the placeholder, you will get the error that <code>newsentry</code>
+is no available field on the Placeholder model. This suggests, that
+<code>entry.placeholder</code> tries to call something like
+<code>Placeholder.newsentry_set.all()</code> internally. I looked at it in the debugger
+and indeed, <code>Placeholder.newsentry_set</code> does not exist.</p>
+<p>This is (almost) logical: In the last step, we would remove the 
+M2MPlaceholderField, therefore, when starting Django, it would not find any
+relation between Placeholder and NewsEntry and therefore it would not
+add <code>newsentry_set</code> to the Placeholder model. Creating the migration
+with <code>--freeze</code> didn't help as well, therefore South doesn't seem to
+be able to create those backwards relation fields, even on frozen models.
+Bummer.</p>
+<h3>2. You can't assign the placeholder objects</h3>
+<p>At first I thought, I will just get the existing placeholder objects and then
+just re-assign them to the new PlaceholderFields like so:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">placeholder</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">placeholders</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">slot</span><span class="o">=</span><span class="s">&#39;excerpt&#39;</span><span class="p">)</span> 
+<span class="n">entry</span><span class="o">.</span><span class="n">excerpt</span> <span class="o">=</span> <span class="n">placeholder</span>
+<span class="n">entry</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</td></tr></table>
+
+<p>If only life would be that simple!</p>
+<p>Turns out this wasn't possible. For some weird reason the placeholders that
+can be assigned to model fields of type <code>PlaceholderField</code> must be of type
+<code>&lt;cms.models.Placeholder&gt;</code> but the placeholders that we get from the
+<code>M2MPlaceholderField</code> are of type 
+<code>&lt;cms.models.placeholderfield.Placeholder&gt;</code>.</p>
+<h2>The Solution</h2>
+<p>The code I came up with in my datamigration looks like this (part 1):</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">migrate_placeholder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orm</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">old_slot</span><span class="p">,</span> <span class="n">new_slot</span><span class="p">,</span> <span class="n">new_field</span><span class="p">):</span>
+        <span class="n">placeholder</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">placeholder_m2m_object</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">placeholders</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">newsentry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span> <span class="n">placeholder__slot</span><span class="o">=</span><span class="n">old_slot</span><span class="p">)</span>
+            <span class="n">placeholder</span> <span class="o">=</span> <span class="n">placeholder_m2m_object</span><span class="o">.</span><span class="n">placeholder</span>
+        <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+            <span class="k">pass</span>
+</pre></div>
+</td></tr></table>
+
+<p>I learned something cool here: When using many to many relationships, Django
+will magically create intermediary relation tables. I always knew this but I
+did not know that you can easily query those tables via the ORM and you will
+get back nice Django models.</p>
+<p>So since I can't just call <code>entry.placeholders.get()</code> I worked around this
+by getting the m2m_objects and retrieving the Placeholder object from those.</p>
+<p>This solved Problem #1.</p>
+<p>The rest of my snippet looks like this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">placeholder</span><span class="p">:</span>
+    <span class="n">placeholder_cls</span> <span class="o">=</span> <span class="n">orm</span><span class="p">[</span><span class="s">&#39;cms.Placeholder&#39;</span><span class="p">]</span>
+    <span class="n">new_placeholder</span> <span class="o">=</span> <span class="n">placeholder_cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">slot</span><span class="o">=</span><span class="n">new_slot</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="n">placeholder</span><span class="o">.</span><span class="n">get_plugins</span><span class="p">():</span>
+        <span class="n">plugin</span><span class="o">.</span><span class="n">placeholder_id</span> <span class="o">=</span> <span class="n">new_placeholder</span><span class="o">.</span><span class="n">pk</span>
+        <span class="n">plugin</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">new_field</span><span class="p">,</span> <span class="n">new_placeholder</span><span class="p">)</span>
+    <span class="n">entry</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">newsentry_placeholder</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">placeholder</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+</td></tr></table>
+
+<p>First I make sure to create a <code>new_placeholder</code> that is of type 
+<code>&lt;cms.models.Placeholder&gt;</code> (so that we can assign it to the new fields on
+the entry objects), then I take all plugins from the old placeholder
+and change their <code>placeholder_id</code> to the new placeholder.</p>
+<p>This solved Problem #2.</p>
+<p>The final datamigration script looks like this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Migration</span><span class="p">(</span><span class="n">DataMigration</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">migrate_placeholder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orm</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">old_slot</span><span class="p">,</span> <span class="n">new_slot</span><span class="p">,</span> <span class="n">new_field</span><span class="p">):</span>
+            <span class="n">placeholder</span> <span class="o">=</span> <span class="bp">None</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">newsentry_placeholder</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">placeholders</span><span class="o">.</span><span class="n">through</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">newsentry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span> <span class="n">placeholder__slot</span><span class="o">=</span><span class="n">old_slot</span><span class="p">)</span>
+                <span class="n">placeholder</span> <span class="o">=</span> <span class="n">newsentry_placeholder</span><span class="o">.</span><span class="n">placeholder</span>
+            <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">if</span> <span class="n">placeholder</span><span class="p">:</span>
+                <span class="n">placeholder_cls</span> <span class="o">=</span> <span class="n">orm</span><span class="p">[</span><span class="s">&#39;cms.Placeholder&#39;</span><span class="p">]</span>
+                <span class="n">new_placeholder</span> <span class="o">=</span> <span class="n">placeholder_cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">slot</span><span class="o">=</span><span class="n">new_slot</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="n">placeholder</span><span class="o">.</span><span class="n">get_plugins</span><span class="p">():</span>
+                    <span class="n">plugin</span><span class="o">.</span><span class="n">placeholder_id</span> <span class="o">=</span> <span class="n">new_placeholder</span><span class="o">.</span><span class="n">pk</span>
+                    <span class="n">plugin</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">new_field</span><span class="p">,</span> <span class="n">new_placeholder</span><span class="p">)</span>
+                <span class="n">entry</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">newsentry_placeholder</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                    <span class="n">placeholder</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">forwards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orm</span><span class="p">):</span>
+        <span class="s">&quot;Write your forwards methods here.&quot;</span>
+        <span class="c"># Note: Remember to use orm[&#39;appname.ModelName&#39;] rather than &quot;from appname.models...&quot;</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">orm</span><span class="p">[</span><span class="s">&#39;multilingual_news.NewsEntry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">migrate_placeholder</span><span class="p">(</span>
+                <span class="n">orm</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="s">&#39;excerpt&#39;</span><span class="p">,</span> <span class="s">&#39;multilingual_news_excerpt&#39;</span><span class="p">,</span> <span class="s">&#39;excerpt&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">migrate_placeholder</span><span class="p">(</span>
+                <span class="n">orm</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="s">&#39;multilingual_news_content&#39;</span><span class="p">,</span> <span class="s">&#39;content&#39;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>One note about the slot names: You can see that I changed the slot names from
+<code>excerpt</code> to <code>multilingual_news_excerpt</code> and likewise from <code>content</code> to
+<code>multilingual_news_content</code>. This makes sense because the slot names allow
+you to define which plugins should be allowed in this slot. Just <code>content</code> is
+quite a generic slot name which might be used by many differnet apps, so it is
+better to create proper slot names here that can uniquely identify your app's
+placeholder field. </p>
+<p>I ran this migration against a new Django 1.5 / django-cms 3 project and it
+worked. I also ran it against an existing Django 1.4 / django-cms 2.3 project
+and all existing cmsplugins showed up nicely in the new PlaceholderFields.</p>
+<p>Life is good.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                        <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>
