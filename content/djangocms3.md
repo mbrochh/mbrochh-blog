@@ -45,6 +45,9 @@ frontend (and in fact you are now able to edit ALL your objects on the
 frontend, which is totally awesome). Therefore we don't really need a fancy
 M2MPlaceholderAdmin any more.
 
+A solution for this problem can be found in my
+[next post](|filename|/m2mplaceholderfield.md).
+
 ### 2. Good bye django-simple-translations
 
 During the last two years we have built more than [70 reusable Django
