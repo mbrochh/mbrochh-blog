@@ -54,7 +54,7 @@ During the last two years we have built more than [70 reusable Django
 apps](https://github.com/bitmazk/).  Most of them are cms plugins or cms
 apphooks and when we started writing all those apps we took cmsplugin-blog as a
 guideline on how to write proper django-cms apps. cmsplugin-blog was using
-[django-simple-transltation](https://simple-translation.readthedocs.org/en/latest/)
+[django-simple-translation](https://simple-translation.readthedocs.org/en/latest/)
 for i18n, so we decided that all our apps will use simple-translation as well.
 
 Now it turns out that this was a very bad decision because django-cms 3 is
