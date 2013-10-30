@@ -446,6 +446,8 @@ introduces.&lt;/p&gt;
 &lt;p&gt;Therefore: We have to say goodbye to simple-translation and migrate our models
 and data to hvad. This might be difficult, but it will be worth it, because
 hvad really is much better than simple-translations.&lt;/p&gt;
+&lt;p&gt;A solution for this problem can be found in
+&lt;a href="http://martinbrochhaus.com/hvad.html"&gt;this post&lt;/a&gt;.&lt;/p&gt;
 &lt;h3&gt;3. Who knows?&lt;/h3&gt;
 &lt;p&gt;As I migrate all of our apps, I will probably find more hurdles and will
 gradually add more detailed posts describing the solutions for each problem.&lt;/p&gt;
