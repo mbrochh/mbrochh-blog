@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+        <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Migrating Apps from simple-translation to django-hvad</h1>
+            <h2>Another Lessons Learned While Getting Ready for django-cms 3.0</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+<p><i class="icon-calendar"></i>&nbsp;Wed 30 October 2013</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+            <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+            <a href="http://martinbrochhaus.com/tag/django.html">django</a>
+            <a href="http://martinbrochhaus.com/tag/django-cms.html">django-cms</a>
+            <a href="http://martinbrochhaus.com/tag/howto.html">howto</a>
+    </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>This is the second post in a small <a href="http://martinbrochhaus.com/djangocms3.html">series</a> about
+problems that might occur when migrating from django-cms 2 to 3.</p>
+<p>In my first post I described <a href="http://martinbrochhaus.com/m2mplaceholderfields.html">how to get rid of the
+M2MPlaceholderField</a>.</p>
+<p>This post will deal with the migration from simple-translation to
+<a href="https://github.com/KristianOellegaard/django-hvad">django-hvad</a>.</p>
+<p>As mentioned in my first post, two years ago we made the decision to use
+simple-translation for <a href="https://github.com/bitmazk/">all our app</a> because
+cmsplugin-blog was using it as well.</p>
+<p>It turns out that this was a bad decision, because django-cms 3 now makes
+great use of django-hvad. Besides, django-hvad has a much cleaner API than
+simple-translation, so it is about time to get rid of the latter.</p>
+<p>The migration should be straight forward:</p>
+<ol>
+<li>Add changes to model and admin needed by hvad</li>
+<li>Create a datamigration to copy all content from simple-translation to hvad</li>
+<li>Remove simple-translation model</li>
+</ol>
+<h2>The Problems</h2>
+<h3>1. You cannot use translated fields in the admin's list_display</h3>
+<p>Let's say your model has a translated field named <code>title</code> and in your model
+admin you want to do something like <code>list_display = ['title', ]</code> then you
+would get the following error:</p>
+<div class="highlight"><pre><span class="n">WrongManager</span> <span class="n">at</span> <span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">admin</span><span class="o">/</span><span class="n">multilingual_news</span><span class="o">/</span><span class="n">newsentry</span><span class="o">/</span>
+<span class="n">To</span> <span class="n">access</span> <span class="n">translated</span> <span class="n">fields</span> <span class="n">like</span> <span class="err">&#39;</span><span class="n">title</span><span class="err">&#39;</span> <span class="n">from</span> <span class="n">an</span> <span class="n">untranslated</span> <span class="n">model</span><span class="p">,</span>
+<span class="n">you</span> <span class="n">must</span> <span class="n">use</span> <span class="n">a</span> <span class="n">translation</span> <span class="n">aware</span> <span class="n">manager</span><span class="p">,</span>
+<span class="n">you</span> <span class="n">can</span> <span class="n">get</span> <span class="n">one</span> <span class="n">using</span> <span class="n">nani</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">get_translation_aware_manager</span><span class="p">.</span>
+</pre></div>
+
+
+<p>This is a deep problem with Django's admin implementation and there is an
+<a href="https://github.com/KristianOellegaard/django-hvad/issues/98">issue</a> for this.</p>
+<p>You can solve this with a workaround by creating your admin class like so:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">NewsEntryAdmin</span><span class="p">(</span><span class="n">TranslatableAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;get_title&#39;</span><span class="p">,</span> <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">title</span>
+    <span class="n">get_title</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;Title&#39;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<h2>2. You still need PlaceholderAdmin</h2>
+<p>This one is not really a problem but it took me by surprise. In django-cms 3
+we don't need the placeholder fields to be in the admin any more because we
+edit the placeholders on the frontend only. So when I followed the hvad docs
+I implemented my admin class so that it only inherits from
+<code>TranslatableAdmin</code>, which worked well with a djangoo-cms 3 project.</p>
+<p>However, you will want your app to be backwards compatible and therefore you
+will want to keep the placeholder fields in your admin. In order to do that,
+your admin class must of course inherit from <code>PlaceholderAdmin</code>, otherwise
+you will get this error when you access an objects change admin in a django-cms
+2 project:</p>
+<div class="highlight"><pre><span class="nt">&lt;lambda&gt;</span>() takes exactly 1 argument (2 given)
+</pre></div>
+
+
+<h2>The Migration</h2>
+<p>Lets say your model that uses simple-translation looks like this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">NewsEntry</span><span class="p">():</span>
+    <span class="n">pub_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">NewsEntryTrans</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">()</span>
+
+    <span class="c"># needed by simple-translation</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">NewsEntry</span><span class="p">)</span>
+    <span class="n">language</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">()</span>
+</pre></div>
+</td></tr></table>
+
+<p>I hope that you didn't name your translation model <code>NewsEntryTranslation</code>
+because that would be the same name that hvad would try to use. Thankfully I
+haven't had that problem yet, but if I had, I would have to rename the
+translation table first. South can handle
+<a href="http://stackoverflow.com/questions/2862979/easiest-way-to-rename-a-model-using-django-south">renaming a Django model</a>.</p>
+<p>The first thing we will do is to add the fields from the translation model to
+the original model, but this time following the
+<a href="http://django-hvad.readthedocs.org/en/latest/public/quickstart.html">hvad docs</a>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">hvad.models</span> <span class="kn">import</span> <span class="n">TranslatableModel</span><span class="p">,</span> <span class="n">TranslatedFields</span>
+
+<span class="k">class</span> <span class="nc">NewsEntry</span><span class="p">(</span><span class="n">TranslatableModel</span><span class="p">):</span>
+    <span class="n">pub_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+
+    <span class="n">translations</span> <span class="o">=</span> <span class="n">TranslatedFields</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">NewsEntryTrans</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</td></tr></table>
+
+<p>Create a South schemamigration for this. Diretly after that also create a
+South datamigration, which should look like this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Migration</span><span class="p">(</span><span class="n">DataMigration</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">forwards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orm</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">entry_trans</span> <span class="ow">in</span> <span class="n">orm</span><span class="o">.</span><span class="n">NewsEntryTrans</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">NewsEntry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">entry_trans</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">entry_trans</span><span class="o">.</span><span class="n">language</span><span class="p">)</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">entry_trans</span><span class="o">.</span><span class="n">title</span>
+            <span class="n">entry</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</td></tr></table>
+
+<p>Finally you can delete the <code>NewsEntryTrans</code> model and create a South
+schemamigration for this as well. Of course you will have to make some changes
+to your templates, because you will not need the <code>simpletranslation_tags</code>
+any more and just access <code>object.title</code> in your templates, which is awesome!</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                        <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>
