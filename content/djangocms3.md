@@ -72,6 +72,9 @@ Therefore: We have to say goodbye to simple-translation and migrate our models
 and data to hvad. This might be difficult, but it will be worth it, because
 hvad really is much better than simple-translations.
 
+A solution for this problem can be found in
+[this post](|filename|/hvad.md).
+
 ### 3. Who knows?
 
 As I migrate all of our apps, I will probably find more hurdles and will
