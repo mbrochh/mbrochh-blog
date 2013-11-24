@@ -3,7 +3,7 @@ Title: My Information Diet
 Slug: information-diet
 Category: Blog
 Tags: social media,
-status: draft
+Status: draft
 
 So this was one week without social media. Some stats:
 

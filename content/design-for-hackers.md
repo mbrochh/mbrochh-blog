@@ -3,7 +3,7 @@ Title: Book Review: Design for Hackers
 Slug: design-for-hackers
 Category: Blog
 Tags: books, design
-status: draft
+Status: draft
 
 * One of the greatest introductions I have ever read. Very honest and personal
   tone, makes me want to read on.

@@ -3,7 +3,7 @@ Title: Important Django ressources
 Slug: django
 Category: Blog
 Tags: django, communities
-status: draft
+Status: draft
 
 *Or: How to stay on top of the game*
 
