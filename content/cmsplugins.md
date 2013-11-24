@@ -4,6 +4,7 @@ Tagline: Be A Good Citizen And Create Good Related Names
 Slug: cmsplugins
 Category: Blog
 Tags: python, django, djangoo-cms, rant
+Draft: draft
 
 I just learned a lesson the hard way: Don't add a `cms_plugins.py` file to
 your reusable app! Create a separate app for the apphook and cms plugin
