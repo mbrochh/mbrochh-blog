@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-10-30T00:00:00+08:00</updated><entry><title>Migrating Apps from simple-translation to django-hvad</title><link href="http://martinbrochhaus.com/hvad.html" rel="alternate"></link><updated>2013-10-30T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-10-30:hvad.html</id><summary type="html">&lt;p&gt;This is the second post in a small &lt;a href="http://martinbrochhaus.com/djangocms3.html"&gt;series&lt;/a&gt; about
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-11-24T00:00:00+08:00</updated><entry><title>Django And related_names</title><link href="http://martinbrochhaus.com/related-names.html" rel="alternate"></link><updated>2013-11-24T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-11-24:related-names.html</id><summary type="html">&lt;p&gt;If you are a Django developer and if you create reusable apps, please
+do everyone else a favour and be a good citizen and ALWAYS add related names to
+all your foreign keys.&lt;/p&gt;
+&lt;p&gt;Why? For example, you cannot add Mezzanine and django-cms to the same project
+because both apps have a Page model with a foreign key to Site and both apps
+didn't provide a related name. Suckers!&lt;/p&gt;
+&lt;p&gt;When you finally add a related name, try to come up with name that is unlikely
+to cause clashes with any other app out there. The safest way to do this is to
+simply prepend your appname to the related name.&lt;/p&gt;
+&lt;p&gt;Bad example:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;site&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;Site&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;related_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;pages&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This doesn't help at all because it is very likely that some other app also
+has a &lt;code&gt;Page&lt;/code&gt; model and would also set the same related name, which would lead
+to a clash again.&lt;/p&gt;
+&lt;p&gt;Good example:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Page&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;site&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;Site&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;related_name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;myapp_pages&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This is good because it's quite unlikely that there will be another app which
+has the same name as your app and has a Page model and uses this very same
+foreign key and related name. Even if there is an app with the same name, you
+would probably not be able to use both apps at the same time because they would 
+have the same package name.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="rant"></category></entry><entry><title>Migrating Apps from simple-translation to django-hvad</title><link href="http://martinbrochhaus.com/hvad.html" rel="alternate"></link><updated>2013-10-30T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-10-30:hvad.html</id><summary type="html">&lt;p&gt;This is the second post in a small &lt;a href="http://martinbrochhaus.com/djangocms3.html"&gt;series&lt;/a&gt; about
 problems that might occur when migrating from django-cms 2 to 3.&lt;/p&gt;
 &lt;p&gt;In my first post I described &lt;a href="http://martinbrochhaus.com/m2mplaceholderfields.html"&gt;how to get rid of the
 M2MPlaceholderField&lt;/a&gt;.&lt;/p&gt;
