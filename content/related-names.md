@@ -3,7 +3,7 @@ Title: Django And related_names
 Tagline: Be A Good Citizen And Create Good Related Names
 Slug: related-names
 Category: Blog
-Tags: python, django, djangoo-cms, rant
+Tags: python, django, rant
 
 If you are a Django developer and if you create reusable apps, please
 do everyone else a favour and be a good citizen and ALWAYS add related names to
