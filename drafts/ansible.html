@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+        <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Django, Vagrant & Ansible</h1>
+            <h2>Privisioning Django boxes with Vagrant and Ansible</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+<p><i class="icon-calendar"></i>&nbsp;Wed 08 January 2014</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+            <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+            <a href="http://martinbrochhaus.com/tag/django.html">django</a>
+            <a href="http://martinbrochhaus.com/tag/vagrant.html">vagrant</a>
+            <a href="http://martinbrochhaus.com/tag/ansible.html">ansible</a>
+    </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>Let's say you have a complex Django application under version control and some
+day some designer wants to jump on board and work on the project. Let's also
+assume that designer is a great artist but doesn't really care about software
+development, so his machine doesn't have all the dependencies needed to run
+your complex Django app (Postgres? Memcached? Redis? Solr?).</p>
+<p>VirtualBox, Vagrant and Ansible can be of great help in this situation. Those
+three tools are extremely easy to install on OSX or Ubuntu.</p>
+<h1>Installation</h1>
+<ol>
+<li>Download and install Virtualbox</li>
+<li>Download and install Vagrant</li>
+</ol>
+<h1>Django project setup</h1>
+<p>CD into your Django project's root folder and create a <code>Vagrantfile</code>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/projects/my_django_project/src/
+<span class="nv">$ </span>vagrant init precise32 http://files.vagrantup.com/precise32.box
+</pre></div>
+</td></tr></table>
+
+<p>This creates a <code>Vagrantfile</code> and sets operating system and image download path. </p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span>vagrant up
+</pre></div>
+</td></tr></table>
+
+<p>This executes the <code>Vagrantfile</code>. It will realise that there is no box with the
+name <code>precise32</code>, yet so it will download it and store it at a folder that is
+managed by Vagrant. In the future, if you want to use a box with the name
+<code>precise32</code>, it will not be downloaded again. Vagrant will never touch these
+boxes and only use them to clone them as a starting point for your VMs.
+The box will be stored at <code>~/.vagrant.d/boxes/precise32/virtualbox/</code> and take
+about 282MB disk space.</p>
+<p>Set the following line in the <code>Vagrantfile</code>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">vm</span><span class="p">.</span><span class="n">network</span> <span class="o">:</span><span class="n">private_network</span><span class="p">,</span> <span class="n">ip</span><span class="o">:</span> <span class="s">&quot;192.168.111.222&quot;</span>
+</pre></div>
+</td></tr></table>
+
+<p>This will give the machine the given IP. We will later need that IP for our
+Ansible playbook.</p>
+<p>Add <code>vagrant_ansible_inventory_default</code> to your .gitignore. This folder get's
+created automatically by Vagrant. It allow you to use the inventory group
+with the name <code>default</code> in your Ansible playbooks.</p>
+<p>Uncomment the following line in the <code>Vagrantfile</code> and change the ports:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">vm</span><span class="p">.</span><span class="n">network</span> <span class="o">:</span><span class="n">forwarded_port</span><span class="p">,</span> <span class="n">guest</span><span class="o">:</span> <span class="mi">8080</span><span class="p">,</span> <span class="n">host</span><span class="o">:</span> <span class="mi">8081</span>
+</pre></div>
+</td></tr></table>
+
+<p>This is because on the VM (guest) we will execute the django development server
+which usually runs on port 8080. On your host machine, we will then access
+the website in the VM via <code>localhost:8081</code>.</p>
+<p>SSH into the box via</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span>vagrant ssh
+</pre></div>
+</td></tr></table>
+
+<p>Your Django project directory (the one with the <code>Vagrantfile</code>) is a synced
+folder in the VM, so you can CD into it:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> /vagrant
+<span class="nv">$ </span>ls
+</pre></div>
+</td></tr></table>
+
+<p>You will see your Django project. So now you are able to work on the project
+on your local machine and all changes will be reflected in the VM as well.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                        <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>
