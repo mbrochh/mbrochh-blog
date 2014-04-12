@@ -1,5 +1,290 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2013-11-24T00:00:00+08:00</updated><entry><title>Django And related_names</title><link href="http://martinbrochhaus.com/related-names.html" rel="alternate"></link><updated>2013-11-24T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-11-24:related-names.html</id><summary type="html">&lt;p&gt;If you are a Django developer and if you create reusable apps, please
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2014-04-11T00:00:00+08:00</updated><entry><title>Django-Storages and Amazon S3</title><link href="http://martinbrochhaus.com/s3.html" rel="alternate"></link><updated>2014-04-11T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-11:s3.html</id><summary type="html">&lt;p&gt;Yesterday I migrated the media files of
+&lt;a href="https://publishizer.com"&gt;Publishizer.com&lt;/a&gt; to &lt;a href="http://aws.amazon.com/s3/"&gt;Amazon's Simple Storage
+Service&lt;/a&gt;. This relatively simple task took me
+almost five hours and was quite a frustrating experience, so I thought I better
+write this down for later reference.&lt;/p&gt;
+&lt;h2&gt;1. Create a Group&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to &lt;a href="https://console.aws.amazon.com/"&gt;https://console.aws.amazon.com/&lt;/a&gt; and login&lt;/li&gt;
+&lt;li&gt;From the list of services select &lt;a href="https://console.aws.amazon.com/iam/home?#home"&gt;IAM&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Click at &lt;code&gt;Groups&lt;/code&gt; and then &lt;code&gt;Create New Group&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;I named my group &lt;code&gt;Webservers&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;At the second step &lt;code&gt;Permissions&lt;/code&gt; I selected &lt;code&gt;Custom Policy&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;I named the policy &lt;code&gt;Webservers-S3&lt;/code&gt; and provided the following code&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Webserver Group Policy:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;Version&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2014-04-10&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;Statement&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;quot;Effect&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Allow&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;quot;Action&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;s3:*&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;quot;Resource&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;*&amp;quot;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This should allow the group to do anything with the S3 service.&lt;/p&gt;
+&lt;h2&gt;2. Create a User&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Now that we have a group with generous permissions, click at &lt;code&gt;Users&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Click at &lt;code&gt;Create New User&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;I named my user &lt;code&gt;Webserver&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Make sure that &lt;code&gt;Generate an access key for each User&lt;/code&gt; is checked&lt;/li&gt;
+&lt;li&gt;In the pop-up window click at the link &lt;code&gt;Show User Security Credentials&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Note down the two keys, you will need them in your Django settings later&lt;/li&gt;
+&lt;li&gt;Click at the new user and then at &lt;code&gt;Add User to Groups&lt;/code&gt; in the bottom pane&lt;/li&gt;
+&lt;li&gt;Select the &lt;code&gt;Webservers&lt;/code&gt; group.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;3. Create a Bucket&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Go back to the &lt;a href="https://console.aws.amazon.com/"&gt;Console&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;a href="https://console.aws.amazon.com/s3/home?region=us-west-2#"&gt;S3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Click at &lt;code&gt;Create Bucket&lt;/code&gt; - give it a name and a region&lt;/li&gt;
+&lt;li&gt;Click at your new bucket and then at &lt;code&gt;Properties&lt;/code&gt; at the top right&lt;/li&gt;
+&lt;li&gt;Click at &lt;code&gt;Permissions&lt;/code&gt; and at &lt;code&gt;Add more permissions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;Authenticated Users&lt;/code&gt; and grant &lt;code&gt;List&lt;/code&gt;, &lt;code&gt;Upload/Delete&lt;/code&gt;, &lt;code&gt;View
+  Permissions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Click at `Edit bucket policy'&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Bucket Policy:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;Version&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;2008-10-17&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;Statement&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+        &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;quot;Sid&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;AllowPublicRead&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;quot;Effect&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Allow&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;quot;Principal&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;quot;AWS&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;*&amp;quot;&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;quot;Action&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;s3:GetObject&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="nt"&gt;&amp;quot;Resource&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;arn:aws:s3:::bucketname/*&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;arn:aws:s3:::bucketname&amp;quot;&lt;/span&gt;
+            &lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Make sure you replace &lt;code&gt;bucketname&lt;/code&gt; with your bucket name.&lt;/p&gt;
+&lt;p&gt;This should allow anyone to access the files if they have the URL. For
+Publishizer this is necessary because we will soon allow people to embed
+campaign widgets in their websites. If you want to make sure that your media
+files can only be accessed from your own server, you can create a more
+restrictive policy that requires a certain IP or the request referrer header
+to be yourdomain.com.&lt;/p&gt;
+&lt;h2&gt;4. Test Your Bucket&lt;/h2&gt;
+&lt;p&gt;At this point in time you should be able to upload stuff into your bucket and
+access it via a web browser. You can try to manually upload an image and then
+access it via &lt;code&gt;https://bucketname.s3.amazonaws.com/filename.png&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;5. Install Django-storages&lt;/h2&gt;
+&lt;p&gt;Although it seems to be quite dated, everyone still seems to use it, so I
+decided to use &lt;a href="http://django-storages.readthedocs.org/en/latest/"&gt;django-storages&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Note that I am NOT using S3 for static files. This is because it is a pain in
+the ass because it slows down deployments. I know that there are tricks where
+you would only download file headers from Amazon in order to figure out if a
+static file needs replacement and then you would store this information in a
+cache but I have not managed to get this working. Our static files (js, css,
+a few tiny images) would be cached by our user's browsers anyways, so serving
+them ourselves would only slow down the user for a few milliseconds and only
+during the first visit. That's OK with me. It's the media files
+ (i.e. book covers) that are big and many so it makes sense to offload them to
+Amazon's unlimited disc space.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In your Django project add &lt;code&gt;django-storages&lt;/code&gt; and &lt;code&gt;boto&lt;/code&gt; to the
+  &lt;code&gt;requirements.txt&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;'storages'&lt;/code&gt; to your &lt;code&gt;INSTALLED_APPS&lt;/code&gt; setting.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now it gets a bit complicated.&lt;/p&gt;
+&lt;p&gt;First of all, create a &lt;code&gt;s3utils.py&lt;/code&gt; file somewhere in your project:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Custom S3 storage backends to store files in subfolders.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;storages.backends.s3boto&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;S3BotoStorage&lt;/span&gt;
+
+&lt;span class="n"&gt;MediaRootS3BotoStorage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;S3BotoStorage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;media&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;I do this because I might want to have several subfolders in my bucket in
+the future (i.e. one for media files, one for static files, one for something
+completely different that does not come from Django). For now I will only
+have one folder for media files.&lt;/p&gt;
+&lt;p&gt;Here is what I have added to my
+&lt;code&gt;local_settings.py&lt;/code&gt; file:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;USE_S3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;span class="n"&gt;AWS_ACCESS_KEY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;XXXX&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;AWS_SECRET_ACCESS_KEY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;XXXX&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;AWS_STORAGE_BUCKET_NAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;bucketname-dev&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;S3_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;https://&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;.s3.amazonaws.com&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;AWS_STORAGE_BUCKET_NAME&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;USE_S3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;DEFAULT_FILE_STORAGE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;myproject.s3utils.MediaRootS3BotoStorage&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;THUMBNAIL_DEFAULT_STORAGE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;myproject.s3utils.MediaRootS3BotoStorage&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;MEDIA_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;S3_URL&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;/media/&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;MEDIA_ROOT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;PROJECT_ROOT&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;../..&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="s"&gt;&amp;#39;media&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_ROOT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;PROJECT_ROOT&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;../..&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;static&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;ul&gt;
+&lt;li&gt;This gives me the chance to turn off S3 when doing local development. If I
+  really need to test something against S3, I can turn it on but use a another
+  bucket for development work.&lt;/li&gt;
+&lt;li&gt;Locally I would use &lt;code&gt;bucketname-dev&lt;/code&gt; but on the real server of course I would
+  use the real &lt;code&gt;bucketname&lt;/code&gt;. That means I have setup two identical buckets.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DEFAULT_FILE_STORAGE&lt;/code&gt; is the setting that activates the magic. From now on
+  all &lt;code&gt;FileFields&lt;/code&gt; will upload their content to Amazon.&lt;/li&gt;
+&lt;li&gt;I'm using &lt;code&gt;easy_thumbnails&lt;/code&gt; and the setting &lt;code&gt;THUMBNAIL_DEFAULT_STORAGE&lt;/code&gt;
+  makes sure that my thumbnails get uploaded to Amazon as well.&lt;/li&gt;
+&lt;li&gt;Usually I set &lt;code&gt;MEDIA_URL&lt;/code&gt; to &lt;code&gt;/media/&lt;/code&gt; in my normal django settings. When
+  we activate S3, we must change that setting so that it is an absolute path
+  to Amazon's S3 service.&lt;/li&gt;
+&lt;li&gt;You can leave &lt;code&gt;MEDIA_ROOT&lt;/code&gt; and &lt;code&gt;STATIC_ROOT&lt;/code&gt; as you would usually have it.
+  When you switch off S3, everything will just continue to work like it did
+  before.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;6. Test Your Setup&lt;/h2&gt;
+&lt;p&gt;You should be able to run your local development server now and upload a file
+via your app. It should end up in your Amazon S3 bucket. If it does not work,
+you might need to create a file &lt;code&gt;$HOME/.boto&lt;/code&gt; with the following content:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[Credentials]&lt;/span&gt;
+&lt;span class="na"&gt;aws_access_key_id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;XXXX&lt;/span&gt;
+&lt;span class="na"&gt;aws_secret_access_key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;XXXX&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;I'm not sure though if this is really needed (after all you have those settings
+in your Django settings already). I just remember that I ran into problems and
+this got me one step further.&lt;/p&gt;
+&lt;h2&gt;7. Upload Your Current Media Files to S3&lt;/h2&gt;
+&lt;p&gt;If you upgraded a legacy app, you will now have the problem that all your
+media files are still located on your webserver but you want them to be on
+Amazon's cloud before you make the switch. Thankfully there is a tool similar
+to &lt;code&gt;rsync&lt;/code&gt; which syncs a local folder with a S3 folder.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;On your webserver download and unpack &lt;a href="http://s3tools.org/download"&gt;s3cmd&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd&lt;/code&gt; into the tool's folder and install the tool via &lt;code&gt;python setup.py install&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;s3cmd --configure&lt;/code&gt; and add your AWS access keys.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Finally, this is how I uploaded all my existing media files to S3:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;s3cmd sync --delete-removed --skip-existing ~/webapps/media/* s3://bucketname/media/
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The first parameter is the path to your media folder&lt;/li&gt;
+&lt;li&gt;The second parameter is your bucketname and the sub-folder that you want to
+  use (if any)&lt;/li&gt;
+&lt;li&gt;Find out more about &lt;a href="http://s3tools.org/s3cmd-sync"&gt;s3cmd sync&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;8. Refactor Where Necessary&lt;/h2&gt;
+&lt;p&gt;In our Django projects we usually have a setting:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;`FULL_DOMAIN = 'https://example.com'&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Then we add a context processor that adds this setting to all templates. This
+is very helpful for email templates, because here you cannot rely on the
+&lt;code&gt;{% static "img/test.png" %}&lt;/code&gt; tag because it would generate a relative path.
+When your customer opens the email in his email client, those relative paths
+would, of course, be broken. Therefore we refer to static files in our email
+templates like this:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{{ FULL_DOMAIN }}{% static &amp;quot;&lt;/span&gt;&lt;span class="na"&gt;img&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;test&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;png&lt;/span&gt;&lt;span class="err"&gt;&amp;quot;&lt;/span&gt; &lt;span class="err"&gt;%}&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This will no longer be sufficient if you set &lt;code&gt;USE_S3 = True&lt;/code&gt;. To work around
+this I created a templatetag like this:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;template&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt;
+
+&lt;span class="n"&gt;register&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;template&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Library&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="nd"&gt;@register.assignment_tag&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_full_domain&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;consider_s3&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;consider_s3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;USE_S3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FULL_DOMAIN&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;So basically if we are using S3, we don't return anything, if we are not using
+S3, we return the &lt;code&gt;FULL_DOMAIN&lt;/code&gt; setting.&lt;/p&gt;
+&lt;p&gt;My email template would now look like this:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;{% load project_tags %}
+&lt;span class="nt"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;{% get_full_domain %}{% static &amp;quot;&lt;/span&gt;&lt;span class="na"&gt;img&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;test&lt;/span&gt;&lt;span class="err"&gt;.&lt;/span&gt;&lt;span class="na"&gt;png&lt;/span&gt;&lt;span class="err"&gt;&amp;quot;&lt;/span&gt; &lt;span class="err"&gt;%}&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;By the way: I know that Django provides the Sites framwork for stuff like this
+but we never use it and since we are always only creating single site Django
+projects, having the site name in the Database is a maintenance nightmare. It
+makes much more sense to us to set the sitename in the settings.&lt;/p&gt;
+&lt;h2&gt;9. Flip The Switch&lt;/h2&gt;
+&lt;p&gt;After this odyssey, you should be able to change the &lt;code&gt;local_settings.py&lt;/code&gt; on
+your production server like above and set &lt;code&gt;USE_S3 = True&lt;/code&gt;. Then run your
+deployment and visit your site.&lt;/p&gt;
+&lt;p&gt;Voila! Images are now served via Amazon! Now if this is not a good reason to
+lean back and experience a good bottle of wine...&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://publishizer.com/wine-sense/" target="_blank"&gt;&lt;img src="https://publishizer.s3.amazonaws.com/media/thumbs/user_media/892/images/92fcb90f-df40-4bdc-86ed-a522ee3b376e.jpg.150x200_q85.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="amazon"></category></entry><entry><title>Django And related_names</title><link href="http://martinbrochhaus.com/related-names.html" rel="alternate"></link><updated>2013-11-24T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-11-24:related-names.html</id><summary type="html">&lt;p&gt;If you are a Django developer and if you create reusable apps, please
 do everyone else a favour: be a good citizen and add related names to
 all your foreign keys.&lt;/p&gt;
 &lt;p&gt;Why? For example, you cannot add Mezzanine and django-cms to the same project
