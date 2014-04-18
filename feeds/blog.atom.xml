@@ -155,10 +155,12 @@ have one folder for media files.&lt;/p&gt;
 10
 11
 12
-13&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;USE_S3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+13
+14&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;USE_S3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
 &lt;span class="n"&gt;AWS_ACCESS_KEY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;XXXX&amp;#39;&lt;/span&gt;
 &lt;span class="n"&gt;AWS_SECRET_ACCESS_KEY&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;XXXX&amp;#39;&lt;/span&gt;
 &lt;span class="n"&gt;AWS_STORAGE_BUCKET_NAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;bucketname-dev&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;AWS_QUERYSTRING_AUTH&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
 &lt;span class="n"&gt;S3_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;https://&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;.s3.amazonaws.com&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;AWS_STORAGE_BUCKET_NAME&lt;/span&gt;
 
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;USE_S3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;

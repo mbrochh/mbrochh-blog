@@ -212,10 +212,12 @@ have one folder for media files.</p>
 10
 11
 12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">USE_S3</span> <span class="o">=</span> <span class="bp">False</span>
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">USE_S3</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="n">AWS_ACCESS_KEY</span> <span class="o">=</span> <span class="s">&#39;XXXX&#39;</span>
 <span class="n">AWS_SECRET_ACCESS_KEY</span> <span class="o">=</span> <span class="s">&#39;XXXX&#39;</span>
 <span class="n">AWS_STORAGE_BUCKET_NAME</span> <span class="o">=</span> <span class="s">&#39;bucketname-dev&#39;</span>
+<span class="n">AWS_QUERYSTRING_AUTH</span> <span class="o">=</span> <span class="bp">False</span>
 <span class="n">S3_URL</span> <span class="o">=</span> <span class="s">&#39;https://</span><span class="si">%s</span><span class="s">.s3.amazonaws.com&#39;</span> <span class="o">%</span> <span class="n">AWS_STORAGE_BUCKET_NAME</span>
 
 <span class="k">if</span> <span class="n">USE_S3</span><span class="p">:</span>
