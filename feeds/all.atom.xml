@@ -1,5 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2014-04-11T00:00:00+08:00</updated><entry><title>Django-Storages and Amazon S3</title><link href="http://martinbrochhaus.com/s3.html" rel="alternate"></link><updated>2014-04-11T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-11:s3.html</id><summary type="html">&lt;p&gt;Yesterday I migrated the media files of
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2014-04-19T00:00:00+08:00</updated><entry><title>Django-compressor and Amazon S3</title><link href="http://martinbrochhaus.com/compressor.html" rel="alternate"></link><updated>2014-04-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-19:compressor.html</id><summary type="html">&lt;p&gt;As described in my &lt;a href="http://martinbrochhaus.com/s3.html"&gt;last post&lt;/a&gt; we are serving the media files
+that are uploaded by our users via Amazon S3. We do not serve our static files
+via S3 because it slows down our deployment. &lt;code&gt;./manage.py collectstatic&lt;/code&gt; would
+currently find more than 280 files and it would take forever to upload them
+all to Amazon. Most of these static files are even completely unrelated to
+our projects - they are images, style sheets and javascript files for the
+Django admin or for django-cms. It is not crucial for us to serve those files
+in the fastest way possible and only our admins will ever see those files, so
+traffic is also not an issue.&lt;/p&gt;
+&lt;p&gt;There are two static files, though, that get served to all our users and
+therefore should be hosted on S3: Our compressed CSS and JS files.&lt;/p&gt;
+&lt;p&gt;We use &lt;a href="https://github.com/django-compressor/django-compressor"&gt;django-compressor&lt;/a&gt;
+for compression.&lt;/p&gt;
+&lt;p&gt;The problem is: When you tell compressor to use S3, it will also search for the
+source that should be compressed on S3. This, of course, will be futile because
+I don't upload all my static files to S3. With a bit of tinkering and
+consulting Stackoverflow I found a solution for this.&lt;/p&gt;
+&lt;h2&gt;1. Create a custom css filter&lt;/h2&gt;
+&lt;p&gt;First of all you will need a custom CssAbsoluteFilter because the original one
+does not work when you have &lt;code&gt;DEBUG=True&lt;/code&gt; and it would insert the Amazon S3 URL
+everywhere. You don't want that because your static files are not hosted on S3.
+You want it to insert your website's full domain instead.&lt;/p&gt;
+&lt;p&gt;Here is a snippet that overrides some methods of the origingal
+CssAbsoluteFilter and addresses both problems. Make sure that you have a
+&lt;code&gt;FULL_DOMAIN = 'https://example.com'&lt;/code&gt; setting in your &lt;code&gt;local_settings.py&lt;/code&gt;.
+Put this into &lt;code&gt;yourproject/compress_filters.py&lt;/code&gt;:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;compressor.filters.css_default&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;CssAbsoluteFilter&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;compressor.utils&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;staticfiles&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CustomCssAbsoluteFilter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CssAbsoluteFilter&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CustomCssAbsoluteFilter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FULL_DOMAIN&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;STATIC_URL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;url_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c"&gt;# The line below is the original line.  I removed settings.DEBUG.&lt;/span&gt;
+        &lt;span class="c"&gt;# if settings.DEBUG and basename and staticfiles.finders:&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;basename&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;staticfiles&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;finders&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;staticfiles&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;finders&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;h2&gt;2. Create a custom S3BotoStorage backend&lt;/h2&gt;
+&lt;p&gt;Next you need to make sure that django-storages searches for the source files
+that should be compressed on the local filesystem but uploads the compressed
+files to Amazon S3. Put this into a file &lt;code&gt;yourproject/s3utils.py&lt;/code&gt;:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.files.storage&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;get_storage_class&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;storages.backends.s3boto&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;S3BotoStorage&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CachedS3BotoStorage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;S3BotoStorage&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CachedS3BotoStorage&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;local_storage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_storage_class&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s"&gt;&amp;#39;compressor.storage.CompressorFileStorage&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)()&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CachedS3BotoStorage&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;local_storage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;
+
+
+&lt;span class="n"&gt;CompressorS3BotoStorage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;CachedS3BotoStorage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;compressor&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;MediaRootS3BotoStorage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;S3BotoStorage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;location&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;media&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;By the way, in my buckets on Amazon I have subfolders. One &lt;code&gt;media&lt;/code&gt; folder for
+the media files uploaded by our users and one &lt;code&gt;compressor&lt;/code&gt; folder for the
+compressed files uploaded by django-compressor. Those two lines with &lt;code&gt;lambda&lt;/code&gt;
+at the bottom make sure that I can use my backends and have the files uploaded
+to the correct subfolder.&lt;/p&gt;
+&lt;h2&gt;3. Setting everything up&lt;/h2&gt;
+&lt;p&gt;First of all, set some Django settings for compressor:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;COMPRESS_PARSER&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;compressor.parser.HtmlParser&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;COMPRESS_CSS_FILTERS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;myproject.compress_filters.CustomCssAbsoluteFilter&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;COMPRESS_ENABLED&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;Secondly, set &lt;code&gt;SOMPRESS_STORAGE&lt;/code&gt; in your &lt;code&gt;local_settings.py&lt;/code&gt;:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;USE_S3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;DEFAULT_FILE_STORAGE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;myproject.s3utils.MediaRootS3BotoStorage&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;THUMBNAIL_DEFAULT_STORAGE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;myproject.s3utils.MediaRootS3BotoStorage&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;MEDIA_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;S3_URL&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;/media/&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;COMPRESS_STORAGE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;myproject.s3utils.CompressorS3BotoStorage&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;In my last post I had set everything up in such a way so that I can disable
+S3 usage simply by setting &lt;code&gt;USE_S3 = False&lt;/code&gt; in my &lt;code&gt;local_settings.py&lt;/code&gt;.
+Therefore the new &lt;code&gt;COMPRESS_STORAGE&lt;/code&gt; setting is added within the &lt;code&gt;if USE_S3&lt;/code&gt;
+if-clause.&lt;/p&gt;
+&lt;h2&gt;4. Change your deployment workflow&lt;/h2&gt;
+&lt;p&gt;Whenever you run a deployment (I hope you use &lt;a href="http://fabric.readthedocs.org/en/latest/"&gt;Fabric&lt;/a&gt;)
+you must make sure to call &lt;code&gt;./manage.py compress --force&lt;/code&gt;. We do this after
+the collectstatic step and before the &lt;code&gt;touch wsgi&lt;/code&gt; step.&lt;/p&gt;
+&lt;p&gt;That's all. From now on, compressor will search the source files for
+compression on the server's local storage and then upload only the compressed
+files to Amazon S3.&lt;/p&gt;
+&lt;p&gt;Note: In this setup you will want to set &lt;code&gt;COMPRESS_ENABLED = False&lt;/code&gt; during
+local development, otherwise it will be hard to debug JS or CSS issues. If you
+set it to &lt;code&gt;True&lt;/code&gt; you must run &lt;code&gt;./manage.py collectstatic&lt;/code&gt; every time you change
+a CSS or JS file.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="amazon"></category></entry><entry><title>Django-Storages and Amazon S3</title><link href="http://martinbrochhaus.com/s3.html" rel="alternate"></link><updated>2014-04-11T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-11:s3.html</id><summary type="html">&lt;p&gt;Yesterday I migrated the media files of
 &lt;a href="https://publishizer.com"&gt;Publishizer.com&lt;/a&gt; to &lt;a href="http://aws.amazon.com/s3/"&gt;Amazon's Simple Storage
 Service&lt;/a&gt;. This relatively simple task took me
 almost five hours and was quite a frustrating experience, so I thought I better

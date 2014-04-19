@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+        <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Django-compressor and Amazon S3</h1>
+            <h2>Use local offline compression and serve compressed files via Amazon S3</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+<p><i class="icon-calendar"></i>&nbsp;Sat 19 April 2014</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+            <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+            <a href="http://martinbrochhaus.com/tag/django.html">django</a>
+            <a href="http://martinbrochhaus.com/tag/amazon.html">amazon</a>
+    </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>As described in my <a href="http://martinbrochhaus.com/s3.html">last post</a> we are serving the media files
+that are uploaded by our users via Amazon S3. We do not serve our static files
+via S3 because it slows down our deployment. <code>./manage.py collectstatic</code> would
+currently find more than 280 files and it would take forever to upload them
+all to Amazon. Most of these static files are even completely unrelated to
+our projects - they are images, style sheets and javascript files for the
+Django admin or for django-cms. It is not crucial for us to serve those files
+in the fastest way possible and only our admins will ever see those files, so
+traffic is also not an issue.</p>
+<p>There are two static files, though, that get served to all our users and
+therefore should be hosted on S3: Our compressed CSS and JS files.</p>
+<p>We use <a href="https://github.com/django-compressor/django-compressor">django-compressor</a>
+for compression.</p>
+<p>The problem is: When you tell compressor to use S3, it will also search for the
+source that should be compressed on S3. This, of course, will be futile because
+I don't upload all my static files to S3. With a bit of tinkering and
+consulting Stackoverflow I found a solution for this.</p>
+<h2>1. Create a custom css filter</h2>
+<p>First of all you will need a custom CssAbsoluteFilter because the original one
+does not work when you have <code>DEBUG=True</code> and it would insert the Amazon S3 URL
+everywhere. You don't want that because your static files are not hosted on S3.
+You want it to insert your website's full domain instead.</p>
+<p>Here is a snippet that overrides some methods of the origingal
+CssAbsoluteFilter and addresses both problems. Make sure that you have a
+<code>FULL_DOMAIN = 'https://example.com'</code> setting in your <code>local_settings.py</code>.
+Put this into <code>yourproject/compress_filters.py</code>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">compressor.filters.css_default</span> <span class="kn">import</span> <span class="n">CssAbsoluteFilter</span>
+<span class="kn">from</span> <span class="nn">compressor.utils</span> <span class="kn">import</span> <span class="n">staticfiles</span>
+
+<span class="k">class</span> <span class="nc">CustomCssAbsoluteFilter</span><span class="p">(</span><span class="n">CssAbsoluteFilter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CustomCssAbsoluteFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">FULL_DOMAIN</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">STATIC_URL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
+
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basename</span><span class="p">):</span>
+        <span class="c"># The line below is the original line.  I removed settings.DEBUG.</span>
+        <span class="c"># if settings.DEBUG and basename and staticfiles.finders:</span>
+        <span class="k">if</span> <span class="n">basename</span> <span class="ow">and</span> <span class="n">staticfiles</span><span class="o">.</span><span class="n">finders</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">staticfiles</span><span class="o">.</span><span class="n">finders</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">basename</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<h2>2. Create a custom S3BotoStorage backend</h2>
+<p>Next you need to make sure that django-storages searches for the source files
+that should be compressed on the local filesystem but uploads the compressed
+files to Amazon S3. Put this into a file <code>yourproject/s3utils.py</code>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.core.files.storage</span> <span class="kn">import</span> <span class="n">get_storage_class</span>
+<span class="kn">from</span> <span class="nn">storages.backends.s3boto</span> <span class="kn">import</span> <span class="n">S3BotoStorage</span>
+
+<span class="k">class</span> <span class="nc">CachedS3BotoStorage</span><span class="p">(</span><span class="n">S3BotoStorage</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CachedS3BotoStorage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_storage</span> <span class="o">=</span> <span class="n">get_storage_class</span><span class="p">(</span>
+            <span class="s">&#39;compressor.storage.CompressorFileStorage&#39;</span><span class="p">)()</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CachedS3BotoStorage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_storage</span><span class="o">.</span><span class="n">_save</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">name</span>
+
+
+<span class="n">CompressorS3BotoStorage</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">CachedS3BotoStorage</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="s">&#39;compressor&#39;</span><span class="p">)</span>
+<span class="n">MediaRootS3BotoStorage</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">S3BotoStorage</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="s">&#39;media&#39;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>By the way, in my buckets on Amazon I have subfolders. One <code>media</code> folder for
+the media files uploaded by our users and one <code>compressor</code> folder for the
+compressed files uploaded by django-compressor. Those two lines with <code>lambda</code>
+at the bottom make sure that I can use my backends and have the files uploaded
+to the correct subfolder.</p>
+<h2>3. Setting everything up</h2>
+<p>First of all, set some Django settings for compressor:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">COMPRESS_PARSER</span> <span class="o">=</span> <span class="s">&#39;compressor.parser.HtmlParser&#39;</span>
+<span class="n">COMPRESS_CSS_FILTERS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;myproject.compress_filters.CustomCssAbsoluteFilter&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">COMPRESS_ENABLED</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</td></tr></table>
+
+<p>Secondly, set <code>SOMPRESS_STORAGE</code> in your <code>local_settings.py</code>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">if</span> <span class="n">USE_S3</span><span class="p">:</span>
+    <span class="n">DEFAULT_FILE_STORAGE</span> <span class="o">=</span> <span class="s">&#39;myproject.s3utils.MediaRootS3BotoStorage&#39;</span>
+    <span class="n">THUMBNAIL_DEFAULT_STORAGE</span> <span class="o">=</span> <span class="s">&#39;myproject.s3utils.MediaRootS3BotoStorage&#39;</span>
+    <span class="n">MEDIA_URL</span> <span class="o">=</span> <span class="n">S3_URL</span> <span class="o">+</span> <span class="s">&#39;/media/&#39;</span>
+    <span class="n">COMPRESS_STORAGE</span> <span class="o">=</span> <span class="s">&#39;myproject.s3utils.CompressorS3BotoStorage&#39;</span>
+</pre></div>
+</td></tr></table>
+
+<p>In my last post I had set everything up in such a way so that I can disable
+S3 usage simply by setting <code>USE_S3 = False</code> in my <code>local_settings.py</code>.
+Therefore the new <code>COMPRESS_STORAGE</code> setting is added within the <code>if USE_S3</code>
+if-clause.</p>
+<h2>4. Change your deployment workflow</h2>
+<p>Whenever you run a deployment (I hope you use <a href="http://fabric.readthedocs.org/en/latest/">Fabric</a>)
+you must make sure to call <code>./manage.py compress --force</code>. We do this after
+the collectstatic step and before the <code>touch wsgi</code> step.</p>
+<p>That's all. From now on, compressor will search the source files for
+compression on the server's local storage and then upload only the compressed
+files to Amazon S3.</p>
+<p>Note: In this setup you will want to set <code>COMPRESS_ENABLED = False</code> during
+local development, otherwise it will be hard to debug JS or CSS issues. If you
+set it to <code>True</code> you must run <code>./manage.py collectstatic</code> every time you change
+a CSS or JS file.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                        <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>
