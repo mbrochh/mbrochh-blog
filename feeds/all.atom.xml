@@ -1,5 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2014-04-19T00:00:00+08:00</updated><entry><title>Django-compressor and Amazon S3</title><link href="http://martinbrochhaus.com/compressor.html" rel="alternate"></link><updated>2014-04-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-19:compressor.html</id><summary type="html">&lt;p&gt;As described in my &lt;a href="http://martinbrochhaus.com/s3.html"&gt;last post&lt;/a&gt; we are serving the media files
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2014-04-20T00:00:00+08:00</updated><entry><title>Django Template Fragment Caching</title><link href="http://martinbrochhaus.com/caching.html" rel="alternate"></link><updated>2014-04-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-20:caching.html</id><summary type="html">&lt;p&gt;Granted, when you look at the frontpage of &lt;a href="https://publishizer.com"&gt;publishizer.com&lt;/a&gt;
+you will say that it doesn't show much content, but even this simple site 
+loads about 20 different partial templates and performs more than a hundred
+database queries.&lt;/p&gt;
+&lt;p&gt;And what for? It rarely ever changes much. If we would get thousands of users,
+we would waste tens of thousands of CPU cycles and IO operations on our
+webserver, which would ultimately cost us a lot of money. In order to prevent
+this, I recently had a closer look at Django's powerful caching framework.&lt;/p&gt;
+&lt;h2&gt;1. Install Memcached&lt;/h2&gt;
+&lt;p&gt;Luckily, on our Webfaction servers, Memcached is already installed. I can't
+remember how I installed it on OSX, but I guess I just ran
+&lt;code&gt;brew install memcached&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;2. Start &amp;amp; Stop Memcached&lt;/h2&gt;
+&lt;p&gt;In order to start Memcached, just run:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;memcached -d -m 50 -s &lt;span class="nv"&gt;$HOME&lt;/span&gt;/memcached.sock -P &lt;span class="nv"&gt;$HOME&lt;/span&gt;/memcached.pid
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This will start it in daemon mode and reserve 50MB of space for your cache.&lt;/p&gt;
+&lt;p&gt;In order to stop Memcached, just run:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;kill&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;cat &lt;span class="nv"&gt;$HOME&lt;/span&gt;/memcached.pid&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;I created &lt;a href="http://www.fabfile.org/"&gt;Fabric&lt;/a&gt; tasks for this so that I can
+restart memcached locally or on our servers easily and added this as one step
+at the end of our deployment script.&lt;/p&gt;
+&lt;h2&gt;3. Add cache settings to your Django settings&lt;/h2&gt;
+&lt;p&gt;Now we setup the whole caching magic. I put this into my &lt;code&gt;local_settings.py&lt;/code&gt;
+because every developer might want to play around with this and most of the
+time you would deactivate caching during local development but of course you
+want to activate it on the production server.&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# [... rest of your local_settings.py]&lt;/span&gt;
+
+&lt;span class="n"&gt;CACHE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+
+&lt;span class="c"&gt;# Start memcached via:&lt;/span&gt;
+&lt;span class="c"&gt;# memcached -d -m 50 -s $HOME/memcached.sock -P $HOME/memcached.pid&lt;/span&gt;
+&lt;span class="c"&gt;# Stop it via:&lt;/span&gt;
+&lt;span class="c"&gt;# kill $(cat $HOME/memcached.pid)&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;CACHE&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;CACHES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="s"&gt;&amp;#39;BACKEND&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;django.core.cache.backends.memcached.MemcachedCache&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s"&gt;&amp;#39;LOCATION&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;unix:/Users/username/memcached.sock&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;TEMPLATE_LOADERS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;django.template.loaders.cached.Loader&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s"&gt;&amp;#39;django.template.loaders.filesystem.Loader&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s"&gt;&amp;#39;django.template.loaders.app_directories.Loader&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;SESSION_ENGINE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;django.contrib.sessions.backends.cached_db&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;CACHE_MIDDLEWARE_KEY_PREFIX&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;yourproject_&amp;#39;&lt;/span&gt;
+&lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;CACHES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="s"&gt;&amp;#39;BACKEND&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;django.core.cache.backends.dummy.DummyCache&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;TEMPLATE_LOADERS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s"&gt;&amp;#39;django.template.loaders.filesystem.Loader&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s"&gt;&amp;#39;django.template.loaders.app_directories.Loader&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s"&gt;&amp;#39;django.template.loaders.eggs.Loader&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;First of all, make sure to change the &lt;code&gt;LOCATION&lt;/code&gt; setting and set &lt;code&gt;username&lt;/code&gt; to
+your username. If you don't want to save the socket in your home folder, you
+might also want to change the path.&lt;/p&gt;
+&lt;p&gt;Secondly change the &lt;code&gt;CACHE_MIDDLEWARE_KEY_PREFIX&lt;/code&gt; to your projectname.&lt;/p&gt;
+&lt;p&gt;Note that we are also using cached template loaders here. If you follow the 
+DRY principle, you will quickly have dozens or even hundreds of small partial
+templates. This will create quite some load on your CPU/disk because for each
+request Django tries to find the template file for each partial template on the
+hard disk. Usually your template locations will never change, so this is a safe
+thing to put into a cache. &lt;/p&gt;
+&lt;p&gt;With these settings, you can just set &lt;code&gt;CACHE = False&lt;/code&gt; when you do local
+development. If you don't set this to &lt;code&gt;False&lt;/code&gt;, you will have to restart
+memcached every time you change something in your templates.&lt;/p&gt;
+&lt;h2&gt;4. Create some cache utils&lt;/h2&gt;
+&lt;p&gt;If you are on Django 1.4, you will need a little helper class. Put this into 
+a file &lt;code&gt;cache_utils.py&lt;/code&gt;:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.cache&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cache&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.utils.hashcompat&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;md5_constructor&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.utils.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;urlquote&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;invalidate_template_fragment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fragment_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;variables&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;md5_constructor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;u&amp;#39;:&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;urlquote&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;variables&lt;/span&gt;&lt;span class="p"&gt;]))&lt;/span&gt;
+    &lt;span class="n"&gt;cache_key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;template.cache.&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;.&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fragment_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hexdigest&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="n"&gt;cache&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;delete&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cache_key&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;For Django 1.5 you can reuse the method for creating the fragment key:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.cache&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;cache&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.cache.utils&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;make_template_fragment_key&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;invalidate_template_fragment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fragment_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;variables&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;cache_key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;make_template_fragment_key&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;fragment_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vary_on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;variables&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+    &lt;span class="n"&gt;cache&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;delete&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cache_key&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;h2&gt;5. Use django-debug-toolbar-template-timings&lt;/h2&gt;
+&lt;p&gt;Any serious Django developer should use the &lt;a href="https://github.com/django-debug-toolbar/django-debug-toolbar"&gt;django-debug-toolbar&lt;/a&gt;.
+If you have that installed, make sure that you also use the plugin
+&lt;a href="https://github.com/orf/django-debug-toolbar-template-timings"&gt;django-debug-toolbar-template-timings&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This will show you the CPU time needed for each of your partial templates and
+makes it super easy to identify the parts in your template that take the most
+time to render.&lt;/p&gt;
+&lt;h2&gt;6. Use template fragment caching&lt;/h2&gt;
+&lt;p&gt;Some parts of your templates are not good candidates for caching, because they
+change often, for example the header of your site might contain the name of
+the logged in user and the main menu might be different for different kinds
+of users. While technically possible, I think this is not a good idea to cache.
+If you have millions of users it would mean that you need to add millions of
+template fragments into the cache, one for each user. I guess that would eat up
+all your RAM in no time.&lt;/p&gt;
+&lt;p&gt;If you have parts that don't change often and are the same for every user,
+those are great candidates for caching.&lt;/p&gt;
+&lt;p&gt;It looks like this:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;{% load cache %}
+{% cache 300 ebook_home_html %}
+    {% include &amp;quot;ebook/partials/ebook_home.html&amp;quot; %}
+{% endcache %}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This is the part on publishizer.com that renders the grid of ebook campaigns.
+It looks the same for every user and it rarely changes (only when someone
+preorders a book or when a campaign ends).&lt;/p&gt;
+&lt;p&gt;I set the cache time to 5 minutes and gave it the cache key &lt;code&gt;ebook_home_html&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This improved the load time of our frontpage from 1800ms to 120ms.&lt;/p&gt;
+&lt;h2&gt;7. Manually invalidate caches&lt;/h2&gt;
+&lt;p&gt;Five minutes is cool but what if a campaign ends or a user makes a preorder?
+It would be cool to always show up to date data on the frontpage. For this
+reason we created the &lt;code&gt;cache_utils.py&lt;/code&gt; module as desribed above. It allows us
+to invalidate the cache whenever we definitely know that something has changed.&lt;/p&gt;
+&lt;p&gt;It's usage could simply look like this:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;payment_completed_handler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sender&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;transaction&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Sends the thank-you email when a payment is completed.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;invalidate_template_fragment&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;ebook_home_html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c"&gt;# ... rest of the function&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;So whenever someone makes a payment, we invalidate the cache.&lt;/p&gt;
+&lt;p&gt;That's it. Hopefully at some happy point in the future, this approach will no
+longer be good enough, because we might have thousands of campaigns at the same
+time and dozens of preorders per second. This would mean that the cache would
+constantly be invalidated and therefore become pointless. However, this could
+easily be solved. Instead of caching the whole frontpage, I could go one level
+deeper and cache the individual rendered campaign cards. We would never show
+more than a few dozen of those cards on the frontpage anyways, so having those
+in the cache would be feasible.&lt;/p&gt;
+&lt;p&gt;Dozens of preorders per second. Ah well... one can only dream...&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>Django-compressor and Amazon S3</title><link href="http://martinbrochhaus.com/compressor.html" rel="alternate"></link><updated>2014-04-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-19:compressor.html</id><summary type="html">&lt;p&gt;As described in my &lt;a href="http://martinbrochhaus.com/s3.html"&gt;last post&lt;/a&gt; we are serving the media files
 that are uploaded by our users via Amazon S3. We do not serve our static files
 via S3 because it slows down our deployment. &lt;code&gt;./manage.py collectstatic&lt;/code&gt; would
 currently find more than 280 files and it would take forever to upload them
