@@ -1,5 +1,5 @@
 Date: 2014-05-01
-Title: Passwordmaker Online
+Title: PasswordMaker Online
 Tagline: How to use the best password manager in the world
 Slug: passwordmaker
 Category: Blog
@@ -20,6 +20,20 @@ So what do I need from a good password manager?
 2. It should be available on all devices that I use
 3. It must not need any kind of user account with any kind of company
 4. It must not store my passwords anywhere
-5. It must not comunicate with any API any time
+5. It must not communicate with any API any time
 6. I only want to remember one master-password
 7. Bonus: I should still be relatively save even if someone knows my master password
+
+## How does it work?
+
+It is very simple: The browser extension (available for
+[Chrome](https://chrome.google.com/webstore/detail/passwordmaker-pro/ocjkdaaapapjpmipmhiadedofjiokogj?hl=en)
+and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/passwordmaker/))
+takes the domain of the site in your active tab and concatenates it with your
+master password. Let's say you are looking at `google.com` and your master
+password is `abc123`, then the resulting string would be
+`mail.google.comabc123`.
+
+PasswordMaker takes that string and applies a Hash algorithm on it. The default
+is MD5 but you can change that if you like. So the resulting password could be
+`z4En5AWL` for `google.com` and `CcUgOJIA` for `dropbox.com` and so on.
