@@ -23,7 +23,7 @@ and &lt;a href="https://addons.mozilla.org/en-US/firefox/addon/passwordmaker/"&g
 takes the domain of the site in your active tab and concatenates it with your
 master password. Let's say you are looking at &lt;code&gt;google.com&lt;/code&gt; and your master
 password is &lt;code&gt;abc123&lt;/code&gt;, then the resulting string would be
-&lt;code&gt;mail.google.comabc123&lt;/code&gt;.&lt;/p&gt;
+&lt;code&gt;google.comabc123&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;PasswordMaker takes that string and applies a Hash algorithm on it. The default
 is MD5 but you can change that if you like. So the resulting password could be
 &lt;code&gt;z4En5AWL&lt;/code&gt; for &lt;code&gt;google.com&lt;/code&gt; and &lt;code&gt;CcUgOJIA&lt;/code&gt; for &lt;code&gt;dropbox.com&lt;/code&gt; and so on.&lt;/p&gt;
