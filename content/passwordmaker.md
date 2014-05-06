@@ -57,10 +57,11 @@ it will be removed from the clipboard after 10 seconds or so.
    out there enforce this stuff.
 
 Note: Be careful about this. You usually only set your settings once and after
-that you don't really care about them any more. This something you could easily
-forget and if you find yourself in front of a new PC one day and need to
+that you don't really care about them any more. This is something you could
+easily forget and if you find yourself in front of a new PC one day and need to
 set everythign up again, you don't want to forget those old settings. In the
-wors case, you have to come up with new settings and re-set all your passwords.
+worst case, you have to come up with new settings and re-set all your
+passwords.
 
 ## What do I do on mobile?
 
