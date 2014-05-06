@@ -101,26 +101,26 @@ I downloaded the website and host [my own copy at Github](http://mbrochh.github.
 
 ## Re-cap: How does PasswordMaker solve the problems mentioned initially?
 
-1. It must enable me to have a unique password for every service that I use
+> 1) It must enable me to have a unique password for every service that I use
 
 Check! Since all your accounts are hosted on different websites, which means
 different top level domains, the hash algorithm will generate different random
 passwords for each domain. This means that all your passwords will be unique.
 
-2. It should be available on all devices that I use
+> 2) It should be available on all devices that I use
 
 Check! There are extensions for Firefox and Chrome. By the way, this is the
 main reason why I will never use Safari. That browser has the worst extension
 ecosystem ever and it is basically impossible to surf the web in any reasonably
 safe way. There are apps for Android and iPhone. That's all I'll ever need.
 
-3. It must not need any kind of user account with any kind of company
+> 3) It must not need any kind of user account with any kind of company
 
 Check! You don't need to create any account. You can download the PasswordMaker
 static website. I don't see why there would ever be updates to the website.
 website and put it on your Github account and host it yourself. It's just a
 
-4. It must not store my passwords anywhere
+> 4) It must not store my passwords anywhere
 
 Check! See the beautiy of it? The master password is in your head and the rest
 is created on the fly. No password is ever stored anywhere (except when you
@@ -128,18 +128,18 @@ enable to save your master password in your RAM during a browser session).  I
 do that. If my adversaries are so powerful that they can read my RAM at any
 time, I'm fucked anyways.
 
-5. It must not communicate with any API any time
+> 5) It must not communicate with any API any time
 
 Check! Neither the mobile apps nor the browser extension nor the original website
 need an internet connection.
 
-6. I only want to remember one master-password
+> 6) I only want to remember one master-password
 
 Check! Well, almost. If you make a lot of changes to your default settings,
 you also need to remember those. I have a really really bad memory, but somehow
 I can always remember my settings.
 
-7. Bonus: I should still be relatively save even if someone knows my master password
+> 7) Bonus: I should still be relatively save even if someone knows my master password
 
 Check! Even if someone manages to get your master password through social
 engineering or a key-logger or by placing a smartphone on the table next to
