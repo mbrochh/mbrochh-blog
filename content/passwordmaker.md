@@ -120,6 +120,7 @@ safe way. There are apps for Android and iPhone. That's all I'll ever need.
 Check! You don't need to create any account. You can download the PasswordMaker
 static website. I don't see why there would ever be updates to the website.
 website and put it on your Github account and host it yourself. It's just a
+simple static website.
 
 > 4) It must not store my passwords anywhere
 
