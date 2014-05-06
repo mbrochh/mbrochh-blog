@@ -1,5 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2014-04-20T00:00:00+08:00</updated><entry><title>Django Template Fragment Caching</title><link href="http://martinbrochhaus.com/caching.html" rel="alternate"></link><updated>2014-04-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-20:caching.html</id><summary type="html">&lt;p&gt;Granted, when you look at the frontpage of &lt;a href="https://publishizer.com"&gt;publishizer.com&lt;/a&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2014-05-06T00:00:00+08:00</updated><entry><title>PasswordMaker Online</title><link href="http://martinbrochhaus.com/passwordmaker.html" rel="alternate"></link><updated>2014-05-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-05-06:passwordmaker.html</id><summary type="html">&lt;p&gt;It must be more than six years that I am using
+&lt;a href="http://www.passwordmaker.org/passwordmaker.html"&gt;PasswordMaker&lt;/a&gt; to manage all
+my passwords. I think this is the best password tool that could ever exist.
+Unfortunately it is a little bit difficult to understand and a little bit
+inconvenient to use, but when it comes to cryptography, there is always a
+tradeoff between convenience and security: You can't have both at the same
+time.&lt;/p&gt;
+&lt;p&gt;So what do I need from a good password manager?&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;It must enable me to have a unique password for every service that I use&lt;/li&gt;
+&lt;li&gt;It should be available on all devices that I use&lt;/li&gt;
+&lt;li&gt;It must not need any kind of user account with any kind of company&lt;/li&gt;
+&lt;li&gt;It must not store my passwords anywhere&lt;/li&gt;
+&lt;li&gt;It must not communicate with any API any time&lt;/li&gt;
+&lt;li&gt;I only want to remember one master-password&lt;/li&gt;
+&lt;li&gt;Bonus: I should still be relatively save even if someone knows my master password&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;How does it work?&lt;/h2&gt;
+&lt;p&gt;It is very simple: The browser extension (available for
+&lt;a href="https://chrome.google.com/webstore/detail/passwordmaker-pro/ocjkdaaapapjpmipmhiadedofjiokogj?hl=en"&gt;Chrome&lt;/a&gt;
+and &lt;a href="https://addons.mozilla.org/en-US/firefox/addon/passwordmaker/"&gt;Firefox&lt;/a&gt;)
+takes the domain of the site in your active tab and concatenates it with your
+master password. Let's say you are looking at &lt;code&gt;google.com&lt;/code&gt; and your master
+password is &lt;code&gt;abc123&lt;/code&gt;, then the resulting string would be
+&lt;code&gt;mail.google.comabc123&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;PasswordMaker takes that string and applies a Hash algorithm on it. The default
+is MD5 but you can change that if you like. So the resulting password could be
+&lt;code&gt;z4En5AWL&lt;/code&gt; for &lt;code&gt;google.com&lt;/code&gt; and &lt;code&gt;CcUgOJIA&lt;/code&gt; for &lt;code&gt;dropbox.com&lt;/code&gt; and so on.&lt;/p&gt;
+&lt;p&gt;So if you want to fill out a password field on the web, you just open the
+extension and the top-level domain will already be filled out. You enter your
+master password and then click a button to insert your password into the
+password field. Alternatively you can copy the password into the clipboard and
+it will be removed from the clipboard after 10 seconds or so.&lt;/p&gt;
+&lt;h2&gt;Here are some important tips&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Change the hash algorithm to something else than MD5.&lt;/li&gt;
+&lt;li&gt;Change the password length to something else than 8. Make it as long as
+   possible. 16 characters should be good.&lt;/li&gt;
+&lt;li&gt;Change the allowed character set to characters and numbers only, because
+   some services out there don't allow special characters.&lt;/li&gt;
+&lt;li&gt;If you want to be really nasty, disallow any random character.&lt;/li&gt;
+&lt;li&gt;Apply a prefix of &lt;code&gt;aA1!&lt;/code&gt; - this makes sure that no matter how random your
+   password is, you will ALWAYS have at least one minor letter, one capital
+   letter, one number and one special character. Some fucking annoying websites
+   out there enforce this stuff.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Note: Be careful about this. You usually only set your settings once and after
+that you don't really care about them any more. This something you could easily
+forget and if you find yourself in front of a new PC one day and need to
+set everythign up again, you don't want to forget those old settings. In the
+wors case, you have to come up with new settings and re-set all your passwords.&lt;/p&gt;
+&lt;h2&gt;What do I do on mobile?&lt;/h2&gt;
+&lt;p&gt;There is an &lt;a href="https://play.google.com/store/apps/details?id=org.passwordmaker.android"&gt;Android app&lt;/a&gt;
+and an &lt;a href="https://itunes.apple.com/us/app/passwordmaker.org-password/id359001896?mt=8"&gt;iOS app&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;What do I do when I'm on a public computer?&lt;/h2&gt;
+&lt;p&gt;One day you will need one of your passwords and you don't have your phone with
+you and the browser on that machine doesn't have the extension installed.&lt;/p&gt;
+&lt;p&gt;No problem! You can always fall back to visiting the
+&lt;a href="http://www.passwordmaker.org/passwordmaker.html"&gt;PasswordMaker website&lt;/a&gt;
+which is slightly inconvenient, because you have to set all your settings
+first. Can't remember that URL? Google for &lt;code&gt;passwordmaker online&lt;/code&gt;!&lt;/p&gt;
+&lt;h2&gt;What do I do with passwords for offline apps?&lt;/h2&gt;
+&lt;p&gt;Your browser with it's extension is always just a click away. Just open the
+extension and instead of a top level domain enter the name of the app you want
+to authenticate with.&lt;/p&gt;
+&lt;h2&gt;What do I do when I have several accounts with the same top level domain?&lt;/h2&gt;
+&lt;p&gt;Same thing: Open the extension and append something to the top level domain.
+I have many Googlemail accounts, so I would turn the top level domain into
+something like &lt;code&gt;google.com/mbrochh&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;But can the PasswordMaker website be trusted?&lt;/h2&gt;
+&lt;p&gt;Nothing on the web can be trusted. Download the website and audit it's code.
+Then put it on a USB stick and use your own version. Besides - you can open
+the website, then disable your internet connection. It will still work. All
+the magic happens via JavaScript on your client only. At no time will anything
+you enter into that form be sent over the wire.&lt;/p&gt;
+&lt;p&gt;I downloaded the website and host &lt;a href="http://mbrochh.github.io/passwordmaker/"&gt;my own copy at Github&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Re-cap: How does PasswordMaker solve the problems mentioned initially?&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;It must enable me to have a unique password for every service that I use&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Check! Since all your accounts are hosted on different websites, which means
+different top level domains, the hash algorithm will generate different random
+passwords for each domain. This means that all your passwords will be unique.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;It should be available on all devices that I use&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Check! There are extensions for Firefox and Chrome. By the way, this is the
+main reason why I will never use Safari. That browser has the worst extension
+ecosystem ever and it is basically impossible to surf the web in any reasonably
+safe way. There are apps for Android and iPhone. That's all I'll ever need.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;It must not need any kind of user account with any kind of company&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Check! You don't need to create any account. You can download the PasswordMaker
+static website. I don't see why there would ever be updates to the website.
+website and put it on your Github account and host it yourself. It's just a&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;It must not store my passwords anywhere&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Check! See the beautiy of it? The master password is in your head and the rest
+is created on the fly. No password is ever stored anywhere (except when you
+enable to save your master password in your RAM during a browser session).  I
+do that. If my adversaries are so powerful that they can read my RAM at any
+time, I'm fucked anyways.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;It must not communicate with any API any time&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Check! Neither the mobile apps nor the browser extension nor the original website
+need an internet connection.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;I only want to remember one master-password&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Check! Well, almost. If you make a lot of changes to your default settings,
+you also need to remember those. I have a really really bad memory, but somehow
+I can always remember my settings.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Bonus: I should still be relatively save even if someone knows my master password&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Check! Even if someone manages to get your master password through social
+engineering or a key-logger or by placing a smartphone on the table next to
+your laptop and listening on the sound of your keystrokes (this shit is really
+scary, ain't it?), they would still need to know the username and he exact
+settings for your PasswordMaker profile in order to sneak into your accounts.&lt;/p&gt;
+&lt;p&gt;If you have applied all the tips I mentioned above, even with the knowledge of
+your master password (and the knowledge that you use PasswordMaker at all) it
+should be very very hard to bruteforce into your account.&lt;/p&gt;
+&lt;p&gt;That's it. If you are using anything else for your passwords, you are doing it
+wrong. There. I said it.&lt;/p&gt;</summary><category term="technology"></category><category term="security"></category><category term="privacy"></category><category term="tools"></category></entry><entry><title>Django Template Fragment Caching</title><link href="http://martinbrochhaus.com/caching.html" rel="alternate"></link><updated>2014-04-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-20:caching.html</id><summary type="html">&lt;p&gt;Granted, when you look at the frontpage of &lt;a href="https://publishizer.com"&gt;publishizer.com&lt;/a&gt;
 you will say that it doesn't show much content, but even this simple site 
 loads about 20 different partial templates and performs more than a hundred
 database queries.&lt;/p&gt;
