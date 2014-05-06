@@ -118,9 +118,9 @@ safe way. There are apps for Android and iPhone. That's all I'll ever need.
 > 3) It must not need any kind of user account with any kind of company
 
 Check! You don't need to create any account. You can download the PasswordMaker
-static website. I don't see why there would ever be updates to the website.
-website and put it on your Github account and host it yourself. It's just a
-simple static website.
+static website. I don't see why there would ever be updates to that site.
+You can even download the site and put it on your Github account and host it
+yourself. It's really just a simple static website.
 
 > 4) It must not store my passwords anywhere
 
@@ -132,8 +132,8 @@ time, I'm fucked anyways.
 
 > 5) It must not communicate with any API any time
 
-Check! Neither the mobile apps nor the browser extension nor the original website
-need an internet connection.
+Check! Neither the mobile apps nor the browser extension nor the original
+website need an internet connection.
 
 > 6) I only want to remember one master-password
 
