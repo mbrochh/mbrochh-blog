@@ -31,7 +31,7 @@ and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/passwordmaker/))
 takes the domain of the site in your active tab and concatenates it with your
 master password. Let's say you are looking at `google.com` and your master
 password is `abc123`, then the resulting string would be
-`mail.google.comabc123`.
+`google.comabc123`.
 
 PasswordMaker takes that string and applies a Hash algorithm on it. The default
 is MD5 but you can change that if you like. So the resulting password could be
