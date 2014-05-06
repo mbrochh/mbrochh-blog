@@ -76,47 +76,47 @@ the magic happens via JavaScript on your client only. At no time will anything
 you enter into that form be sent over the wire.&lt;/p&gt;
 &lt;p&gt;I downloaded the website and host &lt;a href="http://mbrochh.github.io/passwordmaker/"&gt;my own copy at Github&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;Re-cap: How does PasswordMaker solve the problems mentioned initially?&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;It must enable me to have a unique password for every service that I use&lt;/li&gt;
-&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1) It must enable me to have a unique password for every service that I use&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Check! Since all your accounts are hosted on different websites, which means
 different top level domains, the hash algorithm will generate different random
 passwords for each domain. This means that all your passwords will be unique.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;It should be available on all devices that I use&lt;/li&gt;
-&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2) It should be available on all devices that I use&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Check! There are extensions for Firefox and Chrome. By the way, this is the
 main reason why I will never use Safari. That browser has the worst extension
 ecosystem ever and it is basically impossible to surf the web in any reasonably
 safe way. There are apps for Android and iPhone. That's all I'll ever need.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;It must not need any kind of user account with any kind of company&lt;/li&gt;
-&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;3) It must not need any kind of user account with any kind of company&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Check! You don't need to create any account. You can download the PasswordMaker
 static website. I don't see why there would ever be updates to the website.
 website and put it on your Github account and host it yourself. It's just a&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;It must not store my passwords anywhere&lt;/li&gt;
-&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;4) It must not store my passwords anywhere&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Check! See the beautiy of it? The master password is in your head and the rest
 is created on the fly. No password is ever stored anywhere (except when you
 enable to save your master password in your RAM during a browser session).  I
 do that. If my adversaries are so powerful that they can read my RAM at any
 time, I'm fucked anyways.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;It must not communicate with any API any time&lt;/li&gt;
-&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;5) It must not communicate with any API any time&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Check! Neither the mobile apps nor the browser extension nor the original website
 need an internet connection.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;I only want to remember one master-password&lt;/li&gt;
-&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;6) I only want to remember one master-password&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Check! Well, almost. If you make a lot of changes to your default settings,
 you also need to remember those. I have a really really bad memory, but somehow
 I can always remember my settings.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Bonus: I should still be relatively save even if someone knows my master password&lt;/li&gt;
-&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;7) Bonus: I should still be relatively save even if someone knows my master password&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Check! Even if someone manages to get your master password through social
 engineering or a key-logger or by placing a smartphone on the table next to
 your laptop and listening on the sound of your keystrokes (this shit is really
