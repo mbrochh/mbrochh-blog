@@ -33,13 +33,13 @@ master password. Let's say you are looking at `google.com` and your master
 password is `abc123`, then the resulting string would be
 `google.comabc123`.
 
-PasswordMaker takes that string and applies a Hash algorithm on it. The default
-is MD5 but you can change that if you like. So the resulting password could be
+PasswordMaker takes that string and applies a hash algorithm on it. The default
+is MD5 but you can change that if you like. The resulting password could be
 `z4En5AWL` for `google.com` and `CcUgOJIA` for `dropbox.com` and so on.
 
 So if you want to fill out a password field on the web, you just open the
-extension and the top-level domain will already be filled out. You enter your
-master password and then click a button to insert your password into the
+extension and the top-level domain will already be filled in. You enter your
+master password and then click at a button to insert your password into the
 password field. Alternatively you can copy the password into the clipboard and
 it will be removed from the clipboard after 10 seconds or so.
 
@@ -48,18 +48,18 @@ it will be removed from the clipboard after 10 seconds or so.
 1. Change the hash algorithm to something else than MD5.
 2. Change the password length to something else than 8. Make it as long as
    possible. 16 characters should be good.
-3. Change the allowed character set to characters and numbers only, because
-   some services out there don't allow special characters.
+3. Change the allowed character-set to characters and numbers only. This is
+   because some services out there don't allow special characters.
 4. If you want to be really nasty, disallow any random character.
 5. Apply a prefix of `aA1!` - this makes sure that no matter how random your
    password is, you will ALWAYS have at least one minor letter, one capital
-   letter, one number and one special character. Some fucking annoying websites
+   letter, one number and one special character. Some stupid websites
    out there enforce this stuff.
 
 Note: Be careful about this. You usually only set your settings once and after
 that you don't really care about them any more. This is something you could
 easily forget and if you find yourself in front of a new PC one day and need to
-set everythign up again, you don't want to forget those old settings. In the
+set everything up again, you don't want to forget those old settings. In the
 worst case, you have to come up with new settings and re-set all your
 passwords.
 
