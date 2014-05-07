@@ -24,12 +24,12 @@ takes the domain of the site in your active tab and concatenates it with your
 master password. Let's say you are looking at &lt;code&gt;google.com&lt;/code&gt; and your master
 password is &lt;code&gt;abc123&lt;/code&gt;, then the resulting string would be
 &lt;code&gt;google.comabc123&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;PasswordMaker takes that string and applies a Hash algorithm on it. The default
-is MD5 but you can change that if you like. So the resulting password could be
+&lt;p&gt;PasswordMaker takes that string and applies a hash algorithm on it. The default
+is MD5 but you can change that if you like. The resulting password could be
 &lt;code&gt;z4En5AWL&lt;/code&gt; for &lt;code&gt;google.com&lt;/code&gt; and &lt;code&gt;CcUgOJIA&lt;/code&gt; for &lt;code&gt;dropbox.com&lt;/code&gt; and so on.&lt;/p&gt;
 &lt;p&gt;So if you want to fill out a password field on the web, you just open the
-extension and the top-level domain will already be filled out. You enter your
-master password and then click a button to insert your password into the
+extension and the top-level domain will already be filled in. You enter your
+master password and then click at a button to insert your password into the
 password field. Alternatively you can copy the password into the clipboard and
 it will be removed from the clipboard after 10 seconds or so.&lt;/p&gt;
 &lt;h2&gt;Here are some important tips&lt;/h2&gt;
@@ -37,18 +37,18 @@ it will be removed from the clipboard after 10 seconds or so.&lt;/p&gt;
 &lt;li&gt;Change the hash algorithm to something else than MD5.&lt;/li&gt;
 &lt;li&gt;Change the password length to something else than 8. Make it as long as
    possible. 16 characters should be good.&lt;/li&gt;
-&lt;li&gt;Change the allowed character set to characters and numbers only, because
-   some services out there don't allow special characters.&lt;/li&gt;
+&lt;li&gt;Change the allowed character-set to characters and numbers only. This is
+   because some services out there don't allow special characters.&lt;/li&gt;
 &lt;li&gt;If you want to be really nasty, disallow any random character.&lt;/li&gt;
 &lt;li&gt;Apply a prefix of &lt;code&gt;aA1!&lt;/code&gt; - this makes sure that no matter how random your
    password is, you will ALWAYS have at least one minor letter, one capital
-   letter, one number and one special character. Some fucking annoying websites
+   letter, one number and one special character. Some stupid websites
    out there enforce this stuff.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Note: Be careful about this. You usually only set your settings once and after
 that you don't really care about them any more. This is something you could
 easily forget and if you find yourself in front of a new PC one day and need to
-set everythign up again, you don't want to forget those old settings. In the
+set everything up again, you don't want to forget those old settings. In the
 worst case, you have to come up with new settings and re-set all your
 passwords.&lt;/p&gt;
 &lt;h2&gt;What do I do on mobile?&lt;/h2&gt;
