@@ -6,4 +6,7 @@ Category: Blog
 Tags: python, django 
 Status: draft
 
-
+* Describe South migrations
+* Describe new core migrations
+* Describe how to switch from South to core
+* Describe how to maintain both for backwards compatibility
