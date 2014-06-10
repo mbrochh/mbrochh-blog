@@ -7,6 +7,8 @@ Tags: python, django
 Status: draft
 
 * Describe South migrations
+  * http://south.aeracode.org/
 * Describe new core migrations
+  * https://docs.djangoproject.com/en/dev/topics/migrations/
 * Describe how to switch from South to core
 * Describe how to maintain both for backwards compatibility
