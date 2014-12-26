@@ -105,6 +105,10 @@ WORK IN PROGRESS...
 * Subconsciously:
   * Gain a followship = illusion of more power to change the world
 
+## Why do people want to use social networks at all?
+
+* Be your own celebrity?
+
 ## Interesting & paradox observations
 
 * I reserve the most intimate content for Facebook, yet I know that the NSA
