@@ -64,6 +64,7 @@ WORK IN PROGRESS...
   * 361 Friends + 1 Following
   * 58 Followers
   * Share personal and lame stuff with close friends and family
+  * 93 posts in 24hrs
 
 * Twitter
   * Since March 2009
@@ -71,12 +72,16 @@ WORK IN PROGRESS...
   * 539 Followers
   * 231 Following
   * Find new technologies / share links and nerd-jokes with my IT-fellows
+  * 77 posts in 24hrs
 
 * G+
   * Since ??? (When it started)
   * 1516 Followers
   * 253 Following
   * Unsure what to do there. Mainly use it to broadcast to the other two.
+  * Was hoping that it can overcome Facebook and Twitter at the same time, but
+    it failed
+  * 17 posts in 24 hrs
 
 * Ask questions
   * Never get answers on Twitter
