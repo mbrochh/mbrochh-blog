@@ -57,6 +57,8 @@ WORK IN PROGRESS...
   * Verdict: This would be the best network, the only problem is that nobody is
              is using it.
 
+## What do they offer that can't be solved with other tools?
+
 ## How do I use social networks at the moment?
 
 * Facebook
@@ -98,6 +100,18 @@ WORK IN PROGRESS...
   * Recommend places to friends
   * Narcissism: My life is more exciting than yours
 
+## Who profits from social networks?
+
+* The owner
+  * Ad revenue
+  * Big data insights
+  * Subtle controll of the masses
+* Content producers
+  * Inbound traffic / content going viral 
+* Users
+  * Organizing events with many people could be easier (i.e. Python User Group Meetups)
+  * Tools for creating communities 
+
 ## What do I hope to gain from the usage?
 
 * Stay in touch with people, especially when staying abroad for long periods
@@ -138,3 +152,10 @@ WORK IN PROGRESS...
 
 * Rule of thumb: Post everything public. No network can be trusted, therefore
   no network should get content that can't be public.
+
+## Consequences
+
+* I still need FB for app development
+* I don't need Facebook for anything else / my good friends are not using it
+* I don't need G+ for anything
+* I need Twitter to discover tech related content
