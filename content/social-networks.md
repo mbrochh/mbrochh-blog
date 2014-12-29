@@ -57,7 +57,35 @@ WORK IN PROGRESS...
   * Verdict: This would be the best network, the only problem is that nobody is
              is using it.
 
-## What do they offer that can't be solved with other tools?
+## What do social networks offer that can't be solved with other tools?
+
+## Who profits from social networks?
+
+* The owner
+  * Ad revenue
+  * Big data insights
+  * Subtle controll of the masses
+* Content producers
+  * Inbound traffic / content going viral 
+* Users
+  * Organizing events with many people could be easier (i.e. Python User Group Meetups)
+  * Tools for creating communities 
+
+## Why do people want to use social networks at all?
+
+* Be your own celebrity?
+
+## What do I hope to gain from the usage?
+
+* Stay in touch with people, especially when staying abroad for long periods
+* Learn about nice places / activities to do
+* Build a personal brand as a consultant
+* Gain trust in my readership, prove to be a good gatekeeper, links that I post
+  are worth your time
+* Learn about new technologies / best practices
+
+* Subconsciously:
+  * Gain a followship = illusion of more power to change the world
 
 ## How do I use social networks at the moment?
 
@@ -67,6 +95,7 @@ WORK IN PROGRESS...
   * 58 Followers
   * Share personal and lame stuff with close friends and family
   * 93 posts in 24hrs
+  * 1 ad at the top
 
 * Twitter
   * Since March 2009
@@ -74,7 +103,8 @@ WORK IN PROGRESS...
   * 539 Followers
   * 231 Following
   * Find new technologies / share links and nerd-jokes with my IT-fellows
-  * 77 posts in 24hrs
+  * 122 posts in 24hrs
+  * 7 ad in stream at the top
 
 * G+
   * Since ??? (When it started)
@@ -83,7 +113,8 @@ WORK IN PROGRESS...
   * Unsure what to do there. Mainly use it to broadcast to the other two.
   * Was hoping that it can overcome Facebook and Twitter at the same time, but
     it failed
-  * 17 posts in 24 hrs
+  * 4 posts in 24 hrs
+  * 1 annoying "You may know"
 
 * Ask questions
   * Never get answers on Twitter
@@ -99,34 +130,6 @@ WORK IN PROGRESS...
   * Remember nice places
   * Recommend places to friends
   * Narcissism: My life is more exciting than yours
-
-## Who profits from social networks?
-
-* The owner
-  * Ad revenue
-  * Big data insights
-  * Subtle controll of the masses
-* Content producers
-  * Inbound traffic / content going viral 
-* Users
-  * Organizing events with many people could be easier (i.e. Python User Group Meetups)
-  * Tools for creating communities 
-
-## What do I hope to gain from the usage?
-
-* Stay in touch with people, especially when staying abroad for long periods
-* Learn about nice places / activities to do
-* Build a personal brand as a consultant
-* Gain trust in my readership, prove to be a good gatekeeper, links that I post
-  are worth your time
-* Learn about new technologies / best practices
-
-* Subconsciously:
-  * Gain a followship = illusion of more power to change the world
-
-## Why do people want to use social networks at all?
-
-* Be your own celebrity?
 
 ## Interesting & paradox observations
 
