@@ -1,11 +1,42 @@
 Date: 2014-12-26
-Title: Social Network Roulette
-Tagline: Which social networks should I use?
+Title: A Reflection On Social Networks 
+Tagline: How do I use them and why do I use them?
 Slug: social-networks
 Category: Blog
 Tags: social media, facebook, twitter, google plus 
 
 WORK IN PROGRESS...
+
+The World Health Organization counts the [years of life lost](http://www.who.int/gho/mortality_burden_disease/daly_rates/en/)
+due to disabilities and mortality every year. Someone should do the same for
+social networks, because I don't see the difference between a person not
+contributing to society because she is tied to a wheel-chair and a person
+watching cat movies on YouTube.
+
+Social networks are like sugar, cigarettes, alcohol and fast food: We all know
+that they are unhealthy but we just don't have the strength to stay away from
+them.
+
+2014 turned out to be a fantastic year for me but I wasn't even half as
+productive as I used to be. If I want to get any further in life in 2015 I need
+to change something. I have many ideas on how to improve but one idea keeps
+coming back to me:
+
+I need to re-view my social network usage.
+
+In the beginning, I signed up out of curiosity, without any special
+expectations or purpose. I quickly understood how these apps could be used to
+achieve certain goals and so I had created a personal agenda on how to use them
+(and why to use them). However, over time, they became mainstream and changed
+the way we use the internet and even changed the way we interact with other
+people and maybe even the way we work as a society.
+
+Until now, I just swam with the stream. I never mindfully looked at these
+changes and asked myself if they are good or bad and if I want to be part of
+this or not. It all boils down to:
+
+I don't know why I post food porn on Facebook. Everyone seems to do it, so I
+just do it as well.
 
 ## Pros & Cons of each network?
 
@@ -101,10 +132,10 @@ WORK IN PROGRESS...
   * Since March 2009
   * 8074 Tweets
   * 539 Followers
-  * 231 Following
+  * 231 Following / 137 people
   * Find new technologies / share links and nerd-jokes with my IT-fellows
-  * 122 posts in 24hrs
-  * 7 ad in stream at the top
+  * 153 posts in 24hrs
+  * 7 ads in stream
 
 * G+
   * Since ??? (When it started)
