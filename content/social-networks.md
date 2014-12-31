@@ -7,15 +7,16 @@ Tags: social media, facebook, twitter, google plus
 
 WORK IN PROGRESS...
 
-The World Health Organization counts the [years of life lost](http://www.who.int/gho/mortality_burden_disease/daly_rates/en/)
-due to disabilities and mortality every year. Someone should do the same for
-social networks, because I don't see the difference between a person not
-contributing to society because she is tied to a wheel-chair and a person
-watching cat movies on YouTube.
+The World Health Organization counts the [years of life
+lost](http://www.who.int/gho/mortality_burden_disease/daly_rates/en/) due to
+disabilities and mortality every year. Someone should do the same for social
+networks: I don't really see the difference between a person not contributing
+to society because she is tied to a wheel-chair and a person watching cat
+movies on YouTube or playing Candy Crush. Social networks are like sugar,
+cigarettes, alcohol and fast food: We all know that they are unhealthy but we
+just don't have the strength to stay away from them.
 
-Social networks are like sugar, cigarettes, alcohol and fast food: We all know
-that they are unhealthy but we just don't have the strength to stay away from
-them.
+## Why this post?
 
 2014 turned out to be a fantastic year for me but I wasn't even half as
 productive as I used to be. If I want to get any further in life in 2015 I need
@@ -28,12 +29,10 @@ In the beginning, I signed up out of curiosity, without any special
 expectations or purpose. I quickly understood how these apps could be used to
 achieve certain goals and so I had created a personal agenda on how to use them
 (and why to use them). However, over time, they became mainstream and changed
-the way we use the internet and even changed the way we interact with other
-people and maybe even the way we work as a society.
-
-Until now, I just swam with the stream. I never mindfully looked at these
-changes and asked myself if they are good or bad and if I want to be part of
-this or not. It all boils down to:
+the way we use the internet, they changed the way we interact with other people
+and maybe even the way we work as a society. Until now, I just swam with the
+stream. I never mindfully looked at these changes and asked myself if they are
+good or bad and if I want to be part of this or not. It all boils down to:
 
 I don't know why I post food porn on Facebook. Everyone seems to do it, so I
 just do it as well.
@@ -105,6 +104,7 @@ just do it as well.
 ## Why do people want to use social networks at all?
 
 * Be your own celebrity?
+* Perfect time-filler
 
 ## What do I hope to gain from the usage?
 
