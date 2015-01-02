@@ -31,18 +31,47 @@ networks could be used to achieve certain goals and so I had created a personal
 agenda on how to use them (and why to use them). However, over time, they
 became mainstream and changed the way we use the internet, they changed the way
 we interact with other people and maybe even the way we work as a society.
-Until now, I just swam with the stream. I never mindfully looked at these
-changes and asked myself if they are good or bad and if I want to be part of
-this or not. It all boils down to:
 
-I don't know why I post food porn on Facebook. Everyone seems to do it, so I
-just do it as well.
+Until now, I never mindfully looked at these changes and asked myself if they
+are good or bad and if I want to be part of this or not. It all boils down to:
 
-![Social network features](|filename|/images/social-networks-01.png)
+> I don't know why I post food porn on Facebook. Everyone seems to do it, so I
+> just do it as well.
+
+## My social network stats
+
+I'm sure there are hundreds of different kinds of social network users, so
+let's try to find out what kind of user I am. If you are similar to me, the
+rest of this post might be useful to you. If you are very different, you might
+just take the questions I asked myself as an inspiration to reflect on your own
+social network usage and maybe publish your own findings somewhere as well.
+
+![Table with my social network stats](|filename|/images/social-networks-stats.png)
+
+I'm just looking at the three big players here: Facebook, Twitter and Google+.
+I spend a ton of time on Reddit as well, but I don't have any "friends" there,
+so I will ignore Reddit for this post.
+
+I have 271 friends on Facebook. I started the new year with deleting 100
+friends, so those 271 are people who I have met in real life, most probably
+more than once.
+
+I'm actually following 226 accounts on Twitter, but I keep a list of "people".
+All accounts who are not in that list are bots, products, organisations,
+governments, communities and so on. To make the comparisons between the three
+networks more fair, I will assume that I only follow the 137 people on Twitter
+(because non-people usually post higher volumes). While I know everyone I
+follow on Facebook personally, I know almost no one on Twitter. Here I follow
+great developers and public figures in the hopes of getting news about new
+technologies.
+
+On Google+ I'm following 253 people. I added a ton of real-life friends to my
+circles, but those are mostly empty and unused profiles, the rest is pretty
+much the same people that I also follow on Twitter. Here I was hoping to get
+a combination of Facebook and Twitter - the best of both worlds - but
+unfortunately that hope never turned into a reality.
 
 ## Pros & Cons of each network?
-
-* http://www.statista.com/statistics/272014/global-social-networks-ranked-by-number-of-users/
 
 * Facebook
   * Pro: Everyone is there
