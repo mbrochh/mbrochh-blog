@@ -71,6 +71,47 @@ much the same people that I also follow on Twitter. Here I was hoping to get
 a combination of Facebook and Twitter - the best of both worlds - but
 unfortunately that hope never turned into a reality.
 
+## Why do people use social media?
+
+I have my own reasons, but obviously, there seem to be some universal factors
+that suck almost everyone into social media.
+
+[This post by OnePoll](http://www.onepoll.com/10-reasons-people-use-social-media/)
+has a list of ten very reasonable reasons:
+
+*Social interaction* and *expression of opinions* are the obvious one. You can
+find a sub-culture for pretty much anything on the internet, so you will be
+able to socially interact with like-minded people, no matter how crazy or niche
+the topic of your interest is.
+
+*Information seeking*, *passing time*, *entertainment*, *relaxation*, *things
+to talk about*, *convenience* and *knowing about others* all seem to fall into
+a broader category of "fighting boredom".
+
+The interesting thing is this: Without much thought, I can easily think of
+better ways for almost all of the above:
+
+* Want to seek information? Use Google (more direct, better results)!
+* Want to express an opinion? Get politically involved. Fifty likes on Facebook
+  doesn't mean anyone cares about your opinion.
+* Want to pass time? Go for a walk or do sports (healthier).
+* Want to be entertained? Read a book or watch one of the many movies on your
+  watch-later list (more direct, better quality).
+* Want to relax? Do mindfulness meditation (seriously, try it)!
+* Want to know about others? Meet them (better quality, by just using social
+  media you will get a false and incomplete image of a person anyways)!
+
+I think *Convenience* is the culprit. Social networks give you the illusion
+that you can somehow get all of the above, anytime, any place, in small and
+quickly to digest portions. Maybe I *can* use Facebook to relax.  Maybe I *can*
+use it to seek information. And maybe I *can* use it to be entertained. But
+whatever goal I had in mind when I opened Facebook, Facebook doesn't know about
+my intentions, so it offers me all options at the same time, which only
+distracts me. It tries to do all the things at once, as a result it is not
+really good at any of those things.
+
+## What do social networks offer that can't be solved with other tools?
+
 ## Pros & Cons of each network?
 
 * Facebook
@@ -121,7 +162,6 @@ unfortunately that hope never turned into a reality.
   * Verdict: This would be the best network, the only problem is that nobody is
              is using it.
 
-## What do social networks offer that can't be solved with other tools?
 
 ## Who profits from social networks?
 
