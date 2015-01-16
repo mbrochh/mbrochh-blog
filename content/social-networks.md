@@ -4,6 +4,7 @@ Tagline: How do I use them and why do I use them?
 Slug: social-networks
 Category: Blog
 Tags: social media, facebook, twitter, google plus 
+Status: draft
 
 WORK IN PROGRESS...
 
