@@ -41,7 +41,14 @@ Django 1.7 there is a little problem, now: You will have `south` in your
 `INSTALLED_APPS` setting but Django>1.7 does not allow that any more. As a
 quick hack, you can simply add `south` only when the active Django version is
 `<1.7`. Have a look at our [django-reusable-app-template](https://github.com/bitmazk/django-reusable-app-template/blob/master/template/package_name/tests/south_settings.py#L28)
-for an example.
+for an example. It should look something like this:
+
+    #!python
+    from distutils.version import StrictVersion
+    import django
+    django_version = django.get_version()
+    if StrictVersion(django_version) < StrictVersion('1.7'):
+        INSTALLED_APPS.append('south', )
 
 Finally, it would be really great to always run all tests against both
 environments. This is where [tox](http://tox.readthedocs.org/en/latest/) enters 
@@ -73,7 +80,7 @@ these dependencies as well.
 
 All you have to do in order to run your tests is:
 
-    #!py
+    #!bash
     pip install tox
     tox
 
