@@ -1,5 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2014-05-06T00:00:00+08:00</updated><entry><title>PasswordMaker Online</title><link href="http://martinbrochhaus.com/passwordmaker.html" rel="alternate"></link><updated>2014-05-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-05-06:passwordmaker.html</id><summary type="html">&lt;p&gt;It must be more than six years that I am using
+<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/all.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2015-01-20T00:00:00+08:00</updated><entry><title>Maintaining Reusable Django Apps with Tox</title><link href="http://martinbrochhaus.com/tox.html" rel="alternate"></link><updated>2015-01-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2015-01-20:tox.html</id><summary type="html">&lt;p&gt;Django 1.7 was a &lt;a href="https://docs.djangoproject.com/en/1.7/releases/1.7/"&gt;huge release&lt;/a&gt;
+with tons of great new features.&lt;/p&gt;
+&lt;p&gt;One major change is that &lt;a href="http://south.readthedocs.org/en/latest/releasenotes/1.0.html#library-migration-path"&gt;South&lt;/a&gt;
+has been discontinued and Django now provides migrations in it's core.&lt;/p&gt;
+&lt;p&gt;This raises a problem for maintainers of reusable apps, &lt;a href="http://github.com/bitmazk/"&gt;like me and my team&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How can we provide migrations for both, Django 1.6 &amp;amp; South and Django 1.7 &amp;amp; core migrations?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The good thing is that South as of version 1.0 will first look for a folder
+called &lt;code&gt;south_migrations&lt;/code&gt; and only afterwards search for the usual &lt;code&gt;migrations&lt;/code&gt;
+folder.  Therefore, you can simply rename your old &lt;code&gt;migrations&lt;/code&gt; folder to
+&lt;code&gt;south_migrations&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Next you need to activate a second venv that has Django&amp;gt;1.7 installed and run
+&lt;code&gt;./manage.py makemigrations appname&lt;/code&gt;. This will create new initial migrations
+using the new core migrations app.&lt;/p&gt;
+&lt;p&gt;Now you have two folders: &lt;code&gt;south_migrations&lt;/code&gt; with your old migrations and
+&lt;code&gt;migrations&lt;/code&gt; with your new migrations.&lt;/p&gt;
+&lt;p&gt;Every time you make changes to your models, you have to activate the 1.6 venv
+and run &lt;code&gt;./manage.py schemamigration appname --auto&lt;/code&gt;, then activate the 1.7
+venv and run &lt;code&gt;./manage.py makemigrations appname&lt;/code&gt;. It might be a good idea to
+create a fabric task &lt;code&gt;fab makemigrations&lt;/code&gt; which takes care of everything.&lt;/p&gt;
+&lt;p&gt;If you are a good developer you will surely do Test Driven Development. In the
+past I had given a PyCon Talk about &lt;a href="https://github.com/mbrochh/tdd-with-django-reusable-app"&gt;Test Driven Development with reusable Django apps&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In that talk I desribed how we execute our tests with a &lt;code&gt;runtests.py&lt;/code&gt; so that
+we don't need to setup a whole Django project for each reusable app. With
+Django 1.7 there is a little problem, now: You will have &lt;code&gt;south&lt;/code&gt; in your
+&lt;code&gt;INSTALLED_APPS&lt;/code&gt; setting but Django&amp;gt;1.7 does not allow that any more. As a
+quick hack, you can simply add &lt;code&gt;south&lt;/code&gt; only when the active Django version is
+&lt;code&gt;&amp;lt;1.7&lt;/code&gt;. Have a look at our &lt;a href="https://github.com/bitmazk/django-reusable-app-template/blob/master/template/package_name/tests/south_settings.py#L28"&gt;django-reusable-app-template&lt;/a&gt;
+for an example.&lt;/p&gt;
+&lt;p&gt;Finally, it would be really great to always run all tests against both
+environments. This is where &lt;a href="http://tox.readthedocs.org/en/latest/"&gt;tox&lt;/a&gt; enters 
+the stage.&lt;/p&gt;
+&lt;p&gt;Your &lt;code&gt;tox.ini&lt;/code&gt; should look like this:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[tox]&lt;/span&gt;
+&lt;span class="na"&gt;envlist&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;py27-django{16,17}&lt;/span&gt;
+
+&lt;span class="k"&gt;[testenv]&lt;/span&gt;
+&lt;span class="na"&gt;usedevelop&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;True&lt;/span&gt;
+&lt;span class="na"&gt;deps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&lt;/span&gt;
+&lt;span class="s"&gt;    django16: Django&amp;lt;1.7&lt;/span&gt;
+&lt;span class="s"&gt;    django17: Django&amp;gt;=1.7,&amp;lt;1.8&lt;/span&gt;
+&lt;span class="s"&gt;    -rtest_requirements.txt&lt;/span&gt;
+&lt;span class="na"&gt;commands&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;{toxinidir}/VAR_PACKAGE_NAME/tests/runtests.py&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;The &lt;code&gt;envlist&lt;/code&gt; setting defines a list of environments that tox should setup. We
+can use variables here, so the &lt;code&gt;{16,17}&lt;/code&gt; results in two environments with the
+names &lt;code&gt;py27-django16&lt;/code&gt; and &lt;code&gt;py27-django17&lt;/code&gt;. In the &lt;code&gt;deps&lt;/code&gt; setting we can make
+use of those variables again and so we declare that in case of &lt;code&gt;django16&lt;/code&gt; we
+want to install &lt;code&gt;Django&amp;lt;1.7&lt;/code&gt; and otherwise &lt;code&gt;Django&amp;gt;-1.7,&amp;lt;1.8&lt;/code&gt;. Afterwards we
+install our other &lt;code&gt;test_requirements.txt&lt;/code&gt;. Behind the scenes this is the usual
+call to &lt;code&gt;pip install -r test_requirements.txt&lt;/code&gt;. Our reusable app also has a
+&lt;code&gt;setup.py&lt;/code&gt; with &lt;code&gt;install_requires&lt;/code&gt;, thankfully, tox is smart enough to install
+these dependencies as well.&lt;/p&gt;
+&lt;p&gt;All you have to do in order to run your tests is:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;tox&lt;/span&gt;
+&lt;span class="n"&gt;tox&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;There is also a package called &lt;code&gt;detox&lt;/code&gt; which claims to run the tests in
+parallel but I couldn't get it up and running on OSX.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="database"></category></entry><entry><title>PasswordMaker Online</title><link href="http://martinbrochhaus.com/passwordmaker.html" rel="alternate"></link><updated>2014-05-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-05-06:passwordmaker.html</id><summary type="html">&lt;p&gt;It must be more than six years that I am using
 &lt;a href="http://www.passwordmaker.org/passwordmaker.html"&gt;PasswordMaker&lt;/a&gt; to manage all
 my passwords. I think this is the best password tool that could ever exist.
 Unfortunately it is a little bit difficult to understand and a little bit

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>martinbrochhaus.com</title><link href="http://martinbrochhaus.com/" rel="alternate"></link><link href="http://martinbrochhaus.com/feeds/blog.atom.xml" rel="self"></link><id>http://martinbrochhaus.com/</id><updated>2015-01-20T00:00:00+08:00</updated><entry><title>Maintaining Reusable Django Apps with Tox</title><link href="http://martinbrochhaus.com/tox.html" rel="alternate"></link><updated>2015-01-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2015-01-20:tox.html</id><summary type="html">&lt;p&gt;Django 1.7 was a &lt;a href="https://docs.djangoproject.com/en/1.7/releases/1.7/"&gt;huge release&lt;/a&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>martinbrochhaus.com</title><link>http://martinbrochhaus.com/</link><description></description><atom:link href="http://martinbrochhaus.com/feeds/martin-brochhaus.rss.xml" rel="self"></atom:link><lastBuildDate>Tue, 20 Jan 2015 00:00:00 +0800</lastBuildDate><item><title>Maintaining Reusable Django Apps with Tox</title><link>http://martinbrochhaus.com/tox.html</link><description>&lt;p&gt;Django 1.7 was a &lt;a href="https://docs.djangoproject.com/en/1.7/releases/1.7/"&gt;huge release&lt;/a&gt;
 with tons of great new features.&lt;/p&gt;
 &lt;p&gt;One major change is that &lt;a href="http://south.readthedocs.org/en/latest/releasenotes/1.0.html#library-migration-path"&gt;South&lt;/a&gt;
 has been discontinued and Django now provides migrations in it's core.&lt;/p&gt;
@@ -72,7 +72,7 @@ these dependencies as well.&lt;/p&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;There is also a package called &lt;code&gt;detox&lt;/code&gt; which claims to run the tests in
-parallel but I couldn't get it up and running on OSX.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="database"></category></entry><entry><title>PasswordMaker Online</title><link href="http://martinbrochhaus.com/passwordmaker.html" rel="alternate"></link><updated>2014-05-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-05-06:passwordmaker.html</id><summary type="html">&lt;p&gt;It must be more than six years that I am using
+parallel but I couldn't get it up and running on OSX.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Tue, 20 Jan 2015 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2015-01-20:tox.html</guid><category>python</category><category>django</category><category>database</category></item><item><title>PasswordMaker Online</title><link>http://martinbrochhaus.com/passwordmaker.html</link><description>&lt;p&gt;It must be more than six years that I am using
 &lt;a href="http://www.passwordmaker.org/passwordmaker.html"&gt;PasswordMaker&lt;/a&gt; to manage all
 my passwords. I think this is the best password tool that could ever exist.
 Unfortunately it is a little bit difficult to understand and a little bit
@@ -202,7 +202,7 @@ so easy) in order to sneak into your accounts.&lt;/p&gt;
 your master password (and the knowledge that you use PasswordMaker at all) it
 should be very very hard to bruteforce into your account.&lt;/p&gt;
 &lt;p&gt;That's it. If you are using anything else for your passwords, you are doing it
-wrong. There. I said it.&lt;/p&gt;</summary><category term="technology"></category><category term="security"></category><category term="privacy"></category><category term="tools"></category></entry><entry><title>Django Template Fragment Caching</title><link href="http://martinbrochhaus.com/caching.html" rel="alternate"></link><updated>2014-04-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-20:caching.html</id><summary type="html">&lt;p&gt;Granted, when you look at the frontpage of &lt;a href="https://publishizer.com"&gt;publishizer.com&lt;/a&gt;
+wrong. There. I said it.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Tue, 06 May 2014 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2014-05-06:passwordmaker.html</guid><category>technology</category><category>security</category><category>privacy</category><category>tools</category></item><item><title>Django Template Fragment Caching</title><link>http://martinbrochhaus.com/caching.html</link><description>&lt;p&gt;Granted, when you look at the frontpage of &lt;a href="https://publishizer.com"&gt;publishizer.com&lt;/a&gt;
 you will say that it doesn't show much content, but even this simple site 
 loads about 20 different partial templates and performs more than a hundred
 database queries.&lt;/p&gt;
@@ -413,7 +413,7 @@ easily be solved. Instead of caching the whole frontpage, I could go one level
 deeper and cache the individual rendered campaign cards. We would never show
 more than a few dozen of those cards on the frontpage anyways, so having those
 in the cache would be feasible.&lt;/p&gt;
-&lt;p&gt;Dozens of preorders per second. Ah well... one can only dream...&lt;/p&gt;</summary><category term="python"></category><category term="django"></category></entry><entry><title>Django-compressor and Amazon S3</title><link href="http://martinbrochhaus.com/compressor.html" rel="alternate"></link><updated>2014-04-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-19:compressor.html</id><summary type="html">&lt;p&gt;As described in my &lt;a href="http://martinbrochhaus.com/s3.html"&gt;last post&lt;/a&gt; we are serving the media files
+&lt;p&gt;Dozens of preorders per second. Ah well... one can only dream...&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sun, 20 Apr 2014 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2014-04-20:caching.html</guid><category>python</category><category>django</category></item><item><title>Django-compressor and Amazon S3</title><link>http://martinbrochhaus.com/compressor.html</link><description>&lt;p&gt;As described in my &lt;a href="http://martinbrochhaus.com/s3.html"&gt;last post&lt;/a&gt; we are serving the media files
 that are uploaded by our users via Amazon S3. We do not serve our static files
 via S3 because it slows down our deployment. &lt;code&gt;./manage.py collectstatic&lt;/code&gt; would
 currently find more than 280 files and it would take forever to upload them
@@ -557,7 +557,7 @@ files to Amazon S3.&lt;/p&gt;
 &lt;p&gt;Note: In this setup you will want to set &lt;code&gt;COMPRESS_ENABLED = False&lt;/code&gt; during
 local development, otherwise it will be hard to debug JS or CSS issues. If you
 set it to &lt;code&gt;True&lt;/code&gt; you must run &lt;code&gt;./manage.py collectstatic&lt;/code&gt; every time you change
-a CSS or JS file.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="amazon"></category></entry><entry><title>Django-Storages and Amazon S3</title><link href="http://martinbrochhaus.com/s3.html" rel="alternate"></link><updated>2014-04-11T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2014-04-11:s3.html</id><summary type="html">&lt;p&gt;Yesterday I migrated the media files of
+a CSS or JS file.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sat, 19 Apr 2014 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2014-04-19:compressor.html</guid><category>python</category><category>django</category><category>amazon</category></item><item><title>Django-Storages and Amazon S3</title><link>http://martinbrochhaus.com/s3.html</link><description>&lt;p&gt;Yesterday I migrated the media files of
 &lt;a href="https://publishizer.com"&gt;Publishizer.com&lt;/a&gt; to &lt;a href="http://aws.amazon.com/s3/"&gt;Amazon's Simple Storage
 Service&lt;/a&gt;. This relatively simple task took me
 almost five hours and was quite a frustrating experience, so I thought I better
@@ -844,7 +844,7 @@ your production server like above and set &lt;code&gt;USE_S3 = True&lt;/code&gt;
 deployment and visit your site.&lt;/p&gt;
 &lt;p&gt;Voila! Images are now served via Amazon! Now if this is not a good reason to
 lean back and experience a good bottle of wine...&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://publishizer.com/wine-sense/" target="_blank"&gt;&lt;img src="https://publishizer.s3.amazonaws.com/media/thumbs/user_media/892/images/92fcb90f-df40-4bdc-86ed-a522ee3b376e.jpg.150x200_q85.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="amazon"></category></entry><entry><title>Django And related_names</title><link href="http://martinbrochhaus.com/related-names.html" rel="alternate"></link><updated>2013-11-24T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-11-24:related-names.html</id><summary type="html">&lt;p&gt;If you are a Django developer and if you create reusable apps, please
+&lt;p&gt;&lt;a href="https://publishizer.com/wine-sense/" target="_blank"&gt;&lt;img src="https://publishizer.s3.amazonaws.com/media/thumbs/user_media/892/images/92fcb90f-df40-4bdc-86ed-a522ee3b376e.jpg.150x200_q85.jpg" /&gt;&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Fri, 11 Apr 2014 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2014-04-11:s3.html</guid><category>python</category><category>django</category><category>amazon</category></item><item><title>Django And related_names</title><link>http://martinbrochhaus.com/related-names.html</link><description>&lt;p&gt;If you are a Django developer and if you create reusable apps, please
 do everyone else a favour: be a good citizen and add related names to
 all your foreign keys.&lt;/p&gt;
 &lt;p&gt;Why? For example, you cannot add Mezzanine and django-cms to the same project
@@ -890,7 +890,7 @@ to a clash again.&lt;/p&gt;
 &lt;li&gt;and uses this very same foreign key and related name. &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Even if there is an app with the same name, you would probably not be able to
-use both apps at the same time because they would have the same package name.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="rant"></category></entry><entry><title>Migrating Apps from simple-translation to django-hvad</title><link href="http://martinbrochhaus.com/hvad.html" rel="alternate"></link><updated>2013-10-30T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-10-30:hvad.html</id><summary type="html">&lt;p&gt;This is the second post in a small &lt;a href="http://martinbrochhaus.com/djangocms3.html"&gt;series&lt;/a&gt; about
+use both apps at the same time because they would have the same package name.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sun, 24 Nov 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-11-24:related-names.html</guid><category>python</category><category>django</category><category>rant</category></item><item><title>Migrating Apps from simple-translation to django-hvad</title><link>http://martinbrochhaus.com/hvad.html</link><description>&lt;p&gt;This is the second post in a small &lt;a href="http://martinbrochhaus.com/djangocms3.html"&gt;series&lt;/a&gt; about
 problems that might occur when migrating from django-cms 2 to 3.&lt;/p&gt;
 &lt;p&gt;In my first post I described &lt;a href="http://martinbrochhaus.com/m2mplaceholderfields.html"&gt;how to get rid of the
 M2MPlaceholderField&lt;/a&gt;.&lt;/p&gt;
@@ -1027,7 +1027,7 @@ South datamigration, which should look like this:&lt;/p&gt;
 &lt;p&gt;Finally you can delete the &lt;code&gt;NewsEntryTrans&lt;/code&gt; model and create a South
 schemamigration for this as well. Of course you will have to make some changes
 to your templates, because you will not need the &lt;code&gt;simpletranslation_tags&lt;/code&gt;
-any more and just access &lt;code&gt;object.title&lt;/code&gt; in your templates, which is awesome!&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="django-cms"></category><category term="howto"></category></entry><entry><title>Getting Rid of M2MPlaceholderFields</title><link href="http://martinbrochhaus.com/m2mplaceholderfields.html" rel="alternate"></link><updated>2013-10-28T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-10-28:m2mplaceholderfields.html</id><summary type="html">&lt;p&gt;In my &lt;a href="http://martinbrochhaus.com/djangocms3.html"&gt;last post&lt;/a&gt; I gave an overview over some 
+any more and just access &lt;code&gt;object.title&lt;/code&gt; in your templates, which is awesome!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Wed, 30 Oct 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-10-30:hvad.html</guid><category>python</category><category>django</category><category>django-cms</category><category>howto</category></item><item><title>Getting Rid of M2MPlaceholderFields</title><link>http://martinbrochhaus.com/m2mplaceholderfields.html</link><description>&lt;p&gt;In my &lt;a href="http://martinbrochhaus.com/djangocms3.html"&gt;last post&lt;/a&gt; I gave an overview over some 
 hurdles I had to overcome in order to migrate
 &lt;a href="https://github.com/bitmazk/django-multilingual-news"&gt;django-multilingual-news&lt;/a&gt;.
 to django-cms 3.&lt;/p&gt;
@@ -1283,7 +1283,7 @@ placeholder field. &lt;/p&gt;
 &lt;p&gt;I ran this migration against a new Django 1.5 / django-cms 3 project and it
 worked. I also ran it against an existing Django 1.4 / django-cms 2.3 project
 and all existing cmsplugins showed up nicely in the new PlaceholderFields.&lt;/p&gt;
-&lt;p&gt;Life is good.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="django-cms"></category><category term="howto"></category></entry><entry><title>Migrating to django-cms 3</title><link href="http://martinbrochhaus.com/djangocms3.html" rel="alternate"></link><updated>2013-10-27T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-10-27:djangocms3.html</id><summary type="html">&lt;p&gt;You might have heard it: &lt;a href="https://www.django-cms.org/en/"&gt;django-cms 3&lt;/a&gt; is in
+&lt;p&gt;Life is good.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Mon, 28 Oct 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-10-28:m2mplaceholderfields.html</guid><category>python</category><category>django</category><category>django-cms</category><category>howto</category></item><item><title>Migrating to django-cms 3</title><link>http://martinbrochhaus.com/djangocms3.html</link><description>&lt;p&gt;You might have heard it: &lt;a href="https://www.django-cms.org/en/"&gt;django-cms 3&lt;/a&gt; is in
 beta now, so a final release might be released soon. For a long time we had
 used &lt;a href="https://github.com/fivethreeo/cmsplugin-blog"&gt;cmsplugin-blog&lt;/a&gt; with all
 our django-cms installations. Unfortunately it was lacking many features that
@@ -1342,7 +1342,7 @@ hvad really is much better than simple-translations.&lt;/p&gt;
 &lt;h3&gt;3. Who knows?&lt;/h3&gt;
 &lt;p&gt;As I migrate all of our apps, I will probably find more hurdles and will
 gradually add more detailed posts describing the solutions for each problem.&lt;/p&gt;
-&lt;p&gt;Stay tuned for the next post on how to get rid of the M2MPlaceholderField...&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="django-cms"></category><category term="howto"></category></entry><entry><title>Simple Backup With Rsync</title><link href="http://martinbrochhaus.com/backup.html" rel="alternate"></link><updated>2013-10-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-10-19:backup.html</id><summary type="html">&lt;p&gt;Every day I carry around about 830GB of data:&lt;/p&gt;
+&lt;p&gt;Stay tuned for the next post on how to get rid of the M2MPlaceholderField...&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sun, 27 Oct 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-10-27:djangocms3.html</guid><category>python</category><category>django</category><category>django-cms</category><category>howto</category></item><item><title>Simple Backup With Rsync</title><link>http://martinbrochhaus.com/backup.html</link><description>&lt;p&gt;Every day I carry around about 830GB of data:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;80GB of application data and my home folder on a SSD drive in my MacBook&lt;/li&gt;
 &lt;li&gt;440GB on the original MacBook HD which now serves as a secondary drive. It
@@ -1474,7 +1474,7 @@ significantly larger than the old ones.&lt;/p&gt;
 After that I can run the script as usual and sell my old archive drives on
 eBay.&lt;/p&gt;
 &lt;p&gt;The best thing is: The whole setup fits into my luggage, so for a nomad like me
-this is also a solution that I can carry around with me, if I need to.&lt;/p&gt;</summary><category term="howto"></category><category term="shell"></category><category term="rsync"></category><category term="hardware"></category></entry><entry><title>Reveal.js and Github Pages</title><link href="http://martinbrochhaus.com/revealjs.html" rel="alternate"></link><updated>2013-07-02T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-07-02:revealjs.html</id><summary type="html">&lt;p&gt;Yesterday, I described why &lt;a href="http://martinbrochhaus.com/presentations.html"&gt;my current presentation stack needs an overhaul&lt;/a&gt;.
+this is also a solution that I can carry around with me, if I need to.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sat, 19 Oct 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-10-19:backup.html</guid><category>howto</category><category>shell</category><category>rsync</category><category>hardware</category></item><item><title>Reveal.js and Github Pages</title><link>http://martinbrochhaus.com/revealjs.html</link><description>&lt;p&gt;Yesterday, I described why &lt;a href="http://martinbrochhaus.com/presentations.html"&gt;my current presentation stack needs an overhaul&lt;/a&gt;.
 Today I'm going to show you my new stack. This how-to will introduce a little
 helper project that will allow you to easily kickstart a new Reveal.js
 presentation, split it up into subfiles and host it on Github Pages.&lt;/p&gt;
@@ -1602,7 +1602,7 @@ connected to you in real-time, so when you change a slide, it will change on all
 screens.&lt;/p&gt;
 &lt;p&gt;That's it! I hope my little &lt;a href="https://github.com/mbrochh/reveal-template"&gt;reveal-template&lt;/a&gt;
 will be useful to someone and allow you to publish awesome presentations in no
-time - have fun!&lt;/p&gt;</summary><category term="python"></category><category term="presentations"></category><category term="howto"></category></entry><entry><title>Rethinking Presentations</title><link href="http://martinbrochhaus.com/presentations.html" rel="alternate"></link><updated>2013-07-01T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-07-01:presentations.html</id><summary type="html">&lt;p&gt;I'm currently preparing a long tutorial about &lt;a href="https://docs.google.com/document/d/11VN5YN98WG53VHFAbzLuGNLyFw-iaNC78igHOJpjN5o/edit?usp=sharing"&gt;Linux essentials&lt;/a&gt;.
+time - have fun!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Tue, 02 Jul 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-07-02:revealjs.html</guid><category>python</category><category>presentations</category><category>howto</category></item><item><title>Rethinking Presentations</title><link>http://martinbrochhaus.com/presentations.html</link><description>&lt;p&gt;I'm currently preparing a long tutorial about &lt;a href="https://docs.google.com/document/d/11VN5YN98WG53VHFAbzLuGNLyFw-iaNC78igHOJpjN5o/edit?usp=sharing"&gt;Linux essentials&lt;/a&gt;.
 While I really love Apple's Keynote and Github's &lt;a href="https://speakerdeck.com/mbrochh"&gt;Speaker Deck&lt;/a&gt;, 
 I'm afraid  that for this undertaking my usual "presentation stack" is not 
 going to cut it. Here is why:&lt;/p&gt;
@@ -1695,7 +1695,7 @@ presentation in one big &lt;code&gt;index.html&lt;/code&gt; file. This contradic
 collaboration because once again, merge conflicts would become a major issue.&lt;/p&gt;
 &lt;p&gt;Luckily I quickly found a pretty cool solution around this and I also figured
 out a nice way to host my presentation on Github.&lt;/p&gt;
-&lt;p&gt;How I did that? I will post a little how-to tomorrow. Stay tuned!&lt;/p&gt;</summary><category term="presentations"></category><category term="thoughts"></category></entry><entry><title>Information Diet</title><link href="http://martinbrochhaus.com/information-diet.html" rel="alternate"></link><updated>2013-06-01T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-06-01:information-diet.html</id><summary type="html">&lt;p&gt;One week has passed since I started my &lt;a href="http://martinbrochhaus.com/irrelevant.html"&gt;information diet&lt;/a&gt;
+&lt;p&gt;How I did that? I will post a little how-to tomorrow. Stay tuned!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Mon, 01 Jul 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-07-01:presentations.html</guid><category>presentations</category><category>thoughts</category></item><item><title>Information Diet</title><link>http://martinbrochhaus.com/information-diet.html</link><description>&lt;p&gt;One week has passed since I started my &lt;a href="http://martinbrochhaus.com/irrelevant.html"&gt;information diet&lt;/a&gt;
 and I'm happy to report that I was able to stick to my plan and did not cheat.
 I have not consumed social media throughout the whole week. Here is how it
 went:&lt;/p&gt;
@@ -1737,7 +1737,7 @@ That's roughly one notification every hour of my waking time during a day.&lt;/p
 (well, almost: I posted two links) so that number of 66 notifications would
 acutally skyrocket if I took part in the social media game - in that case it
 would be more like one small distraction every five minutes.&lt;/p&gt;
-&lt;p&gt;I think that's actually quite scary...&lt;/p&gt;</summary><category term="self-growth"></category></entry><entry><title>Observr</title><link href="http://martinbrochhaus.com/observr.html" rel="alternate"></link><updated>2013-05-28T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-28:observr.html</id><summary type="html">&lt;p&gt;I have tried many file system watchers so far but none of them worked nicely
+&lt;p&gt;I think that's actually quite scary...&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sat, 01 Jun 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-06-01:information-diet.html</guid><category>self-growth</category></item><item><title>Observr</title><link>http://martinbrochhaus.com/observr.html</link><description>&lt;p&gt;I have tried many file system watchers so far but none of them worked nicely
 under Ubuntu and OSX with the same settings.&lt;/p&gt;
 &lt;p&gt;Recently I stumbled upon &lt;a href="https://github.com/kevinburke/observr/"&gt;observr&lt;/a&gt;
 which is a fork of the maybe better known but abandoned &lt;a href="https://github.com/mynyml/watchr"&gt;watchr&lt;/a&gt;.&lt;/p&gt;
@@ -1773,7 +1773,7 @@ give it &lt;code&gt;chmod +x&lt;/code&gt;, for example:&lt;/p&gt;
 
 &lt;p&gt;This would watch the filesystem for any changes in &lt;code&gt;*.less&lt;/code&gt; files and then
 execute the &lt;code&gt;fab lessc&lt;/code&gt; fabric task. Make sure to activate your virtual
-environment before running this script!&lt;/p&gt;</summary><category term="ruby"></category><category term="django"></category><category term="development"></category></entry><entry><title>Irrelevant News</title><link href="http://martinbrochhaus.com/irrelevant.html" rel="alternate"></link><updated>2013-05-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-26:irrelevant.html</id><summary type="html">&lt;p&gt;About one year ago I conducted a little self experiment: I removed the
+environment before running this script!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Tue, 28 May 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-05-28:observr.html</guid><category>ruby</category><category>django</category><category>development</category></item><item><title>Irrelevant News</title><link>http://martinbrochhaus.com/irrelevant.html</link><description>&lt;p&gt;About one year ago I conducted a little self experiment: I removed the
 Facebook, G+, Twitter and Reddit apps from their prominent positions on my 
 phone's homescreen and declared that I may only start those apps on weekends.&lt;/p&gt;
 &lt;p&gt;During weekdays I would be allowed to use social media in the browser but it
@@ -1840,7 +1840,7 @@ five minutes to spare.&lt;/p&gt;
 &lt;p&gt;Ironically I'm now going to share this post on social media. But I'm doing this 
 because I believe it is relevant to pretty much everyone. And it is in your
 circle of influence. You can act on it right now, if you really want to.&lt;/p&gt;
-&lt;p&gt;You should!&lt;/p&gt;</summary><category term="self-growth"></category></entry><entry><title>Shallow Copy Incidents</title><link href="http://martinbrochhaus.com/copy.html" rel="alternate"></link><updated>2013-05-17T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-17:copy.html</id><summary type="html">&lt;p&gt;I didn't sleep well recently. I'm one of the organisers of &lt;a href="https://pycon.sg"&gt;PyCon SG 2013&lt;/a&gt;
+&lt;p&gt;You should!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sun, 26 May 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-05-26:irrelevant.html</guid><category>self-growth</category></item><item><title>Shallow Copy Incidents</title><link>http://martinbrochhaus.com/copy.html</link><description>&lt;p&gt;I didn't sleep well recently. I'm one of the organisers of &lt;a href="https://pycon.sg"&gt;PyCon SG 2013&lt;/a&gt;
 and specifically it is my task to maintain the website. Since the conference
 will be held very very soon, we are approaching a hot phase where everyone's
 hard work has to come together nicely. Sponsors need to get verified, banners 
@@ -2003,7 +2003,7 @@ that kept me sweating for almost a week:&lt;/p&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;&lt;strong&gt;D'oh!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Now go and buy those god damn &lt;a href="https://pycon.sg/checkout/"&gt;PyCon tickets&lt;/a&gt; already, la!&lt;/p&gt;</summary><category term="python"></category></entry><entry><title>OSX Django Toolbelt</title><link href="http://martinbrochhaus.com/toolbelt.html" rel="alternate"></link><updated>2013-05-16T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-16:toolbelt.html</id><summary type="html">&lt;p&gt;Every time I mentor someone about web development with Django, we spend 
+&lt;p&gt;Now go and buy those god damn &lt;a href="https://pycon.sg/checkout/"&gt;PyCon tickets&lt;/a&gt; already, la!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Fri, 17 May 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-05-17:copy.html</guid><category>python</category></item><item><title>OSX Django Toolbelt</title><link>http://martinbrochhaus.com/toolbelt.html</link><description>&lt;p&gt;Every time I mentor someone about web development with Django, we spend 
 countless hours setting up his or her development machine. I'm getting sick of
 it, so I thought I might write it all down.&lt;/p&gt;
 &lt;p&gt;This post will help you to setup a fresh MacBook in such a way that enables you
@@ -2356,7 +2356,7 @@ instead I am using &lt;a href="https://github.com/davidhalter/jedi-vim"&gt;jedi-
 should take you about an hour and is well worth your time. In the beginning
 you will want to have a look at the &lt;a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html"&gt;vim cheatsheet&lt;/a&gt;
 every now and then.&lt;/p&gt;
-&lt;p&gt;I should probably write a post about how to setup vim, soon...&lt;/p&gt;</summary><category term="osx"></category><category term="django"></category></entry><entry><title>Pelican and Github Pages</title><link href="http://martinbrochhaus.com/pelican2.html" rel="alternate"></link><updated>2013-05-15T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-05-15:pelican2.html</id><summary type="html">&lt;p&gt;One year ago I blogged about &lt;a href="http://martinbrochhaus.com/pelican.html"&gt;Pelican&lt;/a&gt; and up until
+&lt;p&gt;I should probably write a post about how to setup vim, soon...&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Thu, 16 May 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-05-16:toolbelt.html</guid><category>osx</category><category>django</category></item><item><title>Pelican and Github Pages</title><link>http://martinbrochhaus.com/pelican2.html</link><description>&lt;p&gt;One year ago I blogged about &lt;a href="http://martinbrochhaus.com/pelican.html"&gt;Pelican&lt;/a&gt; and up until
 today this remains the most frequented post in my blog. However, in the
 meantime Pelican got two major version bumps and is much more powerful now (and 
 easier to use). So let's see how to setup your blog with Pelican and host it
@@ -2511,7 +2511,7 @@ nano ~/blogging/src/pelicanconf.py
 &lt;span class="c"&gt;# Change the THEME setting:&lt;/span&gt;
 &lt;span class="nv"&gt;THEME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/Users/martin/pelican-themes/basic&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</summary><category term="blogging"></category><category term="python"></category></entry><entry><title>Django GFKs &amp; Factory Boy</title><link href="http://martinbrochhaus.com/factory-boy.html" rel="alternate"></link><updated>2013-01-22T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-01-22:factory-boy.html</id><summary type="html">&lt;p&gt;Let's say you are writing a reusable Django app and your app has a model with
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Wed, 15 May 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-05-15:pelican2.html</guid><category>blogging</category><category>python</category></item><item><title>Django GFKs &amp; Factory Boy</title><link>http://martinbrochhaus.com/factory-boy.html</link><description>&lt;p&gt;Let's say you are writing a reusable Django app and your app has a model with
 a generic foreign key. An example could be a messaging app where messages can
 attached to any other object (when you think about Facebook, a message can
 be sent to another User, or to his profile timeline, or to a status update
@@ -2653,7 +2653,7 @@ adds the &lt;code&gt;test_app&lt;/code&gt; to your &lt;code&gt;INSTALLED_APPS&lt
 tests you could to change the db backend to an in-memory sqlite database and
 for better test case recovery you could use a NoseTestRunner. Check out
 my &lt;a href="https://github.com/bitmazk/django-libs/blob/master/django_libs/settings/test_settings.py"&gt;test settings in django-libs&lt;/a&gt;
-for an example that I use in all my projects.&lt;/p&gt;</summary><category term="python"></category><category term="django"></category><category term="testing"></category><category term="howto"></category></entry><entry><title>Manage Twitter Bootstrap</title><link href="http://martinbrochhaus.com/bootstrap.html" rel="alternate"></link><updated>2013-01-17T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-01-17:bootstrap.html</id><summary type="html">&lt;p&gt;Without any doubt, &lt;a href="http://twitter.github.com/bootstrap/"&gt;Twitter's Bootstrap&lt;/a&gt;
+for an example that I use in all my projects.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Tue, 22 Jan 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-01-22:factory-boy.html</guid><category>python</category><category>django</category><category>testing</category><category>howto</category></item><item><title>Manage Twitter Bootstrap</title><link>http://martinbrochhaus.com/bootstrap.html</link><description>&lt;p&gt;Without any doubt, &lt;a href="http://twitter.github.com/bootstrap/"&gt;Twitter's Bootstrap&lt;/a&gt;
 is awesome. So far I am using it in more than 10 projects and I don't regret
 anything.&lt;/p&gt;
 &lt;p&gt;Unfortunately, Bootstrap has one major flaw: You can't really add it to your
@@ -2835,7 +2835,7 @@ conflicts when we pull a new version, but the &lt;code&gt;variables.less&lt;/cod
 gold and really needs to be changed.&lt;/p&gt;
 &lt;p&gt;As a solution, we just create our own &lt;code&gt;my-variables.less&lt;/code&gt; file and import it
 in copies of &lt;code&gt;bootstrap.less&lt;/code&gt; and &lt;code&gt;responsive.less&lt;/code&gt; - those files are just as
-likely to change but if they do, we can re-create them in no time.&lt;/p&gt;</summary><category term="css"></category><category term="bootstrap"></category><category term="howto"></category></entry><entry><title>Solr &amp; Supervisor</title><link href="http://martinbrochhaus.com/solr.html" rel="alternate"></link><updated>2013-01-10T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2013-01-10:solr.html</id><summary type="html">&lt;p&gt;A while ago I wrote how to &lt;a href="http://martinbrochhaus.com/2012/07/circus.html"&gt;daemonize Solr on Webfaction with Circus &lt;/a&gt;.&lt;/p&gt;
+likely to change but if they do, we can re-create them in no time.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Thu, 17 Jan 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-01-17:bootstrap.html</guid><category>css</category><category>bootstrap</category><category>howto</category></item><item><title>Solr &amp; Supervisor</title><link>http://martinbrochhaus.com/solr.html</link><description>&lt;p&gt;A while ago I wrote how to &lt;a href="http://martinbrochhaus.com/2012/07/circus.html"&gt;daemonize Solr on Webfaction with Circus &lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Unfortunately this solution has not proven to be as stable as I wished, plus
 I think there is a security issue because in theory other Webfaction users on
 the same machine could communicate with my own Circus instance.&lt;/p&gt;
@@ -2981,7 +2981,7 @@ a Fabric task. Here it is:&lt;/p&gt;
     &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;workon envname &amp;amp;&amp;amp; $HOME/webapps/django/myproject/manage.py rebuild_index --noinput&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</summary><category term="solr"></category><category term="webfaction"></category></entry><entry><title>RE: Developer Time</title><link href="http://martinbrochhaus.com/re-developer-time.html" rel="alternate"></link><updated>2012-12-06T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-12-06:re-developer-time.html</id><summary type="html">&lt;p&gt;I just came across &lt;a href="http://pydanny.com/developer-time.html"&gt;Daniel Greenfeld's post about Developer time&lt;/a&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Thu, 10 Jan 2013 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2013-01-10:solr.html</guid><category>solr</category><category>webfaction</category></item><item><title>RE: Developer Time</title><link>http://martinbrochhaus.com/re-developer-time.html</link><description>&lt;p&gt;I just came across &lt;a href="http://pydanny.com/developer-time.html"&gt;Daniel Greenfeld's post about Developer time&lt;/a&gt;
 and when I was halfway entering my reply into the comment field I realised
 that this might be worth a blog post on it's own. So here is my two cents:&lt;/p&gt;
 &lt;p&gt;I believe that there are good ways to maximise developer time, they might just
@@ -3095,7 +3095,7 @@ result is always the same: After 3 hours or so, my thinking slows down. After
 you wrote in the first hours to the code you wrote in the last hour of a six
 hour coding block.&lt;/p&gt;
 &lt;p&gt;Small interruptions aren't that bad. The problem are the interruptions that we
-can't schedule ourselves.&lt;/p&gt;</summary><category term="programming"></category><category term="management"></category></entry><entry><title>Fixing Mountain Lion</title><link href="http://martinbrochhaus.com/mountain-lion.html" rel="alternate"></link><updated>2012-07-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-07-26:mountain-lion.html</id><summary type="html">&lt;p&gt;Out of habit I opened the AppStore on my MacBook Pro yesterday and found a big
+can't schedule ourselves.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Thu, 06 Dec 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-12-06:re-developer-time.html</guid><category>programming</category><category>management</category></item><item><title>Fixing Mountain Lion</title><link>http://martinbrochhaus.com/mountain-lion.html</link><description>&lt;p&gt;Out of habit I opened the AppStore on my MacBook Pro yesterday and found a big
 fat new app in the spotlight: OSX 10.8 Mountain Lion. I paid my 15 bucks,
 downloaded the 4GB over night and started the installation this morning. It
 estimated 34 minutes to install but I don't know if that is true because I went
@@ -3219,7 +3219,7 @@ Profiles --&amp;gt; Default&lt;/code&gt;. Set it back to &lt;code&gt;xterm-256co
 &lt;p&gt;This whole thing took me exactly 4 hours including the writing of this blog
 post. It also took so long because I had to reinstall a huge virtualenv over
 and over again until it finally worked without errors. Not too bad actually and
-I found it quite amazing that MySQL and Postgres still worked.&lt;/p&gt;</summary><category term="apple"></category><category term="osx"></category></entry><entry><title>Solr &amp; Circus</title><link href="http://martinbrochhaus.com/circus.html" rel="alternate"></link><updated>2012-07-13T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-07-13:circus.html</id><summary type="html">&lt;p&gt;Since Webfaction increased the available memory from 40 MB to 250 MB I started
+I found it quite amazing that MySQL and Postgres still worked.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Thu, 26 Jul 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-07-26:mountain-lion.html</guid><category>apple</category><category>osx</category></item><item><title>Solr &amp; Circus</title><link>http://martinbrochhaus.com/circus.html</link><description>&lt;p&gt;Since Webfaction increased the available memory from 40 MB to 250 MB I started
 using Solr for more and more of my projects. However, I never really knew how
 to ensure that Solr restarts itself if it crashes and how to easily stop and
 start it in case I have to re-build the &lt;code&gt;schema.xml&lt;/code&gt; file.&lt;/p&gt;
@@ -3341,7 +3341,7 @@ ps aux | grep java
 return &lt;code&gt;[OK]&lt;/code&gt; the process will remain visible for a few seconds after you
 stopped it. Similarly it will not accept requests for a few seconds after it
 has been started. So if you use start and stop in a shell script or Fabric
-task better insert some &lt;code&gt;sleep&lt;/code&gt; seconds before doing anything else with Solr.&lt;/p&gt;</summary><category term="python"></category><category term="solr"></category><category term="circus"></category></entry><entry><title>StartSSL and Webfaction</title><link href="http://martinbrochhaus.com/ssl.html" rel="alternate"></link><updated>2012-06-13T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-13:ssl.html</id><summary type="html">&lt;p&gt;For my next big project it will be mandatory to use a SSL certificate for the
+task better insert some &lt;code&gt;sleep&lt;/code&gt; seconds before doing anything else with Solr.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Fri, 13 Jul 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-07-13:circus.html</guid><category>python</category><category>solr</category><category>circus</category></item><item><title>StartSSL and Webfaction</title><link>http://martinbrochhaus.com/ssl.html</link><description>&lt;p&gt;For my next big project it will be mandatory to use a SSL certificate for the
 web application. I have never dealt with SSL before, so I am going to take
 some notes here. Let's see how it goes...&lt;/p&gt;
 &lt;p&gt;I chose &lt;a href="https://www.startssl.com/"&gt;StartSSL&lt;/a&gt; because they offer a free
@@ -3362,7 +3362,7 @@ panel that uses HTTPS and maps the same apps as the non-HTTPS version.&lt;/p&gt;
 from the Webfaction support telling me that everything worked fine and indeed,
 I can now access my website via HTTPS.&lt;/p&gt;
 &lt;p&gt;Wow. That was easy! The whole process took me less than an hour to setup.
-I'm going to use SSL for all my sites from now on.&lt;/p&gt;</summary><category term="ssl"></category><category term="webfaction"></category></entry><entry><title>GMail &amp; Mailing Lists</title><link href="http://martinbrochhaus.com/gmail-groups.html" rel="alternate"></link><updated>2012-06-11T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-11:gmail-groups.html</id><summary type="html">&lt;p&gt;Here is a small trick to manage your mailing list subscriptions with your GMail
+I'm going to use SSL for all my sites from now on.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Wed, 13 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-13:ssl.html</guid><category>ssl</category><category>webfaction</category></item><item><title>GMail &amp; Mailing Lists</title><link>http://martinbrochhaus.com/gmail-groups.html</link><description>&lt;p&gt;Here is a small trick to manage your mailing list subscriptions with your GMail
 account without cluttering your inbox.&lt;/p&gt;
 &lt;h2&gt;Step 1: Setup multiple inboxes&lt;/h2&gt;
 &lt;ul&gt;
@@ -3422,7 +3422,7 @@ is another huge plus.&lt;/p&gt;
 them all as read. Another good thing about this is that you will be able to
 perform searches in GMail to find old discussions.&lt;/p&gt;
 &lt;p&gt;Your new inbox should look like this:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Gmail with multiple inboxes" src="http://martinbrochhaus.com/images/mailinglists.png" /&gt;&lt;/p&gt;</summary><category term="google"></category><category term="gmail"></category><category term="lifehacking"></category><category term="productivity"></category></entry><entry><title>Why We Should All Write a Video Game</title><link href="http://martinbrochhaus.com/videogame.html" rel="alternate"></link><updated>2012-06-09T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-09:videogame.html</id><summary type="html">&lt;p&gt;Here are my notes about &lt;a href="https://plus.google.com/100267502615190755251/about"&gt;Richard Jones'&lt;/a&gt;
+&lt;p&gt;&lt;img alt="Gmail with multiple inboxes" src="http://martinbrochhaus.com/images/mailinglists.png" /&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Mon, 11 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-11:gmail-groups.html</guid><category>google</category><category>gmail</category><category>lifehacking</category><category>productivity</category></item><item><title>Why We Should All Write a Video Game</title><link>http://martinbrochhaus.com/videogame.html</link><description>&lt;p&gt;Here are my notes about &lt;a href="https://plus.google.com/100267502615190755251/about"&gt;Richard Jones'&lt;/a&gt;
 keynote with the title "Why we should all write a video game".&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=jpaSS82Jgbg&lt;/p&gt;
 &lt;p&gt;He starts with a awesomely geeky overview over the history of game computing.
@@ -3473,7 +3473,7 @@ Just get something done that is fun and playable.&lt;/p&gt;
 &lt;li&gt;Refactor later&lt;/li&gt;
 &lt;li&gt;Simple is better than complex&lt;/li&gt;
 &lt;li&gt;Complex is better than complicated&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Big Data Clouds</title><link href="http://martinbrochhaus.com/big-data-cloud.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:big-data-cloud.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/110893970871115341770/about"&gt;Chris Boesch's&lt;/a&gt;
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sat, 09 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-09:videogame.html</guid><category>python</category><category>pycon</category><category>conferences</category></item><item><title>Big Data Clouds</title><link>http://martinbrochhaus.com/big-data-cloud.html</link><description>&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/110893970871115341770/about"&gt;Chris Boesch's&lt;/a&gt;
 talk about analyzing big data in the cloud.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=ADjIt6ZbqKU&lt;/p&gt;
 &lt;p&gt;Chris is a professor teaching many IT subjects at Singapore Management
@@ -3508,7 +3508,7 @@ this:&lt;/p&gt;
 simple, can be done with a few dozen lines of code.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://www.amazon.com/The-Lean-Startup-Entrepreneurs-Continuous/dp/0307887898?tag=duckduckgo-d-20"&gt;The Lean Startup&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Diversity as a Dependency</title><link href="http://martinbrochhaus.com/diversity.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:diversity.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/108526151904394584422/about"&gt;Anna Martelli Ravenscroft's&lt;/a&gt;
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Fri, 08 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-08:big-data-cloud.html</guid><category>python</category><category>pycon</category><category>conferences</category></item><item><title>Diversity as a Dependency</title><link>http://martinbrochhaus.com/diversity.html</link><description>&lt;p&gt;Here are my notes on &lt;a href="https://plus.google.com/108526151904394584422/about"&gt;Anna Martelli Ravenscroft's&lt;/a&gt;
 closing keynote on "Diversity as a Dependency".&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=wOpdDxJzNkw&lt;/p&gt;
 &lt;p&gt;She opens her keynote with a question:&lt;/p&gt;
@@ -3597,7 +3597,7 @@ reason why it is very hard to make them all work together in harmony.&lt;/p&gt;
 Stallman sends to all hosts whenever he come to speak. While it is quite
 amusing and displays him as quite a weirdo, it definitely is a very very
 precise "doc" about the person. Maybe we just could have docs for people?
-Put them on their GitHub profiles?&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Permission for Forgiveness</title><link href="http://martinbrochhaus.com/eafp.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:eafp.html</id><summary type="html">&lt;p&gt;Here are my live notes on &lt;a href="https://plus.google.com/106273672060692715136/about"&gt;Alex Martelli's&lt;/a&gt;
+Put them on their GitHub profiles?&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Fri, 08 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-08:diversity.html</guid><category>python</category><category>pycon</category><category>conferences</category></item><item><title>Permission for Forgiveness</title><link>http://martinbrochhaus.com/eafp.html</link><description>&lt;p&gt;Here are my live notes on &lt;a href="https://plus.google.com/106273672060692715136/about"&gt;Alex Martelli's&lt;/a&gt;
 keynote "Permission for Forgiveness".&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=lEtyYEKqUlk&lt;/p&gt;
 &lt;p&gt;He starts with a joke about the font in his presentation which looks like
@@ -3664,7 +3664,7 @@ harmful.&lt;/p&gt;
 and do things, as long as you don't do evil. It's also kind of encouraging to
 try to stand out even when facing seemingly impossible to overcome bureaucratic
 barriers.&lt;/p&gt;
-&lt;p&gt;Slides can be found &lt;a href="http;//www.aleax.it/pycon12ap_fop.pdf"&gt;here&lt;/a&gt;&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Functional Programming in Python</title><link href="http://martinbrochhaus.com/functional.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:functional.html</id><summary type="html">&lt;p&gt;Here are my notes for &lt;a href="https://twitter.com/chihiro"&gt;Gavin Bong's&lt;/a&gt;
+&lt;p&gt;Slides can be found &lt;a href="http;//www.aleax.it/pycon12ap_fop.pdf"&gt;here&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Fri, 08 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-08:eafp.html</guid><category>python</category><category>pycon</category><category>conferences</category></item><item><title>Functional Programming in Python</title><link>http://martinbrochhaus.com/functional.html</link><description>&lt;p&gt;Here are my notes for &lt;a href="https://twitter.com/chihiro"&gt;Gavin Bong's&lt;/a&gt;
 talk about functional programming in Python.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=r75X4Vn_E9k&lt;/p&gt;
 &lt;p&gt;Sorry for the horribly weird notes. I don't know anything about functional
@@ -3711,7 +3711,7 @@ functions, which is the standard in Haskell.&lt;/p&gt;
 &lt;li&gt;You should play with different functional programming languages&lt;/li&gt;
 &lt;li&gt;Structure and Interpretation of Computer Programs is a good book to
   understand functional programming.&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>MongoDB with Python</title><link href="http://martinbrochhaus.com/mongodb.html" rel="alternate"></link><updated>2012-06-08T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-08:mongodb.html</id><summary type="html">&lt;p&gt;Here are my notes on &lt;a href="https://twitter.com/#!/mathias_mongo"&gt;Mathias Stern's&lt;/a&gt;
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Fri, 08 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-08:functional.html</guid><category>python</category><category>pycon</category><category>conferences</category></item><item><title>MongoDB with Python</title><link>http://martinbrochhaus.com/mongodb.html</link><description>&lt;p&gt;Here are my notes on &lt;a href="https://twitter.com/#!/mathias_mongo"&gt;Mathias Stern's&lt;/a&gt;
 talk about "MongoDB with Python"&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: Here is the video: https://www.youtube.com/watch?v=hU8rkNT6CVk&lt;/p&gt;
 &lt;p&gt;MongoDB should make your life easier. You should be able to start coding
@@ -3772,7 +3772,7 @@ seems to be an awesome tool for tinkering around with new APIs.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://pypi.python.org/pypi/pymongo/"&gt;pymongo&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://bsonspec.org/"&gt;BSON&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Introduction to Game Development</title><link href="http://martinbrochhaus.com/pygame.html" rel="alternate"></link><updated>2012-06-07T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-06-07:pygame.html</id><summary type="html">&lt;p&gt;I like how &lt;a href="https://twitter.com/pydanny"&gt;Daniel Greenfeld&lt;/a&gt; has the habit of
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Fri, 08 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-08:mongodb.html</guid><category>python</category><category>pycon</category><category>conferences</category></item><item><title>Introduction to Game Development</title><link>http://martinbrochhaus.com/pygame.html</link><description>&lt;p&gt;I like how &lt;a href="https://twitter.com/pydanny"&gt;Daniel Greenfeld&lt;/a&gt; has the habit of
 publishing &lt;a href="http://pydanny-event-notes.readthedocs.org/en/latest/index.html"&gt;live notes&lt;/a&gt;
 when he attends conferences and meet-ups. I don't think that I will have the
 time and money to attend so many conferences that a dedicated repository would
@@ -3943,7 +3943,7 @@ form installing pygame to getting to play a first prototype just works and
 there seem to be free tools available for every aspect of simple game
 development (like creating sound etc.). I definitely want to try this at home!
 This might be the most awesome way to teach my 12 year old brother in law about
-programming.&lt;/p&gt;</summary><category term="python"></category><category term="pycon"></category><category term="conferences"></category></entry><entry><title>Pair Programming With Tmux</title><link href="http://martinbrochhaus.com/pair.html" rel="alternate"></link><updated>2012-05-26T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-05-26:pair.html</id><summary type="html">&lt;p&gt;At &lt;a href="http://www.bitmazk.com"&gt;Bitmazk&lt;/a&gt; we are a small team of web developers
+programming.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Thu, 07 Jun 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-06-07:pygame.html</guid><category>python</category><category>pycon</category><category>conferences</category></item><item><title>Pair Programming With Tmux</title><link>http://martinbrochhaus.com/pair.html</link><description>&lt;p&gt;At &lt;a href="http://www.bitmazk.com"&gt;Bitmazk&lt;/a&gt; we are a small team of web developers
 with members located in Singapore and Germany. Of course we do codereviews
 with Google's awesome &lt;a href="https://code.google.com/p/rietveld/"&gt;Rietveld&lt;/a&gt; but
 often when someone has an immediate problem, pair programming is just so much
@@ -4165,7 +4165,7 @@ very useful.&lt;/p&gt;
 &lt;img alt="wemux server" src="http://martinbrochhaus.com/images/wemux.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Note how wemux determines that my Ubuntu machine has lesser screen resolution
 and automatically scales down the working area on my MacBook. If this is not
-awesome...&lt;/p&gt;</summary><category term="screen"></category><category term="tmux"></category><category term="wemux"></category><category term="vim"></category><category term="ssh"></category><category term="programming"></category></entry><entry><title>Snippets of April 2012</title><link href="http://martinbrochhaus.com/snippets-201204.html" rel="alternate"></link><updated>2012-04-21T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-04-21:snippets-201204.html</id><summary type="html">&lt;p&gt;This is my second post in a series of (almost) monthly posts about small bits
+awesome...&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sat, 26 May 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-05-26:pair.html</guid><category>screen</category><category>tmux</category><category>wemux</category><category>vim</category><category>ssh</category><category>programming</category></item><item><title>Snippets of April 2012</title><link>http://martinbrochhaus.com/snippets-201204.html</link><description>&lt;p&gt;This is my second post in a series of (almost) monthly posts about small bits
 and pieces of wisdom that amazed me. You can find the first post here:
 &lt;a href="http://martinbrochhaus.com/2012/02/snippets-201202.html"&gt;Snippets of February 2012&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;Ubuntu: Static Application Switcher&lt;/h1&gt;
@@ -4268,7 +4268,7 @@ Here are some posts that, to me, should be spread as far as possible.&lt;/p&gt;
   It sad but true: This whole Scrumm and Agile movement is a big scam. This
   rant explains why. Thought provoking read.&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</summary><category term="snippets"></category><category term="ubuntu"></category><category term="screen"></category><category term="ssh"></category><category term="mercurial"></category><category term="self growth"></category></entry><entry><title>InnoDB vs. MyISAM</title><link href="http://martinbrochhaus.com/myisam-vs-innodb.html" rel="alternate"></link><updated>2012-03-18T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-03-18:myisam-vs-innodb.html</id><summary type="html">&lt;p&gt;During the last few months I constantly ran into problems with MySQL which
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sat, 21 Apr 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-04-21:snippets-201204.html</guid><category>snippets</category><category>ubuntu</category><category>screen</category><category>ssh</category><category>mercurial</category><category>self growth</category></item><item><title>InnoDB vs. MyISAM</title><link>http://martinbrochhaus.com/myisam-vs-innodb.html</link><description>&lt;p&gt;During the last few months I constantly ran into problems with MySQL which
 drove me crazy and I finally decided to use PostgreSQL for all new projects.
 Today I figured out what was going on:&lt;/p&gt;
 &lt;p&gt;On my development machine I have MySQL version 5.1.61 installed. Recent
@@ -4316,7 +4316,7 @@ other engine by simply executing:&lt;/p&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;So I converted all MyISAM tables into InnoDB tables and all was good. I should
-definitely update my local MySQL installation...&lt;/p&gt;</summary><category term="databases"></category><category term="mysql"></category><category term="django"></category></entry><entry><title>Snippets of February 2012</title><link href="http://martinbrochhaus.com/snippets-201202.html" rel="alternate"></link><updated>2012-02-29T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-02-29:snippets-201202.html</id><summary type="html">&lt;p&gt;Naturally, as a developer I learn new awesome things almost every day.
+definitely update my local MySQL installation...&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sun, 18 Mar 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-03-18:myisam-vs-innodb.html</guid><category>databases</category><category>mysql</category><category>django</category></item><item><title>Snippets of February 2012</title><link>http://martinbrochhaus.com/snippets-201202.html</link><description>&lt;p&gt;Naturally, as a developer I learn new awesome things almost every day.
 I thought it might be a good idea to keep track of all those small Ah-Ha!
 moments and release a snippets post every month.&lt;/p&gt;
 &lt;h1&gt;Global .gitignore&lt;/h1&gt;
@@ -4382,7 +4382,7 @@ exploded with all kinds of awesomeness.&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
-&lt;p&gt;Hint: In order for this to work, you need to install git via Homebrew on OSX.&lt;/p&gt;</summary><category term="git"></category><category term="python"></category><category term="vim"></category><category term="snippets"></category></entry><entry><title>Blogging with Pelican and GitHub</title><link href="http://martinbrochhaus.com/pelican.html" rel="alternate"></link><updated>2012-02-20T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-02-20:pelican.html</id><summary type="html">&lt;p&gt;While it took me indeed just four lines of code and thirty minutes to setup the
+&lt;p&gt;Hint: In order for this to work, you need to install git via Homebrew on OSX.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Wed, 29 Feb 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-02-29:snippets-201202.html</guid><category>git</category><category>python</category><category>vim</category><category>snippets</category></item><item><title>Blogging with Pelican and GitHub</title><link>http://martinbrochhaus.com/pelican.html</link><description>&lt;p&gt;While it took me indeed just four lines of code and thirty minutes to setup the
 first version of this blog, I couldn't resist to geek over it for a few more
 hours and create a nice and clean approach to publishing this blog with
 &lt;a href="https://github.com/fabric/fabric"&gt;Fabric&lt;/a&gt;,
@@ -4574,7 +4574,7 @@ information have a look at the instructions about
 &lt;a href="https://twitter.com/ametaireau"&gt;Alexis Metaireau&lt;/a&gt; for the great work on
 Pelican. There is a small and friendly group sitting at #pelican on Freenode
 and while I was writing this post, I submitted a pull request to Pelican which
-got merged almost immediately. The project is really worth a closer look!&lt;/p&gt;</summary><category term="blogging"></category><category term="python"></category></entry><entry><title>I Can Haz Blog</title><link href="http://martinbrochhaus.com/blogging.html" rel="alternate"></link><updated>2012-02-19T00:00:00+08:00</updated><author><name>Martin Brochhaus</name></author><id>tag:martinbrochhaus.com,2012-02-19:blogging.html</id><summary type="html">&lt;p&gt;I'm a netizen since 1996 or so and I think I have accounts for all major
+got merged almost immediately. The project is really worth a closer look!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Mon, 20 Feb 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-02-20:pelican.html</guid><category>blogging</category><category>python</category></item><item><title>I Can Haz Blog</title><link>http://martinbrochhaus.com/blogging.html</link><description>&lt;p&gt;I'm a netizen since 1996 or so and I think I have accounts for all major
 blogging services that ever popped into existence. Yet I'm quite sure that I
 have never managed to publish stuff on a regular basis or even build an
 audience. This is a shame. If you know tricks to overcome this laziness, please
@@ -4633,4 +4633,4 @@ about his Pelican powered blog on Github. Luckily he included a first blog post
 which describes how to setup a similar blog with just four simple lines of
 code.&lt;/p&gt;
 &lt;p&gt;I was hooked. So I set up this blog in an hour or so. Let's see if I can
-finally meet my goal to publish meaningful content on a regular basis :)&lt;/p&gt;</summary><category term="blogging"></category><category term="python"></category></entry></feed>
+finally meet my goal to publish meaningful content on a regular basis :)&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sun, 19 Feb 2012 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2012-02-19:blogging.html</guid><category>blogging</category><category>python</category></item></channel></rss>

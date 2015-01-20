@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+        <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Maintaining Reusable Django Apps with Tox</h1>
+            <h2>How to provide migrations for both, Django 1.6 & 1.7</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+<p><i class="icon-calendar"></i>&nbsp;Tue 20 January 2015</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+            <a href="http://martinbrochhaus.com/tag/python.html">python</a>
+            <a href="http://martinbrochhaus.com/tag/django.html">django</a>
+            <a href="http://martinbrochhaus.com/tag/database.html">database</a>
+    </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>Django 1.7 was a <a href="https://docs.djangoproject.com/en/1.7/releases/1.7/">huge release</a>
+with tons of great new features.</p>
+<p>One major change is that <a href="http://south.readthedocs.org/en/latest/releasenotes/1.0.html#library-migration-path">South</a>
+has been discontinued and Django now provides migrations in it's core.</p>
+<p>This raises a problem for maintainers of reusable apps, <a href="http://github.com/bitmazk/">like me and my team</a>:</p>
+<blockquote>
+<p>How can we provide migrations for both, Django 1.6 &amp; South and Django 1.7 &amp; core migrations?</p>
+</blockquote>
+<p>The good thing is that South as of version 1.0 will first look for a folder
+called <code>south_migrations</code> and only afterwards search for the usual <code>migrations</code>
+folder.  Therefore, you can simply rename your old <code>migrations</code> folder to
+<code>south_migrations</code>.</p>
+<p>Next you need to activate a second venv that has Django&gt;1.7 installed and run
+<code>./manage.py makemigrations appname</code>. This will create new initial migrations
+using the new core migrations app.</p>
+<p>Now you have two folders: <code>south_migrations</code> with your old migrations and
+<code>migrations</code> with your new migrations.</p>
+<p>Every time you make changes to your models, you have to activate the 1.6 venv
+and run <code>./manage.py schemamigration appname --auto</code>, then activate the 1.7
+venv and run <code>./manage.py makemigrations appname</code>. It might be a good idea to
+create a fabric task <code>fab makemigrations</code> which takes care of everything.</p>
+<p>If you are a good developer you will surely do Test Driven Development. In the
+past I had given a PyCon Talk about <a href="https://github.com/mbrochh/tdd-with-django-reusable-app">Test Driven Development with reusable Django apps</a>.</p>
+<p>In that talk I desribed how we execute our tests with a <code>runtests.py</code> so that
+we don't need to setup a whole Django project for each reusable app. With
+Django 1.7 there is a little problem, now: You will have <code>south</code> in your
+<code>INSTALLED_APPS</code> setting but Django&gt;1.7 does not allow that any more. As a
+quick hack, you can simply add <code>south</code> only when the active Django version is
+<code>&lt;1.7</code>. Have a look at our <a href="https://github.com/bitmazk/django-reusable-app-template/blob/master/template/package_name/tests/south_settings.py#L28">django-reusable-app-template</a>
+for an example.</p>
+<p>Finally, it would be really great to always run all tests against both
+environments. This is where <a href="http://tox.readthedocs.org/en/latest/">tox</a> enters 
+the stage.</p>
+<p>Your <code>tox.ini</code> should look like this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">[tox]</span>
+<span class="na">envlist</span> <span class="o">=</span> <span class="s">py27-django{16,17}</span>
+
+<span class="k">[testenv]</span>
+<span class="na">usedevelop</span> <span class="o">=</span> <span class="s">True</span>
+<span class="na">deps</span> <span class="o">=</span><span class="s"></span>
+<span class="s">    django16: Django&lt;1.7</span>
+<span class="s">    django17: Django&gt;=1.7,&lt;1.8</span>
+<span class="s">    -rtest_requirements.txt</span>
+<span class="na">commands</span> <span class="o">=</span> <span class="s">{toxinidir}/VAR_PACKAGE_NAME/tests/runtests.py</span>
+</pre></div>
+</td></tr></table>
+
+<p>The <code>envlist</code> setting defines a list of environments that tox should setup. We
+can use variables here, so the <code>{16,17}</code> results in two environments with the
+names <code>py27-django16</code> and <code>py27-django17</code>. In the <code>deps</code> setting we can make
+use of those variables again and so we declare that in case of <code>django16</code> we
+want to install <code>Django&lt;1.7</code> and otherwise <code>Django&gt;-1.7,&lt;1.8</code>. Afterwards we
+install our other <code>test_requirements.txt</code>. Behind the scenes this is the usual
+call to <code>pip install -r test_requirements.txt</code>. Our reusable app also has a
+<code>setup.py</code> with <code>install_requires</code>, thankfully, tox is smart enough to install
+these dependencies as well.</p>
+<p>All you have to do in order to run your tests is:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">pip</span> <span class="n">install</span> <span class="n">tox</span>
+<span class="n">tox</span>
+</pre></div>
+</td></tr></table>
+
+<p>There is also a package called <code>detox</code> which claims to run the tests in
+parallel but I couldn't get it up and running on OSX.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                        <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                <li><a href="https://plus.google.com/101162916953876296847/about"><span class="symbol">&#xe039;</span> Google Plus</a></li>
+                                <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                <li><a href="https://facebook.com/mbrochh"><span class="symbol">&#xe027;</span> Facebook</a></li>
+                                <li><a href="https://foursquare.com/mbrochh"><span class="symbol">&#xe032;</span> Foursquare</a></li>
+                                <li><a href="http://www.linkedin.com/in/mbrochh"><span class="symbol">&#xe052;</span> LinkedIN</a></li>
+                                <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>
