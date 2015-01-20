@@ -85,7 +85,19 @@ Django 1.7 there is a little problem, now: You will have <code>south</code> in y
 <code>INSTALLED_APPS</code> setting but Django&gt;1.7 does not allow that any more. As a
 quick hack, you can simply add <code>south</code> only when the active Django version is
 <code>&lt;1.7</code>. Have a look at our <a href="https://github.com/bitmazk/django-reusable-app-template/blob/master/template/package_name/tests/south_settings.py#L28">django-reusable-app-template</a>
-for an example.</p>
+for an example. It should look something like this:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">distutils.version</span> <span class="kn">import</span> <span class="n">StrictVersion</span>
+<span class="kn">import</span> <span class="nn">django</span>
+<span class="n">django_version</span> <span class="o">=</span> <span class="n">django</span><span class="o">.</span><span class="n">get_version</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">StrictVersion</span><span class="p">(</span><span class="n">django_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">StrictVersion</span><span class="p">(</span><span class="s">&#39;1.7&#39;</span><span class="p">):</span>
+    <span class="n">INSTALLED_APPS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;south&#39;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
 <p>Finally, it would be really great to always run all tests against both
 environments. This is where <a href="http://tox.readthedocs.org/en/latest/">tox</a> enters 
 the stage.</p>
@@ -123,8 +135,8 @@ call to <code>pip install -r test_requirements.txt</code>. Our reusable app also
 these dependencies as well.</p>
 <p>All you have to do in order to run your tests is:</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">pip</span> <span class="n">install</span> <span class="n">tox</span>
-<span class="n">tox</span>
+2</pre></div></td><td class="code"><div class="highlight"><pre>pip install tox
+tox
 </pre></div>
 </td></tr></table>
 

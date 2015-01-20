@@ -28,7 +28,19 @@ Django 1.7 there is a little problem, now: You will have &lt;code&gt;south&lt;/c
 &lt;code&gt;INSTALLED_APPS&lt;/code&gt; setting but Django&amp;gt;1.7 does not allow that any more. As a
 quick hack, you can simply add &lt;code&gt;south&lt;/code&gt; only when the active Django version is
 &lt;code&gt;&amp;lt;1.7&lt;/code&gt;. Have a look at our &lt;a href="https://github.com/bitmazk/django-reusable-app-template/blob/master/template/package_name/tests/south_settings.py#L28"&gt;django-reusable-app-template&lt;/a&gt;
-for an example.&lt;/p&gt;
+for an example. It should look something like this:&lt;/p&gt;
+&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;distutils.version&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;StrictVersion&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt;
+&lt;span class="n"&gt;django_version&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_version&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;StrictVersion&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;django_version&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;StrictVersion&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;1.7&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;south&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
 &lt;p&gt;Finally, it would be really great to always run all tests against both
 environments. This is where &lt;a href="http://tox.readthedocs.org/en/latest/"&gt;tox&lt;/a&gt; enters 
 the stage.&lt;/p&gt;
@@ -66,8 +78,8 @@ call to &lt;code&gt;pip install -r test_requirements.txt&lt;/code&gt;. Our reusa
 these dependencies as well.&lt;/p&gt;
 &lt;p&gt;All you have to do in order to run your tests is:&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
-2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;tox&lt;/span&gt;
-&lt;span class="n"&gt;tox&lt;/span&gt;
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;pip install tox
+tox
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
