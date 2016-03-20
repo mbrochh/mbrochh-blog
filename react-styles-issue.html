@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+        <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python & Django. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>TypeError: CSS2Properties doesn't have an indexed property setter for '0'</h1>
+            <h2>Beware of this nasty pitfall if you use Radium</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+<p><i class="icon-calendar"></i>&nbsp;Sun 20 March 2016</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+            <a href="http://martinbrochhaus.com/tag/javascript.html">javascript</a>
+            <a href="http://martinbrochhaus.com/tag/reactjs.html">reactjs</a>
+    </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>Last Friday it came to my attention that our shop grid on <a href="https://luxglove.com/products/artworks/">luxglove.com</a> didn't work on Firefox.</p>
+<p>When opening the developer tools, I could see this error:</p>
+<div class="highlight"><pre><span class="n">TypeError</span><span class="o">:</span> <span class="n">CSS2Properties</span> <span class="n">doesn</span><span class="s1">&#39;t have an indexed property setter for &#39;</span><span class="mi">0</span><span class="err">&#39;</span>
+</pre></div>
+
+
+<p>And after a few seconds another error would show up:</p>
+<div class="highlight"><pre><span class="n">Error</span><span class="o">:</span> <span class="n">findComponentRoot</span><span class="o">(...):</span>
+
+<span class="n">Unable</span> <span class="n">to</span> <span class="n">find</span> <span class="n">element</span><span class="o">.</span> <span class="n">This</span> <span class="n">probably</span> <span class="n">means</span> <span class="n">the</span> <span class="n">DOM</span> <span class="n">was</span> <span class="n">unexpectedly</span>
+<span class="n">mutated</span> <span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">g</span><span class="o">.,</span> <span class="n">by</span> <span class="n">the</span> <span class="n">browser</span><span class="o">),</span> <span class="n">usually</span> <span class="n">due</span> <span class="n">to</span> <span class="n">forgetting</span> <span class="n">a</span> <span class="o">&lt;</span><span class="n">tbody</span><span class="o">&gt;</span>
+<span class="n">when</span> <span class="n">using</span> <span class="n">tables</span><span class="o">,</span> <span class="n">nesting</span> <span class="n">tags</span> <span class="n">like</span> <span class="o">&lt;</span><span class="n">form</span><span class="o">&gt;,</span> <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;,</span> <span class="n">or</span> <span class="o">&lt;</span><span class="n">a</span><span class="o">&gt;,</span> <span class="n">or</span> <span class="n">using</span>
+<span class="n">non</span><span class="o">-</span><span class="n">SVG</span> <span class="n">elements</span> <span class="k">in</span> <span class="n">an</span> <span class="o">&lt;</span><span class="n">svg</span><span class="o">&gt;</span> <span class="n">parent</span><span class="o">.</span> <span class="n">Try</span> <span class="n">inspecting</span> <span class="n">the</span> <span class="n">child</span> <span class="n">nodes</span>
+<span class="n">of</span> <span class="n">the</span> <span class="n">element</span> <span class="k">with</span> <span class="n">React</span> <span class="n">ID</span><span class="o">.</span>
+</pre></div>
+
+
+<p>I spent five hours trying to find a solution. Mainly because I concentrated
+on the bigger, more scary looking error instead of just focusing on the first
+one.</p>
+<p>What finally led me to the solution was enabling "Pause on Exception" in the
+Firefox developer tools. Now I could see that the error happens within the
+ReactJS codebase right here:</p>
+<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="nx">styleValue</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">style</span><span class="p">[</span><span class="nx">styleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">styleValue</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</pre></div>
+
+
+<p>By hovering over the variables, I could see that <code>styleName</code> was <code>undefined</code>
+and <code>styleValue</code> as an Object.</p>
+<p>In the "Variables" panel I could expand the <code>styles</code> member and see that it
+contained a style <code>height: "1em"</code>. Ah-ha! That's something I can search for
+in my codebase.</p>
+<p>It lead me to a component that contained this:</p>
+<div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">className=</span><span class="s">&quot;visible-xs&quot;</span> <span class="na">style=</span><span class="s">{[{height:</span> <span class="err">&quot;1em&quot;}]}</span><span class="nt">&gt;</span><span class="ni">&amp;nbsp;</span><span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<p>That looked about right to me. I'm doing this all the time. Then it hit me:</p>
+<p>This component does not use any other styles. Only this one instance where I
+defined the style right there in the <code>render()</code> method. Usually I have a
+<code>const styles = {}</code> variable at the top of my file. In this case, I had not and
+when I did a bit of code cleanup I thought:</p>
+<p>"Oh, this component doesn't define any styles, so I can remove the Radium
+import and the Radium decorator".</p>
+<p>Boy was I wrong. Without Radium, <code>style={[{height: "1em"}]}</code> is no longer valid
+syntax to add styles in vanilla-React.</p>
+<p>If you ever face this error and if you use Radium, I hope I might have saved
+you a few hours of frustration (and I'm sure my future self will thank me
+because I'm pretty sure I'll mess this up at least one more time in my life).</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                        <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>

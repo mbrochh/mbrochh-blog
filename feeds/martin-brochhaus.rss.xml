@@ -1,5 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>martinbrochhaus.com</title><link>http://martinbrochhaus.com/</link><description></description><atom:link href="http://martinbrochhaus.com/feeds/martin-brochhaus.rss.xml" rel="self"></atom:link><lastBuildDate>Tue, 20 Jan 2015 00:00:00 +0800</lastBuildDate><item><title>Maintaining Reusable Django Apps with Tox</title><link>http://martinbrochhaus.com/tox.html</link><description>&lt;p&gt;Django 1.7 was a &lt;a href="https://docs.djangoproject.com/en/1.7/releases/1.7/"&gt;huge release&lt;/a&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>martinbrochhaus.com</title><link>http://martinbrochhaus.com/</link><description></description><atom:link href="http://martinbrochhaus.com/feeds/martin-brochhaus.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 20 Mar 2016 00:00:00 +0800</lastBuildDate><item><title>TypeError: CSS2Properties doesn't have an indexed property setter for '0'</title><link>http://martinbrochhaus.com/react-styles-issue.html</link><description>&lt;p&gt;Last Friday it came to my attention that our shop grid on &lt;a href="https://luxglove.com/products/artworks/"&gt;luxglove.com&lt;/a&gt; didn't work on Firefox.&lt;/p&gt;
+&lt;p&gt;When opening the developer tools, I could see this error:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;TypeError&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;CSS2Properties&lt;/span&gt; &lt;span class="n"&gt;doesn&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t have an indexed property setter for &amp;#39;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And after a few seconds another error would show up:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;findComponentRoot&lt;/span&gt;&lt;span class="o"&gt;(...):&lt;/span&gt;
+
+&lt;span class="n"&gt;Unable&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;find&lt;/span&gt; &lt;span class="n"&gt;element&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;This&lt;/span&gt; &lt;span class="n"&gt;probably&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;DOM&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;unexpectedly&lt;/span&gt;
+&lt;span class="n"&gt;mutated&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.,&lt;/span&gt; &lt;span class="n"&gt;by&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;browser&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="n"&gt;usually&lt;/span&gt; &lt;span class="n"&gt;due&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;forgetting&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;tbody&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;when&lt;/span&gt; &lt;span class="n"&gt;using&lt;/span&gt; &lt;span class="n"&gt;tables&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nesting&lt;/span&gt; &lt;span class="n"&gt;tags&lt;/span&gt; &lt;span class="n"&gt;like&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;,&lt;/span&gt; &lt;span class="n"&gt;or&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;,&lt;/span&gt; &lt;span class="n"&gt;or&lt;/span&gt; &lt;span class="n"&gt;using&lt;/span&gt;
+&lt;span class="n"&gt;non&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;SVG&lt;/span&gt; &lt;span class="n"&gt;elements&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;svg&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;parent&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Try&lt;/span&gt; &lt;span class="n"&gt;inspecting&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;child&lt;/span&gt; &lt;span class="n"&gt;nodes&lt;/span&gt;
+&lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;element&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;React&lt;/span&gt; &lt;span class="n"&gt;ID&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I spent five hours trying to find a solution. Mainly because I concentrated
+on the bigger, more scary looking error instead of just focusing on the first
+one.&lt;/p&gt;
+&lt;p&gt;What finally led me to the solution was enabling "Pause on Exception" in the
+Firefox developer tools. Now I could see that the error happens within the
+ReactJS codebase right here:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;styleValue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;style&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;styleName&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;styleValue&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;By hovering over the variables, I could see that &lt;code&gt;styleName&lt;/code&gt; was &lt;code&gt;undefined&lt;/code&gt;
+and &lt;code&gt;styleValue&lt;/code&gt; as an Object.&lt;/p&gt;
+&lt;p&gt;In the "Variables" panel I could expand the &lt;code&gt;styles&lt;/code&gt; member and see that it
+contained a style &lt;code&gt;height: "1em"&lt;/code&gt;. Ah-ha! That's something I can search for
+in my codebase.&lt;/p&gt;
+&lt;p&gt;It lead me to a component that contained this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;className=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;visible-xs&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;style=&lt;/span&gt;&lt;span class="s"&gt;{[{height:&lt;/span&gt; &lt;span class="err"&gt;&amp;quot;1em&amp;quot;}]}&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;&lt;span class="ni"&gt;&amp;amp;nbsp;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That looked about right to me. I'm doing this all the time. Then it hit me:&lt;/p&gt;
+&lt;p&gt;This component does not use any other styles. Only this one instance where I
+defined the style right there in the &lt;code&gt;render()&lt;/code&gt; method. Usually I have a
+&lt;code&gt;const styles = {}&lt;/code&gt; variable at the top of my file. In this case, I had not and
+when I did a bit of code cleanup I thought:&lt;/p&gt;
+&lt;p&gt;"Oh, this component doesn't define any styles, so I can remove the Radium
+import and the Radium decorator".&lt;/p&gt;
+&lt;p&gt;Boy was I wrong. Without Radium, &lt;code&gt;style={[{height: "1em"}]}&lt;/code&gt; is no longer valid
+syntax to add styles in vanilla-React.&lt;/p&gt;
+&lt;p&gt;If you ever face this error and if you use Radium, I hope I might have saved
+you a few hours of frustration (and I'm sure my future self will thank me
+because I'm pretty sure I'll mess this up at least one more time in my life).&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Sun, 20 Mar 2016 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2016-03-20:react-styles-issue.html</guid><category>javascript</category><category>reactjs</category></item><item><title>Maintaining Reusable Django Apps with Tox</title><link>http://martinbrochhaus.com/tox.html</link><description>&lt;p&gt;Django 1.7 was a &lt;a href="https://docs.djangoproject.com/en/1.7/releases/1.7/"&gt;huge release&lt;/a&gt;
 with tons of great new features.&lt;/p&gt;
 &lt;p&gt;One major change is that &lt;a href="http://south.readthedocs.org/en/latest/releasenotes/1.0.html#library-migration-path"&gt;South&lt;/a&gt;
 has been discontinued and Django now provides migrations in it's core.&lt;/p&gt;
