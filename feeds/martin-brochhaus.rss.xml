@@ -12,8 +12,8 @@ for this.&lt;/p&gt;
 &lt;code&gt;/.well-known/...&lt;/code&gt; URL can be accessed. Note: I typically have a non-root
 user &lt;code&gt;django&lt;/code&gt; on my servers, that's why I set the &lt;code&gt;root&lt;/code&gt; directive to a folder
 under that user's account. Make sure that the folder
-&lt;code&gt;/home/django/www/letsencrypt&lt;/code&gt; exists (by logging in as that user and creating
-it)&lt;/p&gt;
+&lt;code&gt;/home/django/www/letsencrypt/.well-known&lt;/code&gt; exists (by logging in as that user
+and creating it).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;example&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -37,6 +37,9 @@ it)&lt;/p&gt;
 
 &lt;p&gt;A blue screen will appear, asking for your email address and if all goes well,
 the certs will placed at &lt;code&gt;/etc/letsencrypt/live/example.com&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Hint: If you were already using a cert, possibly even one from letsencrypt,
+you might need to delete the &lt;code&gt;/etc/letsencrypt/&lt;/code&gt; folder and comment out
+the SSL part in the nginx conf.&lt;/p&gt;
 &lt;p&gt;Now configure nginx to actually use the certs:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;server {
     listen 443 ssl;

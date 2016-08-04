@@ -68,8 +68,8 @@ for this.</p>
 <code>/.well-known/...</code> URL can be accessed. Note: I typically have a non-root
 user <code>django</code> on my servers, that's why I set the <code>root</code> directive to a folder
 under that user's account. Make sure that the folder
-<code>/home/django/www/letsencrypt</code> exists (by logging in as that user and creating
-it)</p>
+<code>/home/django/www/letsencrypt/.well-known</code> exists (by logging in as that user
+and creating it).</p>
 <div class="highlight"><pre><span class="nt">server</span> <span class="p">{</span>
     <span class="n">listen</span> <span class="m">80</span><span class="p">;</span>
     <span class="n">server_name</span> <span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="p">;</span>
@@ -93,6 +93,9 @@ it)</p>
 
 <p>A blue screen will appear, asking for your email address and if all goes well,
 the certs will placed at <code>/etc/letsencrypt/live/example.com</code>.</p>
+<p>Hint: If you were already using a cert, possibly even one from letsencrypt,
+you might need to delete the <code>/etc/letsencrypt/</code> folder and comment out
+the SSL part in the nginx conf.</p>
 <p>Now configure nginx to actually use the certs:</p>
 <div class="highlight"><pre>server {
     listen 443 ssl;
