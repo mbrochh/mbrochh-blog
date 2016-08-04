@@ -1,5 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>martinbrochhaus.com</title><link>http://martinbrochhaus.com/</link><description></description><atom:link href="http://martinbrochhaus.com/feeds/martin-brochhaus.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 20 Mar 2016 00:00:00 +0800</lastBuildDate><item><title>TypeError: CSS2Properties doesn't have an indexed property setter for '0'</title><link>http://martinbrochhaus.com/react-styles-issue.html</link><description>&lt;p&gt;Last Friday it came to my attention that our shop grid on &lt;a href="https://luxglove.com/products/artworks/"&gt;luxglove.com&lt;/a&gt; didn't work on Firefox.&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>martinbrochhaus.com</title><link>http://martinbrochhaus.com/</link><description></description><atom:link href="http://martinbrochhaus.com/feeds/martin-brochhaus.rss.xml" rel="self"></atom:link><lastBuildDate>Thu, 04 Aug 2016 00:00:00 +0800</lastBuildDate><item><title>Using Letsencrypt on Digital Ocean</title><link>http://martinbrochhaus.com/letsencrypt.html</link><description>&lt;p&gt;First of all, DigitalOcean has a
+&lt;a href="https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04"&gt;pretty good official guide&lt;/a&gt;
+for this.&lt;/p&gt;
+&lt;p&gt;However, I still struggled a bit with that guide, so here are my notes:&lt;/p&gt;
+&lt;p&gt;First we need to login as root and install Letsencrypt:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next we need to make sure that nginx is configured so that the
+&lt;code&gt;/.well-known/...&lt;/code&gt; URL can be accessed. Note: I typically have a non-root
+user &lt;code&gt;django&lt;/code&gt; on my servers, that's why I set the &lt;code&gt;root&lt;/code&gt; directive to a folder
+under that user's account. Make sure that the folder
+&lt;code&gt;/home/django/www/letsencrypt&lt;/code&gt; exists (by logging in as that user and creating
+it)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;listen&lt;/span&gt; &lt;span class="m"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;server_name&lt;/span&gt; &lt;span class="n"&gt;example&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;home&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;www&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;letsencrypt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;location&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;rewrite&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="n"&gt;example&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sg&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;request_uri&lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="n"&gt;permanent&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="nt"&gt;location&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nc"&gt;.well-known&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;allow&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next we need to obtain our certificate for the first time:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;/opt/letsencrypt/letsencrypt-auto certonly -a webroot --webroot-path=/home/django/www/letsencrypt -d example.com
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;A blue screen will appear, asking for your email address and if all goes well,
+the certs will placed at &lt;code&gt;/etc/letsencrypt/live/example.com&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Now configure nginx to actually use the certs:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;server {
+    listen 443 ssl;
+    server_name example.com;
+    root /home/django/project_assets;
+
+    ssl on;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+
+    ...
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And reload nginx:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo service nginx reload
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally, let's automate the renewal:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;mkdir /root/bin
+mkdir /root/log
+touch /root/bin/renew-ssl-cert.sh
+chmod +x /root/bin/renew-ssl-cert.sh
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Put the following code into &lt;code&gt;renew-ssl-cert.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;/opt/letsencrypt/letsencrypt-auto renew &amp;gt; /root/log/letsencrypt-auto.log 2&amp;gt;&amp;amp;1
+sudo service nginx reload
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And add the following line to crontab:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;* 1 * * 1 /root/bin/renew-ssl-cert.sh &amp;gt; /root/log/renew-ssl-cert.log 2&amp;gt;&amp;amp;1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You might want to test if everything works:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;/root/bin/renew-ssl-cert.sh &amp;gt; /root/log/renew-ssl-cert.log 2&amp;gt;&amp;amp;1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It should create two files in &lt;code&gt;/root/log&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;-------------------------------------------------------------------------------
+Processing /etc/letsencrypt/renewal/example.com.conf
+-------------------------------------------------------------------------------
+
+The following certs are not due for renewal yet:
+  /etc/letsencrypt/live/example.com/fullchain.pem (skipped)
+No renewals were attempted.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;* Reloading nginx configuration nginx
+   ...done.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I hope this helps :)&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Martin Brochhaus</dc:creator><pubDate>Thu, 04 Aug 2016 00:00:00 +0800</pubDate><guid>tag:martinbrochhaus.com,2016-08-04:letsencrypt.html</guid><category>ssl</category><category>server</category></item><item><title>TypeError: CSS2Properties doesn't have an indexed property setter for '0'</title><link>http://martinbrochhaus.com/react-styles-issue.html</link><description>&lt;p&gt;Last Friday it came to my attention that our shop grid on &lt;a href="https://luxglove.com/products/artworks/"&gt;luxglove.com&lt;/a&gt; didn't work on Firefox.&lt;/p&gt;
 &lt;p&gt;When opening the developer tools, I could see this error:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;TypeError&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;CSS2Properties&lt;/span&gt; &lt;span class="n"&gt;doesn&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;t have an indexed property setter for &amp;#39;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;

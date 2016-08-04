@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>martinbrochhaus.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/bootstrap-responsive.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/github-numbers.css" rel="stylesheet" media="screen">
+    <link href="http://martinbrochhaus.com/theme/css/styles.css" rel="stylesheet" media="screen">
+
+    <link href='http://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css' >
+    <link href='http://fonts.googleapis.com/css?family=Cantora+One' rel='stylesheet' type='text/css'>
+
+        <link href="http://martinbrochhaus.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="martinbrochhaus.com Atom Feed" />
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-1147761-33']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</head>
+<body>
+    <div class="miniBio">
+        <div class="container">
+            <a class="brand" href="/" title="martinbrochhaus.com"><img src="http://martinbrochhaus.com/theme/img/avatar.jpg" /></a>
+            <span class="miniBioText">I build software with Python, Django, ReactJS & React-Native. Every day. All day long.</span>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="container">
+    <div class="row">
+        <div class="span12 articleDetailHeadline">
+            <h1>Using Letsencrypt on Digital Ocean</h1>
+            <h2>Just a note to myself...</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row articleDetail">
+        <div class="span3 articleInfo light">
+<p><i class="icon-calendar"></i>&nbsp;Thu 04 August 2016</p>
+    <p class="articleTags">
+        <i class="icon-tag"></i>&nbsp;tags:
+            <a href="http://martinbrochhaus.com/tag/ssl.html">ssl</a>
+            <a href="http://martinbrochhaus.com/tag/server.html">server</a>
+    </p>
+        </div>
+        <div class="span6 articleDetailContent">
+            <p>First of all, DigitalOcean has a
+<a href="https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04">pretty good official guide</a>
+for this.</p>
+<p>However, I still struggled a bit with that guide, so here are my notes:</p>
+<p>First we need to login as root and install Letsencrypt:</p>
+<div class="highlight"><pre>sudo git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+</pre></div>
+
+
+<p>Next we need to make sure that nginx is configured so that the
+<code>/.well-known/...</code> URL can be accessed. Note: I typically have a non-root
+user <code>django</code> on my servers, that's why I set the <code>root</code> directive to a folder
+under that user's account. Make sure that the folder
+<code>/home/django/www/letsencrypt</code> exists (by logging in as that user and creating
+it)</p>
+<div class="highlight"><pre><span class="nt">server</span> <span class="p">{</span>
+    <span class="n">listen</span> <span class="m">80</span><span class="p">;</span>
+    <span class="n">server_name</span> <span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="p">;</span>
+    <span class="n">root</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">letsencrypt</span><span class="p">;</span>
+
+    <span class="n">location</span> <span class="o">/</span> <span class="err">{</span>
+        <span class="n">rewrite</span> <span class="o">^</span> <span class="n">https</span><span class="o">://</span><span class="n">example</span><span class="o">.</span><span class="n">sg</span><span class="err">$</span><span class="n">request_uri</span><span class="o">?</span> <span class="n">permanent</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nt">location</span> <span class="o">~</span> <span class="o">/</span><span class="nc">.well-known</span> <span class="p">{</span>
+        <span class="n">allow</span> <span class="n">all</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="err">}</span>
+</pre></div>
+
+
+<p>Next we need to obtain our certificate for the first time:</p>
+<div class="highlight"><pre>/opt/letsencrypt/letsencrypt-auto certonly -a webroot --webroot-path=/home/django/www/letsencrypt -d example.com
+</pre></div>
+
+
+<p>A blue screen will appear, asking for your email address and if all goes well,
+the certs will placed at <code>/etc/letsencrypt/live/example.com</code>.</p>
+<p>Now configure nginx to actually use the certs:</p>
+<div class="highlight"><pre>server {
+    listen 443 ssl;
+    server_name example.com;
+    root /home/django/project_assets;
+
+    ssl on;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+
+    ...
+}
+</pre></div>
+
+
+<p>And reload nginx:</p>
+<div class="highlight"><pre>sudo service nginx reload
+</pre></div>
+
+
+<p>Finally, let's automate the renewal:</p>
+<div class="highlight"><pre>mkdir /root/bin
+mkdir /root/log
+touch /root/bin/renew-ssl-cert.sh
+chmod +x /root/bin/renew-ssl-cert.sh
+</pre></div>
+
+
+<p>Put the following code into <code>renew-ssl-cert.sh</code>:</p>
+<div class="highlight"><pre>/opt/letsencrypt/letsencrypt-auto renew &gt; /root/log/letsencrypt-auto.log 2&gt;&amp;1
+sudo service nginx reload
+</pre></div>
+
+
+<p>And add the following line to crontab:</p>
+<div class="highlight"><pre>* 1 * * 1 /root/bin/renew-ssl-cert.sh &gt; /root/log/renew-ssl-cert.log 2&gt;&amp;1
+</pre></div>
+
+
+<p>You might want to test if everything works:</p>
+<div class="highlight"><pre>/root/bin/renew-ssl-cert.sh &gt; /root/log/renew-ssl-cert.log 2&gt;&amp;1
+</pre></div>
+
+
+<p>It should create two files in <code>/root/log</code>:</p>
+<div class="highlight"><pre>-------------------------------------------------------------------------------
+Processing /etc/letsencrypt/renewal/example.com.conf
+-------------------------------------------------------------------------------
+
+The following certs are not due for renewal yet:
+  /etc/letsencrypt/live/example.com/fullchain.pem (skipped)
+No renewals were attempted.
+</pre></div>
+
+
+<p>and:</p>
+<div class="highlight"><pre>* Reloading nginx configuration nginx
+   ...done.
+</pre></div>
+
+
+<p>I hope this helps :)</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row comments">
+        <div class="span3">&nbsp;</div>
+        <div class="span6">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'martinbrochhauscom'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span6">
+                    <p><strong>Martin Brochhaus</strong> is the founder of <a href="http://bitmazk.com">Bitmazk Pte. Ltd.</a>. He is doing web development since 1998 and currently he is in love with Python & Django. Almost all of his work can be found on <a href="https://github.com/bitmazk">Github</a>. When he is not writing code, he gives <a href="https://speakerdeck.com/mbrochh">talks</a> or helps organizing <a href="https://pycon.sg">conferences</a>.</p>
+                </div>
+                <div class="span4">
+                        <p><strong>Say hi!</strong></p>
+                        <ul class="socialLinks">
+                                <li><a href="https://github.com/mbrochh"><span class="symbol">&#xe037;</span> Github</a></li>
+                                <li><a href="https://twitter.com/mbrochh"><span class="symbol">&#xe086;</span> Twitter</a></li>
+                                <li><a href="https://secure.flickr.com/photos/mbrochh/"><span class="symbol">&#xe029;</span> Flickr</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://martinbrochhaus.com/theme/js/bootstrap.min.js"></script>
+</body>
+</html>
