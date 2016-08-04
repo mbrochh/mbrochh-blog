@@ -21,8 +21,8 @@ Next we need to make sure that nginx is configured so that the
 `/.well-known/...` URL can be accessed. Note: I typically have a non-root
 user `django` on my servers, that's why I set the `root` directive to a folder
 under that user's account. Make sure that the folder
-`/home/django/www/letsencrypt` exists (by logging in as that user and creating
-it)
+`/home/django/www/letsencrypt/.well-known` exists (by logging in as that user
+and creating it).
 
 ```
 server {
@@ -48,6 +48,10 @@ Next we need to obtain our certificate for the first time:
 
 A blue screen will appear, asking for your email address and if all goes well,
 the certs will placed at `/etc/letsencrypt/live/example.com`.
+
+Hint: If you were already using a cert, possibly even one from letsencrypt,
+you might need to delete the `/etc/letsencrypt/` folder and comment out
+the SSL part in the nginx conf.
 
 Now configure nginx to actually use the certs:
 
