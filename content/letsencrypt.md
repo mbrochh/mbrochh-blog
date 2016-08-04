@@ -11,7 +11,10 @@ for this.
 
 However, I still struggled a bit with that guide, so here are my notes:
 
-First we need to login as root and install Letsencrypt:
+First we need to login as root and install Letsencrypt.
+
+NOTE: If you are using AWS, you are probably logging in as "ubuntu", so make
+sure to replace `root` with `ubuntu` in the snippets:
 
 ```
 sudo git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
