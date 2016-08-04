@@ -3,7 +3,9 @@
 &lt;a href="https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04"&gt;pretty good official guide&lt;/a&gt;
 for this.&lt;/p&gt;
 &lt;p&gt;However, I still struggled a bit with that guide, so here are my notes:&lt;/p&gt;
-&lt;p&gt;First we need to login as root and install Letsencrypt:&lt;/p&gt;
+&lt;p&gt;First we need to login as root and install Letsencrypt.&lt;/p&gt;
+&lt;p&gt;NOTE: If you are using AWS, you are probably logging in as "ubuntu", so make
+sure to replace &lt;code&gt;root&lt;/code&gt; with &lt;code&gt;ubuntu&lt;/code&gt; in the snippets:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;sudo git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 &lt;/pre&gt;&lt;/div&gt;
 
